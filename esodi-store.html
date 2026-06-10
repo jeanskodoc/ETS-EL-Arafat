@@ -1,0 +1,2047 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ETS EL Arafat - Électronique & Accessoires</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
+:root{--primary:#16a34a;--primary-h:#15803d;--accent:#2563eb;--accent-h:#1d4ed8;--dark:#0f172a;--bg:#f1f5f9;--card:#fff;--text:#1e293b;--text-light:#64748b;--border:#e2e8f0;--green:#16a34a;--red:#ef4444;--shadow:0 1px 3px rgba(0,0,0,.1);--shadow-lg:0 8px 24px rgba(0,0,0,.12);--radius:12px;--radius-sm:8px;--whatsapp:#25D366;--rose:#e11d48}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+.container{max-width:1200px;margin:0 auto;padding:0 1rem;width:100%}
+header{background:var(--card);box-shadow:var(--shadow);position:sticky;top:0;z-index:100}
+.nav-wrapper{display:flex;justify-content:space-between;align-items:center;padding:.6rem 0;gap:8px}
+.logo{font-size:1.2rem;font-weight:800;color:var(--dark);text-decoration:none;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.logo i{color:var(--primary)}.logo span{color:var(--accent)}
+.desktop-nav ul{display:flex;gap:4px;list-style:none;align-items:center}
+.desktop-nav button{background:none;border:none;font-size:.72rem;font-weight:600;color:var(--text-light);cursor:pointer;transition:all .2s;padding:.3rem .4rem;white-space:nowrap;border-radius:6px}
+.desktop-nav button:hover,.desktop-nav button.active{color:var(--primary);background:#eff6ff}
+.desktop-nav button i{margin-right:2px}
+.cart-badge{position:absolute;top:-6px;right:-6px;background:var(--accent);color:#fff;font-size:.55rem;min-width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700}
+.wish-badge{position:absolute;top:-6px;right:-6px;background:var(--rose);color:#fff;font-size:.55rem;min-width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;font-weight:700}
+.mobile-menu-btn{display:none;background:none;border:none;font-size:1.3rem;color:var(--dark);cursor:pointer;padding:.3rem}
+.mobile-nav{position:fixed;top:0;left:-100%;width:80%;max-width:260px;height:100%;background:var(--card);z-index:200;transition:left .3s ease;box-shadow:2px 0 10px rgba(0,0,0,.1);padding:1.5rem}
+.mobile-nav.active{left:0}
+.mobile-nav-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:150;display:none}
+.mobile-nav-overlay.active{display:block}
+.mobile-nav ul{list-style:none;display:flex;flex-direction:column;gap:4px;margin-top:1.5rem}
+.mobile-nav button{width:100%;text-align:left;background:none;border:none;font-size:.95rem;font-weight:600;color:var(--text);padding:.5rem;cursor:pointer;border-radius:8px;display:flex;align-items:center;gap:8px}
+.mobile-nav button:hover{background:#f1f5f9}
+.mobile-nav button i{width:22px;color:var(--primary);text-align:center}
+main{flex:1;padding:1.2rem 0}
+.section{display:none;animation:fadeIn .25s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hero{background:linear-gradient(135deg,var(--dark),var(--primary));color:#fff;padding:1.5rem 2rem;border-radius:var(--radius);margin-bottom:1.2rem;text-align:center;position:relative;overflow:hidden}
+.hero:before{content:'🔌';position:absolute;right:-20px;bottom:-20px;font-size:8rem;opacity:.1}
+.hero h1{font-size:1.5rem;margin-bottom:.2rem}
+.hero p{font-size:.85rem;opacity:.9}
+.search-bar{display:flex;gap:8px;margin-bottom:.8rem;flex-wrap:wrap}
+.search-bar input{flex:1;min-width:160px;padding:.65rem 1rem;border:2px solid var(--border);border-radius:50px;font-size:.9rem;outline:none;transition:border-color .2s}
+.search-bar input:focus{border-color:var(--primary)}
+.filters{display:flex;gap:5px;margin-bottom:.8rem;flex-wrap:wrap;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+.filter-btn{padding:.35rem .75rem;border:1px solid var(--border);background:var(--card);border-radius:20px;cursor:pointer;transition:all .2s;font-size:.75rem;font-weight:500;white-space:nowrap;flex-shrink:0}
+.filter-btn:hover,.filter-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.8rem}
+.product-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s;position:relative}
+.product-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.product-img{width:100%;height:160px;object-fit:cover;background:#f1f5f9;cursor:pointer}
+.product-wish{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.9);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.9rem;transition:all .2s;z-index:2;box-shadow:0 2px 6px rgba(0,0,0,.1)}
+.product-wish:hover{transform:scale(1.1)}.product-wish.active i{color:var(--rose)}.product-wish i{color:#94a3b8}
+.product-body{padding:.7rem;flex:1;display:flex;flex-direction:column}
+.product-cat{font-size:.6rem;text-transform:uppercase;color:#94a3b8;letter-spacing:.5px}
+.product-name{font-size:.85rem;font-weight:700;color:var(--dark);margin:.15rem 0;cursor:pointer;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.product-name:hover{color:var(--primary)}
+.product-brand{font-size:.72rem;color:var(--text-light);margin-bottom:.2rem}
+.product-price{font-weight:800;color:var(--primary);font-size:1.05rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.product-ogprice{font-size:.7rem;color:#94a3b8;text-decoration:line-through;font-weight:400}
+.product-wprice{font-size:.7rem;color:var(--text-light)}.product-wprice strong{color:var(--accent)}
+.product-warranty{font-size:.68rem;color:var(--green);margin-top:2px}
+.product-actions{display:flex;gap:5px;margin-top:auto;padding-top:.4rem}
+.promo-badge{position:absolute;top:8px;left:8px;background:var(--red);color:#fff;font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:4px;z-index:2}
+.btn{padding:.5rem;border:none;border-radius:var(--radius-sm);font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:5px;font-size:.76rem;text-decoration:none}
+.btn:active{transform:scale(.97)}
+.btn-block{width:100%;padding:.65rem;font-size:.85rem;display:flex}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-h)}
+.btn-accent{background:var(--accent);color:#fff}.btn-accent:hover{background:var(--accent-h)}
+.btn-green{background:var(--green);color:#fff}.btn-green:hover{background:#15803d}
+.btn-red{background:var(--red);color:#fff}.btn-red:hover{background:#dc2626}
+.btn-rose{background:var(--rose);color:#fff}.btn-rose:hover{background:#be123c}
+.btn-whatsapp{background:var(--whatsapp);color:#fff}.btn-whatsapp:hover{background:#1da851}
+.btn-outline{background:var(--card);color:var(--text);border:1px solid var(--border);padding:.45rem}.btn-outline:hover{background:#f8fafc}
+.btn-sm{flex:0;padding:.35rem .55rem;font-size:.72rem}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.admin-layout{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:900px){.admin-layout{grid-template-columns:1fr}}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:1rem}
+.card h3{font-size:.95rem;margin-bottom:.8rem;color:var(--dark);display:flex;align-items:center;gap:6px}
+.card p{font-size:.82rem;color:var(--text-light);line-height:1.5}
+.form-group{margin-bottom:.6rem}
+.form-group label{display:block;font-size:.75rem;font-weight:600;color:var(--dark);margin-bottom:.2rem}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:.55rem;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:.85rem;outline:none;transition:border-color .2s;background:var(--card)}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:.78rem}
+th,td{padding:.4rem .35rem;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}
+th{font-size:.65rem;text-transform:uppercase;color:var(--text-light);letter-spacing:.5px;font-weight:600}
+tbody tr:hover{background:#f8fafc}
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:.65rem;font-weight:600;white-space:nowrap}
+.badge-blue{background:#dbeafe;color:#1e40af}.badge-green{background:#dcfce7;color:#166534}
+.badge-gray{background:#f1f5f9;color:var(--text-light)}.badge-red{background:#fee2e2;color:#991b1b}
+.badge-purple{background:#ede9fe;color:#5b21b6}.badge-orange{background:#fef3c7;color:#92400e}
+.badge-rose{background:#fce7f3;color:#9d174d}
+.pagination .page-btn{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-weight:600;font-size:.75rem;transition:all .15s;display:flex;align-items:center;justify-content:center}
+.pagination .page-btn:hover{background:var(--primary);color:#fff;border-color:var(--primary)}
+.pagination .page-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.pagination .page-btn:disabled{opacity:.3;cursor:default}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.8rem;margin-bottom:1.2rem}
+.kpi-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:1rem;text-align:center;transition:transform .2s}
+.kpi-card:hover{transform:translateY(-2px)}
+.kpi-card .icon{font-size:1.8rem;margin-bottom:.2rem}
+.kpi-card .value{font-size:1.3rem;font-weight:800;color:var(--dark)}
+.kpi-card .label{font-size:.7rem;color:var(--text-light);text-transform:uppercase;letter-spacing:.5px}
+.chart-bar{display:flex;align-items:end;gap:2px;height:130px;padding:.8rem 0}
+.chart-bar .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px}
+.chart-bar .bar{width:100%;min-height:3px;border-radius:3px 3px 0 0;transition:height .4s ease;cursor:help}
+.chart-bar .bar:hover{opacity:.8}
+.chart-bar .lbl{font-size:.5rem;color:var(--text-light);text-align:center}
+.cart-item{display:flex;align-items:center;gap:.8rem;padding:.7rem 0;border-bottom:1px solid var(--border);animation:slideUp .25s ease}
+.cart-item img{width:48px;height:48px;object-fit:cover;border-radius:var(--radius-sm)}
+.cart-item-info{flex:1}.cart-item-info strong{font-size:.8rem}
+.cart-item-info small{color:var(--text-light);font-size:.7rem}
+.qty-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .15s;user-select:none;font-size:.85rem}
+.qty-btn:hover{background:#f1f5f9;border-color:var(--primary)}
+.qty-btn:active{transform:scale(.9)}
+.cart-total{text-align:right;padding-top:.8rem;font-size:1.1rem;font-weight:800;color:var(--dark)}
+.cart-total small{font-weight:400;font-size:.78rem;color:var(--text-light)}
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);display:none;justify-content:center;align-items:center;z-index:2000;padding:1rem;backdrop-filter:blur(2px)}
+.modal-overlay.active{display:flex}
+.modal-content{background:var(--card);border-radius:16px;padding:1.5rem;max-width:500px;width:92%;max-height:85vh;overflow-y:auto;animation:slideUp .25s ease;margin:auto}
+.modal-content h3{margin-bottom:.8rem}
+.map-container{width:100%;height:280px;border-radius:var(--radius);overflow:hidden;border:2px solid var(--border)}
+.map-container .leaflet-container{width:100%;height:100%}
+.store-info-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:1rem;margin-bottom:1.2rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+.store-info-card .info{flex:1;min-width:200px}
+.store-info-card .info h2{font-size:1.05rem;margin-bottom:.4rem}
+.store-info-card .info p{font-size:.8rem;color:var(--text-light);margin-bottom:.25rem}
+.store-info-card .info i{width:18px;color:var(--primary)}
+.empty-state{text-align:center;padding:2rem 1rem;color:var(--text-light)}
+.empty-state i{font-size:2.5rem;margin-bottom:.4rem;opacity:.4}
+.empty-state p{font-size:.85rem}
+.loading-spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle}
+.toast-container{position:fixed;bottom:16px;right:16px;z-index:3000;display:flex;flex-direction:column;gap:6px;max-width:300px}
+@media(max-width:480px){.toast-container{left:16px;right:16px;max-width:none}}
+.toast{padding:10px 14px;border-radius:8px;box-shadow:var(--shadow-lg);font-size:.82rem;font-weight:600;animation:slideUp .3s ease;display:flex;align-items:center;gap:6px}
+.toast-success{border-left:4px solid #16a34a;background:#f0fdf4;color:#166534}
+.toast-warning{border-left:4px solid #f59e0b;background:#fffbeb;color:#92400e}
+.toast-error{border-left:4px solid #ef4444;background:#fef2f2;color:#991b1b}
+.toast-info{border-left:4px solid #3b82f6;background:#eff6ff;color:#1e40af}
+.divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
+footer{background:var(--dark);color:#cbd5e1;padding:1.2rem 0;margin-top:auto;text-align:center;font-size:.78rem}
+footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}footer a:hover{color:#fff}
+@media(max-width:399px){
+.container{padding:0 .5rem}.hero{padding:.8rem}.hero h1{font-size:1rem}
+.products-grid{grid-template-columns:1fr;gap:.5rem}.product-img{height:180px}
+.modal-content{padding:.8rem}.logo{font-size:.9rem}
+.map-container{height:180px}.store-info-card{flex-direction:column;text-align:center}
+.kpi-grid{grid-template-columns:repeat(2,1fr);gap:.4rem}.kpi-card{padding:.6rem}.kpi-card .value{font-size:.9rem}
+.btn{padding:.45rem;font-size:.72rem}.btn-block{padding:.55rem;font-size:.8rem}
+.search-bar input{padding:.55rem .8rem;font-size:.85rem}
+.filters{gap:4px}.filter-btn{padding:.3rem .6rem;font-size:.7rem}
+.product-body{padding:.6rem}.product-name{font-size:.8rem}.product-price{font-size:.95rem}
+.admin-layout{gap:.5rem}.card{padding:.7rem}
+}
+@media(min-width:400px)and(max-width:599px){
+.products-grid{grid-template-columns:repeat(2,1fr);gap:.5rem}.product-img{height:150px}
+.hero{padding:1rem}.hero h1{font-size:1.1rem}
+.modal-content{padding:1rem}
+}
+@media(min-width:600px)and(max-width:767px){
+.products-grid{grid-template-columns:repeat(3,1fr);gap:.6rem}.product-img{height:160px}
+.hero{padding:1.2rem}.hero h1{font-size:1.2rem}
+}
+@media(max-width:767px){
+.desktop-nav{display:none}.mobile-menu-btn{display:block}
+.admin-layout{grid-template-columns:1fr}.product-actions{flex-direction:column}
+.search-bar{flex-direction:column}.search-bar input{min-width:auto}
+.chart-bar{height:80px}.chart-bar .lbl{display:none}
+.store-info-card{flex-direction:column;text-align:center;gap:.8rem}
+.store-info-card .btn{width:100%}
+.footer-grid{grid-template-columns:1fr!important;gap:1rem!important;text-align:center}
+.footer-col{padding:0!important}
+}
+@media(min-width:768px)and(max-width:1023px){
+.desktop-nav{display:block}.mobile-menu-btn{display:none}
+.products-grid{grid-template-columns:repeat(3,1fr);gap:.7rem}
+.hero{padding:1.5rem}
+}
+@media(min-width:768px){.desktop-nav{display:block}.mobile-menu-btn{display:none}}
+@media(min-width:1024px){
+.hero{padding:2rem}.hero h1{font-size:1.6rem}.products-grid{gap:.8rem}
+.container{padding:0 2rem}
+}
+@media(min-width:1200px){
+.products-grid{grid-template-columns:repeat(4,1fr);gap:1rem}
+.hero h1{font-size:1.8rem}
+}
+@media(orientation:landscape)and (max-height:500px){
+.hero{padding:.6rem}.hero h1{font-size:1rem}.hero p{font-size:.75rem}
+}
+.skeleton{background:linear-gradient(90deg,#e2e8f0 25%,#f1f5f9 50%,#e2e8f0 75%);background-size:200% 100%;animation:shimmer 1.2s infinite;border-radius:6px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skeleton-card{background:var(--card);border-radius:var(--radius);overflow:hidden}
+.skeleton-img{width:100%;height:160px}.skeleton-body{padding:.7rem}.skeleton-line{height:12px;margin-bottom:8px;width:100%}.skeleton-line:last-child{width:60%}
+#scroll-top{position:fixed;bottom:80px;right:16px;width:42px;height:42px;border-radius:50%;background:var(--primary);color:#fff;border:none;box-shadow:var(--shadow-lg);cursor:pointer;display:none;align-items:center;justify-content:center;z-index:100;font-size:1rem;transition:all .2s}
+#scroll-top:hover{transform:scale(1.1);background:var(--primary-h)}
+#scroll-top.visible{display:flex}
+.lightbox-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);z-index:5000;display:none;justify-content:center;align-items:center;cursor:zoom-out;padding:1rem}
+.lightbox-overlay.active{display:flex}
+.lightbox-overlay img{max-width:100%;max-height:90vh;border-radius:8px;object-fit:contain;animation:fadeIn .3s ease}
+.lightbox-close{position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;border:none;font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.lightbox-close:hover{background:rgba(255,255,255,.4)}
+.search-suggest{position:absolute;top:100%;left:0;right:0;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);box-shadow:var(--shadow-lg);z-index:50;max-height:250px;overflow-y:auto;display:none;margin-top:2px}
+.search-suggest.show{display:block}
+.search-suggest-item{padding:.5rem .8rem;cursor:pointer;font-size:.8rem;display:flex;align-items:center;gap:8px;transition:background .15s}
+.search-suggest-item:hover{background:#f1f5f9}
+.search-suggest-item img{width:28px;height:28px;border-radius:4px;object-fit:cover}
+.search-bar{position:relative}
+.order-timeline{display:flex;gap:0;margin:.8rem 0;position:relative;flex-wrap:wrap}
+.order-step{flex:1;text-align:center;min-width:80px;padding:.4rem .2rem;position:relative}
+.order-step:before{content:'';position:absolute;top:20px;left:50%;width:100%;height:3px;background:var(--border);z-index:0}
+.order-step:last-child:before{display:none}
+.order-step .dot{width:18px;height:18px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;margin:0 auto 4px;position:relative;z-index:1;font-size:.5rem;color:#fff;transition:all .3s}
+.order-step.completed:before,.order-step.active:before{background:var(--primary)}
+.order-step.completed .dot,.order-step.active .dot{background:var(--primary)}
+.order-step.completed .dot:after{content:'\2713'}.order-step.active .dot{box-shadow:0 0 0 3px rgba(22,163,74,.3)}
+.order-step .label{font-size:.6rem;color:var(--text-light);white-space:nowrap}
+.order-step.completed .label,.order-step.active .label{color:var(--primary);font-weight:600}
+</style>
+</head>
+<body>
+
+<header>
+<div class="container nav-wrapper">
+<a href="#" class="logo" data-view="store"><i class="fas fa-bolt"></i> ETS EL<span> Arafat</span></a>
+<nav class="desktop-nav">
+<ul>
+<li><button class="active" data-view="store"><i class="fas fa-home"></i> Boutique</button></li>
+<li><button data-view="promos"><i class="fas fa-tags"></i> Promos</button></li>
+<li><button data-view="map"><i class="fas fa-map-marker-alt"></i> Carte</button></li>
+<li id="nav-li-dash" hidden><button data-view="dash"><i class="fas fa-chart-line"></i> Dashboard</button></li>
+<li id="nav-li-prod" hidden><button data-view="prod"><i class="fas fa-box"></i> Produits</button></li>
+<li id="nav-li-orders" hidden><button data-view="orders"><i class="fas fa-truck"></i> Ventes</button></li>
+<li><button data-view="track"><i class="fas fa-search-location"></i> Suivi</button></li>
+<li><button data-view="contact"><i class="fas fa-headset"></i> Contact</button></li>
+<li><button data-view="vendor"><i class="fas fa-store"></i> Vendeur</button></li>
+<li><button data-view="vendor-orders"><i class="fas fa-truck"></i> Commandes</button></li>
+<li><button data-view="vendor-accounts"><i class="fas fa-chart-line"></i> Mes Comptes</button></li>
+<li><button data-view="price-mgmt"><i class="fas fa-qrcode"></i> Gestion de prix</button></li>
+<li><button data-view="cart" style="position:relative"><i class="fas fa-shopping-cart"></i> Panier <span id="cart-count" class="cart-badge">0</span></button></li>
+<li><button data-view="wishlist" style="position:relative"><i class="fas fa-heart"></i> <span id="wish-badge" class="wish-badge">0</span></button></li>
+</ul>
+</nav>
+<button class="mobile-menu-btn" aria-label="Menu"><i class="fas fa-bars"></i></button>
+</div>
+</header>
+
+<div class="mobile-nav-overlay"></div>
+<div class="mobile-nav">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+<span class="logo"><i class="fas fa-bolt"></i> ETS EL<span> Arafat</span></span>
+<button class="close-menu-btn" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-light)">&times;</button>
+</div>
+<ul>
+<li><button data-view="store"><i class="fas fa-home"></i> Boutique</button></li>
+<li><button data-view="promos"><i class="fas fa-tags"></i> Promos</button></li>
+<li><button data-view="map"><i class="fas fa-map-marker-alt"></i> Carte</button></li>
+<li id="nav-m-li-dash" hidden><button data-view="dash"><i class="fas fa-chart-line"></i> Dashboard</button></li>
+<li id="nav-m-li-prod" hidden><button data-view="prod"><i class="fas fa-box"></i> Produits</button></li>
+<li id="nav-m-li-orders" hidden><button data-view="orders"><i class="fas fa-truck"></i> Ventes</button></li>
+<li><button data-view="track"><i class="fas fa-search-location"></i> Suivi commande</button></li>
+<li><button data-view="contact"><i class="fas fa-headset"></i> Contact</button></li>
+<li><button data-view="vendor"><i class="fas fa-store"></i> Vendeur</button></li>
+<li><button data-view="vendor-orders"><i class="fas fa-truck"></i> Commandes</button></li>
+<li><button data-view="vendor-accounts"><i class="fas fa-chart-line"></i> Mes Comptes</button></li>
+<li><button data-view="price-mgmt"><i class="fas fa-qrcode"></i> Gestion de prix</button></li>
+<li><button data-view="cart"><i class="fas fa-shopping-cart"></i> Panier</button></li>
+<li><button data-view="wishlist"><i class="fas fa-heart"></i> Favoris</button></li>
+</ul>
+</div>
+
+<main class="container">
+
+<section id="view-store" class="section active">
+<div class="hero">
+<h1><i class="fas fa-bolt"></i> Électronique & Accessoires</h1>
+<p>Les meilleures marques aux meilleurs prix — Livraison partout en Afrique</p>
+</div>
+<div class="store-info-card">
+<div style="flex-shrink:0;font-size:2.5rem;color:var(--primary)"><i class="fas fa-store"></i></div>
+<div class="info">
+<h2>ETS EL Arafat</h2>
+<p><i class="fas fa-map-marker-alt"></i> Atakpamé, ENS-Togo, Face station TEXACO</p>
+<p><i class="fas fa-phone"></i> +228 91 98 46 98</p>
+<p><i class="fas fa-clock"></i> Lun-Sam 8h-19h · Dim 9h-13h</p>
+</div>
+<button class="btn btn-primary" data-view="map" style="flex:0;padding:.55rem 1rem"><i class="fas fa-map-marked-alt"></i> Carte</button>
+</div>
+<div class="search-bar"><input type="text" id="search" placeholder="Rechercher un produit, une marque..." autocomplete="off"><div id="search-suggest" class="search-suggest"></div></div>
+<div class="filters" id="filters"></div>
+<div id="products-grid" class="products-grid"></div>
+<div id="prod-pagination" class="pagination" style="display:flex;justify-content:center;gap:5px;margin-top:.8rem;flex-wrap:wrap"></div>
+</section>
+
+<section id="view-promos" class="section">
+<div class="hero" style="background:linear-gradient(135deg,#991b1b,#ef4444)"><h1><i class="fas fa-tags"></i> Promotions</h1><p>Des offres exceptionnelles sur une sélection de produits</p></div>
+<div id="promos-grid" class="products-grid"></div>
+</section>
+
+<section id="view-map" class="section">
+<h2 style="font-size:1.1rem;margin-bottom:.8rem"><i class="fas fa-map-marked-alt"></i> Notre boutique</h2>
+<div class="store-info-card">
+<div class="info">
+<h2>ETS EL Arafat</h2>
+<p><i class="fas fa-map-marker-alt"></i> Atakpamé, ENS-Togo, Face station TEXACO</p>
+<p><i class="fas fa-phone"></i> +228 91 98 46 98</p>
+<p><i class="fas fa-envelope"></i> contact@etselarafat.tg</p>
+<p><i class="fas fa-clock"></i> Lun-Sam 8h-19h · Dim 9h-13h</p>
+</div>
+</div>
+<div class="map-container" id="shop-map"></div>
+<div style="text-align:center;margin-top:.5rem;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+<button class="btn btn-sm btn-primary" id="btn-route-osm"><i class="fas fa-route"></i> Itinéraire OSM</button>
+<button class="btn btn-sm" id="btn-route-gmaps" style="background:#4285f4;color:#fff"><i class="fab fa-google"></i> Google Maps</button>
+<button class="btn btn-sm btn-outline" id="btn-clear-route"><i class="fas fa-times"></i> Effacer</button>
+<span id="route-info" style="font-size:.78rem;color:var(--text-light);align-self:center;width:100%"></span>
+</div>
+</section>
+
+<section id="view-dash" class="section">
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:.8rem">
+<h2 style="font-size:1.1rem"><i class="fas fa-chart-line"></i> Tableau de bord</h2>
+<button class="btn btn-sm btn-outline" id="btn-export-csv"><i class="fas fa-download"></i> Export CSV</button>
+</div>
+<div class="kpi-grid" id="kpi-grid"></div>
+<div class="admin-layout">
+<div class="card"><h3><i class="fas fa-calendar"></i> Chiffre d'affaires (30 jours)</h3><div id="revenue-chart" class="chart-bar"></div></div>
+<div class="card"><h3><i class="fas fa-star"></i> Top 5 produits</h3><div id="top-products" style="display:flex;flex-direction:column;gap:6px"></div></div>
+</div>
+<div class="card" style="margin-top:.8rem">
+<h3><i class="fas fa-clock"></i> Dernières ventes</h3>
+<div class="table-wrap"><table class="mini-tbl"><thead><tr><th>Date</th><th>Client</th><th>Produits</th><th>Total</th><th>Statut</th></tr></thead><tbody id="recent-sales"></tbody></table></div>
+</div>
+</section>
+
+<section id="view-prod" class="section">
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:.8rem">
+<h2 style="font-size:1.1rem"><i class="fas fa-box"></i> Gestion des produits</h2>
+<div style="display:flex;align-items:center;gap:8px">
+<span id="admin-info" style="font-size:.78rem;color:var(--text-light);display:none"></span>
+<button id="logout-btn" class="btn btn-sm btn-outline" style="color:var(--red);border-color:var(--red)" hidden><i class="fas fa-sign-out-alt"></i> Quitter</button>
+</div>
+</div>
+<div class="admin-layout">
+<div class="card">
+<h3><i class="fas fa-plus-circle"></i> Ajouter un produit</h3>
+<form id="add-form" novalidate>
+<div class="form-group"><label>Nom *</label><input type="text" id="f-name" required></div>
+<div class="form-group"><label>Marque</label><input type="text" id="f-brand"></div>
+<div class="form-group"><label>Catégorie</label><select id="f-cat"><option>TV & Audio</option><option>Smartphone</option><option>Informatique</option><option>Électroménager</option><option>Climatisation</option><option>Accessoires</option></select></div>
+<div class="form-group"><label>Prix détail (FCFA) *</label><input type="number" id="f-price" required min="0"></div>
+<div class="form-group"><label>Prix de gros (FCFA) *</label><input type="number" id="f-wprice" required min="0"></div>
+<div class="form-group"><label>Seuil gros</label><input type="number" id="f-wqty" value="5" min="2"></div>
+<div class="form-group"><label>Promo (%)</label><input type="number" id="f-promo" value="0" min="0" max="100"></div>
+<div class="form-group"><label>Garantie</label><input type="text" id="f-warranty" placeholder="ex: 2 ans"></div>
+<div class="form-group"><label>Stock *</label><input type="number" id="f-stock" value="10" min="0" required></div>
+<div class="form-group"><label>Alerte stock min</label><input type="number" id="f-minstock" value="3" min="1"></div>
+<div class="form-group"><label>Image URL</label><input type="url" id="f-img" placeholder="https://..."></div>
+<div class="form-group"><label>Description</label><textarea id="f-desc" rows="2"></textarea></div>
+<div class="form-group"><label>Livraison (FCFA)</label><input type="number" id="f-delivery" value="0" min="0"></div>
+<button type="submit" class="btn btn-primary btn-block"><i class="fas fa-cloud-upload-alt"></i> Publier</button>
+</form>
+</div>
+<div class="card">
+<h3>Stock <span id="stock-count" style="font-weight:400;font-size:.78rem;color:var(--text-light)"></span></h3>
+            <div class="table-wrap"><table><thead><tr><th>Produit</th><th>Prix</th><th>Gros</th><th>Stock</th><th>Promo</th><th></th></tr></thead><tbody id="admin-tbody"></tbody></table></div>
+</div>
+</div>
+</section>
+
+<section id="view-orders" class="section">
+<h2 style="font-size:1.1rem;margin-bottom:.8rem"><i class="fas fa-truck"></i> Historique des ventes</h2>
+<div class="admin-layout">
+<div class="card">
+<h3><i class="fas fa-plus-circle"></i> Ajouter une vente</h3>
+<form id="manual-sale-form" novalidate>
+<div class="form-group"><label>Client *</label><input type="text" id="ms-client" required></div>
+<div class="form-group"><label>Téléphone *</label><input type="tel" id="ms-phone" required></div>
+<div class="form-group"><label>Produit *</label><select id="ms-product" required><option value="">--</option></select></div>
+<div class="form-group"><label>Quantité</label><input type="number" id="ms-qty" value="1" min="1"></div>
+<div class="form-group"><label>Montant (FCFA) *</label><input type="number" id="ms-amount" required min="0"></div>
+<div class="form-group"><label>Livraison (FCFA)</label><input type="number" id="ms-delivery" value="0" min="0"></div>
+<div class="form-group"><label>Statut</label><select id="ms-status"><option>payé</option><option>livré</option><option>livré et payé</option></select></div>
+<button type="submit" class="btn btn-green btn-block"><i class="fas fa-check"></i> Enregistrer</button>
+</form>
+<hr class="divider">
+<h3><i class="fas fa-search"></i> Filtres</h3>
+<div class="form-group"><label>Du</label><input type="date" id="filter-from"></div>
+<div class="form-group"><label>Au</label><input type="date" id="filter-to"></div>
+<div style="display:flex;gap:6px"><button class="btn btn-sm btn-primary" id="btn-filter-sales">Filtrer</button><button class="btn btn-sm btn-outline" id="btn-reset-filters">Réinitialiser</button></div>
+</div>
+<div class="card">
+<h3>Toutes les ventes <span id="sales-count" style="font-weight:400;font-size:.78rem;color:var(--text-light)"></span></h3>
+            <div class="table-wrap"><table><thead><tr><th>Date</th><th>Client</th><th>Tél</th><th>Produits</th><th>Total</th><th>Statut</th><th></th></tr></thead><tbody id="sales-tbody"></tbody></table></div>
+            <div id="sales-pagination" class="pagination" style="display:flex;justify-content:center;gap:5px;margin-top:.8rem;flex-wrap:wrap"></div>
+</div>
+</div>
+</section>
+
+<section id="view-track" class="section">
+<h2 style="font-size:1.1rem;margin-bottom:.8rem"><i class="fas fa-search-location"></i> Suivi de commande</h2>
+<div class="card" style="max-width:500px;margin:0 auto">
+<p style="margin-bottom:.8rem">Entrez votre numéro de téléphone pour retrouver vos commandes.</p>
+<form id="track-form" style="display:flex;gap:8px;flex-wrap:wrap">
+<div style="flex:1;min-width:180px"><input type="tel" id="track-phone" placeholder="+228 XX XX XX XX" required></div>
+<button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Rechercher</button>
+</form>
+<div id="track-results" style="margin-top:1rem"></div>
+</div>
+</section>
+
+<section id="view-contact" class="section">
+<h2 style="font-size:1.1rem;margin-bottom:.8rem"><i class="fas fa-headset"></i> Contactez-nous</h2>
+<div class="admin-layout">
+<div class="card">
+<h3><i class="fas fa-store"></i> Nos coordonnées</h3>
+<div style="display:flex;flex-direction:column;gap:10px;font-size:.85rem;color:var(--text)">
+<p><i class="fas fa-map-marker-alt" style="width:20px;color:var(--primary)"></i> Atakpamé, ENS-Togo, Face station TEXACO</p>
+<p><i class="fas fa-phone" style="width:20px;color:var(--primary)"></i> <a href="tel:+22891984698" style="color:var(--primary);text-decoration:none">+228 91 98 46 98</a></p>
+<p><i class="fab fa-whatsapp" style="width:20px;color:var(--whatsapp)"></i> <a href="https://wa.me/22891984698" target="_blank" style="color:var(--whatsapp);text-decoration:none">WhatsApp</a></p>
+<p><i class="fas fa-envelope" style="width:20px;color:var(--primary)"></i> <a href="mailto:contact@etselarafat.tg" style="color:var(--primary);text-decoration:none">contact@etselarafat.tg</a></p>
+<p><i class="fas fa-clock" style="width:20px;color:var(--primary)"></i> Lun-Sam 8h-19h · Dim 9h-13h</p>
+</div>
+<div style="display:flex;gap:8px;margin-top:1rem;flex-wrap:wrap">
+<a class="btn btn-whatsapp" href="https://wa.me/22891984698" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+<a class="btn btn-primary" href="tel:+22891984698"><i class="fas fa-phone"></i> Appeler</a>
+<a class="btn btn-outline" href="mailto:contact@etselarafat.tg"><i class="fas fa-envelope"></i> Email</a>
+</div>
+</div>
+<div class="card">
+<h3><i class="fas fa-paper-plane"></i> Envoyer un message</h3>
+<form id="contact-form" novalidate>
+<div class="form-group"><label>Votre nom *</label><input type="text" id="contact-name" required></div>
+<div class="form-group"><label>Votre email</label><input type="email" id="contact-email"></div>
+<div class="form-group"><label>Téléphone *</label><input type="tel" id="contact-phone" required></div>
+<div class="form-group"><label>Message *</label><textarea id="contact-msg" rows="3" required></textarea></div>
+<button type="submit" class="btn btn-primary btn-block"><i class="fab fa-whatsapp"></i> Envoyer via WhatsApp</button>
+</form>
+</div>
+</div>
+</section>
+
+<section id="view-cart" class="section">
+<h2 style="font-size:1.1rem;margin-bottom:.8rem"><i class="fas fa-shopping-cart"></i> Votre panier</h2>
+<div class="card">
+<div id="cart-items"></div>
+<div class="cart-total" id="cart-total">0 FCFA</div>
+<button class="btn btn-green btn-block" style="margin-top:.8rem" id="btn-checkout"><i class="fab fa-whatsapp"></i> Commander</button>
+</div>
+</section>
+
+<section id="view-wishlist" class="section">
+<h2 style="font-size:1.1rem;margin-bottom:.8rem"><i class="fas fa-heart" style="color:var(--rose)"></i> Mes favoris</h2>
+<div id="wishlist-grid" class="products-grid"></div>
+</section>
+
+<section id="view-vendor" class="section">
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:.8rem">
+<h2 style="font-size:1.1rem"><i class="fas fa-store"></i> Espace Vendeur</h2>
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+<span id="vendor-info" style="font-size:.78rem;color:var(--text-light);display:none"></span>
+<button id="vendor-logout-btn" class="btn btn-sm btn-outline" style="color:var(--red);border-color:var(--red);display:none" onclick="vendorLogout()"><i class="fas fa-sign-out-alt"></i> Quitter</button>
+</div>
+</div>
+<div class="admin-layout">
+<div class="card">
+<h3><i class="fas fa-plus-circle"></i> Ajouter un produit</h3>
+<form id="vendor-add-form" novalidate>
+<div class="form-group"><label>Nom *</label><input type="text" id="vf-name" required></div>
+<div class="form-group"><label>Marque</label><input type="text" id="vf-brand" placeholder="ex: Samsung, LG..."></div>
+<div class="form-group"><label>Catégorie</label><select id="vf-cat"><option>TV & Audio</option><option>Smartphone</option><option>Informatique</option><option>Électroménager</option><option>Climatisation</option><option>Accessoires</option></select></div>
+<div class="form-group"><label>Prix détail (FCFA) *</label><input type="number" id="vf-price" required min="0"></div>
+<div class="form-group"><label>Prix de gros (FCFA) *</label><input type="number" id="vf-wprice" required min="0"></div>
+<div class="form-group"><label>Seuil gros</label><input type="number" id="vf-wqty" value="5" min="2"></div>
+<div class="form-group"><label>Promo (%)</label><input type="number" id="vf-promo" value="0" min="0" max="100"></div>
+<div class="form-group"><label>Garantie</label><input type="text" id="vf-warranty" placeholder="ex: 2 ans"></div>
+<div class="form-group"><label>Stock *</label><input type="number" id="vf-stock" value="10" min="0" required></div>
+<div class="form-group"><label>Alerte stock min</label><input type="number" id="vf-minstock" value="3" min="1"></div>
+<div class="form-group"><label>Image URL</label><input type="url" id="vf-img" placeholder="https://..."></div>
+<div class="form-group"><label>Description</label><textarea id="vf-desc" rows="2"></textarea></div>
+<div class="form-group"><label>Livraison (FCFA)</label><input type="number" id="vf-delivery" value="0" min="0"></div>
+<div class="form-group"><label>Votre boutique *</label><input type="text" id="vf-seller" required></div>
+<button type="submit" class="btn btn-primary btn-block"><i class="fas fa-cloud-upload-alt"></i> Publier</button>
+</form>
+</div>
+<div class="card">
+<h3><i class="fas fa-box"></i> Mes produits <span id="vendor-prod-count" style="font-weight:400;font-size:.78rem;color:var(--text-light)"></span></h3>
+<div class="table-wrap"><table><thead><tr><th>Produit</th><th>Prix</th><th>Gros</th><th>Stock</th><th>Promo</th><th></th></tr></thead><tbody id="vendor-tbody"></tbody></table></div>
+</div>
+</div>
+</section>
+
+<section id="view-vendor-orders" class="section">
+<h2 style="font-size:1.1rem;margin-bottom:.8rem"><i class="fas fa-truck"></i> Commandes reçues</h2>
+<div class="admin-layout">
+<div class="card">
+<h3><i class="fas fa-check-circle"></i> Enregistrer une livraison</h3>
+<form id="vendor-delivery-form" novalidate>
+<div class="form-group"><label>Client *</label><input type="text" id="vd-client" required></div>
+<div class="form-group"><label>Téléphone *</label><input type="tel" id="vd-phone" required></div>
+<div class="form-group"><label>Ville</label><input type="text" id="vd-city"></div>
+<div style="margin-bottom:.5rem;font-weight:600;font-size:.82rem"><i class="fas fa-boxes"></i> Produits</div>
+<div id="vd-items">
+<div class="vd-item-row" style="display:flex;gap:6px;margin-bottom:6px;align-items:end;flex-wrap:wrap">
+<div style="flex:2;min-width:120px"><select class="vd-prod" required style="width:100%;padding:.55rem;border:1px solid var(--border);border-radius:8px;font-size:.82rem;background:var(--card)"><option value="">--</option></select></div>
+<div style="flex:0 0 60px"><input type="number" class="vd-qty" value="1" min="1" placeholder="Qté" style="width:100%;padding:.55rem;border:1px solid var(--border);border-radius:8px;font-size:.82rem"></div>
+<div style="flex:1;min-width:90px"><input type="number" class="vd-amt" placeholder="Montant" required min="0" style="width:100%;padding:.55rem;border:1px solid var(--border);border-radius:8px;font-size:.82rem"></div>
+<button type="button" class="vd-remove-row btn btn-sm btn-red" style="padding:.4rem .5rem" title="Retirer"><i class="fas fa-times"></i></button>
+</div>
+</div>
+<button type="button" id="vd-add-row" class="btn btn-sm btn-outline" style="margin-bottom:.6rem"><i class="fas fa-plus"></i> Ajouter un produit</button>
+<div style="text-align:right;font-weight:700;font-size:1rem;margin-bottom:.5rem">Total : <span id="vd-total">0</span> FCFA</div>
+<div class="form-group"><label>Statut</label><select id="vd-status"><option>Livré</option><option>Payé</option><option>Livré et payé</option></select></div>
+<button type="submit" class="btn btn-green btn-block"><i class="fas fa-check"></i> Enregistrer</button>
+</form>
+</div>
+<div class="card">
+<h3><i class="fas fa-history"></i> Historique <span id="vendor-orders-count" style="font-weight:400;font-size:.78rem;color:var(--text-light)"></span></h3>
+<div class="table-wrap"><table><thead><tr><th>Client</th><th>Produit</th><th>Qté</th><th>Montant</th><th>Statut</th><th>Date</th><th></th></tr></thead><tbody id="vendor-orders-tbody"></tbody></table></div>
+</div>
+</div>
+</section>
+
+<section id="view-vendor-accounts" class="section">
+<h2 style="font-size:1.1rem;margin-bottom:.8rem"><i class="fas fa-chart-line" style="color:var(--green)"></i> Mes Comptes</h2>
+<div class="admin-layout">
+<div class="card">
+<h3><i class="fas fa-calendar-day"></i> Aujourd'hui</h3>
+<div id="vendor-today-summary" style="display:flex;gap:10px;flex-wrap:wrap"></div>
+</div>
+<div class="card">
+<h3><i class="fas fa-history"></i> Historique journalier</h3>
+<div id="vendor-daily-history"></div>
+</div>
+</div>
+<div class="admin-layout" style="margin-top:.8rem">
+<div class="card">
+<h3><i class="fas fa-percent" style="color:var(--accent)"></i> Part Développeur (25%)</h3>
+<div id="dev-fee-summary" style="display:flex;gap:10px;flex-wrap:wrap"></div>
+<div style="display:flex;gap:8px;margin-top:.8rem;flex-wrap:wrap">
+<button class="btn btn-sm btn-primary" onclick="printDevInvoice()"><i class="fas fa-print"></i> Imprimer facture développeur</button>
+</div>
+</div>
+<div class="card">
+<h3><i class="fas fa-database"></i> Sauvegarde & Export</h3>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button class="btn btn-sm btn-green" onclick="exportVendorJSON()"><i class="fas fa-file-export"></i> Exporter JSON</button>
+<button class="btn btn-sm btn-accent" onclick="document.getElementById('import-vendor-json').click()"><i class="fas fa-file-import"></i> Importer JSON</button>
+<input type="file" id="import-vendor-json" accept=".json" style="display:none" onchange="importVendorJSON(event)">
+</div>
+<p style="font-size:.7rem;color:var(--text-light);margin-top:.5rem">Exportez vos données pour sauvegarde ou importez un fichier JSON précédemment exporté.</p>
+</div>
+</div>
+</section>
+
+<section id="view-price-mgmt" class="section">
+<h2 style="font-size:1.1rem;margin-bottom:.8rem"><i class="fas fa-qrcode" style="color:var(--accent)"></i> Gestion de prix & QR Codes</h2>
+<div class="admin-layout">
+<div class="card">
+<h3><i class="fas fa-camera"></i> Scanner un produit</h3>
+<div id="pm-scanner-container" style="position:relative;width:100%;border-radius:var(--radius);overflow:hidden;background:#000">
+<video id="pm-video" autoplay playsinline style="width:100%;height:auto;min-height:220px;max-height:320px;object-fit:cover"></video>
+<div id="pm-scan-region" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:70%;height:130px;border:3px solid var(--accent);border-radius:var(--radius);box-shadow:0 0 0 4000px rgba(0,0,0,.4)"></div>
+</div>
+<div style="display:flex;gap:8px;margin-top:10px;justify-content:center;flex-wrap:wrap">
+<button id="pm-start-scan" class="btn btn-sm btn-accent" style="background:var(--accent);color:#fff"><i class="fas fa-camera"></i> Démarrer</button>
+<button id="pm-stop-scan" class="btn btn-sm btn-red" style="display:none"><i class="fas fa-stop"></i> Arrêter</button>
+</div>
+<div id="pm-scan-result" style="margin-top:10px"></div>
+</div>
+<div class="card">
+<h3><i class="fas fa-info-circle"></i> Produit scanné</h3>
+<div id="pm-product-info"><div class="empty-state"><p>Scannez un QR code pour voir les détails</p></div></div>
+</div>
+</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.8rem">
+<button id="pm-gen-all" class="btn btn-sm btn-primary"><i class="fas fa-qrcode"></i> Générer QR pour tous</button>
+<button id="pm-print-all" class="btn btn-sm btn-accent" style="background:var(--accent)"><i class="fas fa-print"></i> Imprimer étiquettes</button>
+<button id="pm-export-qr" class="btn btn-sm btn-green"><i class="fas fa-file-export"></i> Exporter JSON</button>
+<button id="pm-import-qr" class="btn btn-sm btn-primary"><i class="fas fa-file-import"></i> Importer JSON</button>
+<button id="pm-reset-db" class="btn btn-sm" style="background:#ef4444;color:#fff"><i class="fas fa-trash-alt"></i> Réinitialiser la base</button>
+</div>
+<div class="card">
+<h3><i class="fas fa-tags"></i> QR Codes générés <span id="pm-qr-count" style="font-weight:400;font-size:.78rem;color:var(--text-light)"></span></h3>
+<div id="pm-qr-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;max-height:500px;overflow-y:auto"></div>
+</div>
+<input type="file" id="pm-file-input" accept=".json" style="display:none">
+</section>
+
+</main>
+
+<div id="login-modal" class="modal-overlay">
+<div class="modal-content" style="max-width:340px">
+<div style="text-align:center;margin-bottom:.8rem"><div style="font-size:2.2rem">🔐</div><h3>Connexion Admin</h3></div>
+<form id="login-form" novalidate>
+<div class="form-group"><label>Identifiant</label><input type="text" id="login-user" required autocomplete="username"></div>
+<div class="form-group"><label>Mot de passe</label><input type="password" id="login-pass" required autocomplete="current-password"></div>
+<button type="submit" class="btn btn-primary btn-block"><i class="fas fa-sign-in-alt"></i> Se connecter</button>
+<p id="login-error" style="color:#ef4444;font-size:.78rem;text-align:center;margin-top:6px;display:none"></p>
+</form>
+</div>
+</div>
+
+<div id="payment-modal" class="modal-overlay">
+<div class="modal-content" style="max-width:400px;text-align:center">
+<div style="font-size:2.5rem;margin-bottom:.3rem">💳</div>
+<h3>Finaliser la commande</h3>
+<div class="form-group" style="text-align:left"><label>Votre nom *</label><input type="text" id="checkout-name" required></div>
+<div class="form-group" style="text-align:left"><label>Téléphone *</label><input type="tel" id="checkout-phone" required placeholder="+228 XX XX XX XX"></div>
+<div id="pay-summary" style="background:#f0fdf4;padding:.7rem;border-radius:8px;margin:.8rem 0;font-size:.85rem"></div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<button id="btn-pay-whatsapp" class="btn btn-block" style="background:var(--whatsapp);color:#fff;padding:.9rem;border-radius:10px;font-weight:700;font-size:.9rem;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><i class="fab fa-whatsapp"></i> Envoyer la commande par WhatsApp</button>
+<div id="payment-options" style="display:none;margin-top:4px">
+<p style="font-size:.75rem;color:var(--text-light);text-align:center;margin-bottom:6px">— Choisissez votre moyen de paiement —</p>
+<button id="btn-pay-flooz" class="btn btn-block" style="background:linear-gradient(135deg,#ff6600,#ff3300);color:#fff;padding:.9rem;border-radius:10px;font-weight:700;font-size:.9rem;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><i class="fas fa-mobile-alt"></i> Payer par Flooz (+228 99 14 06 06)</button>
+<button id="btn-pay-yas" class="btn btn-block" style="background:linear-gradient(135deg,#0066cc,#003399);color:#fff;padding:.9rem;border-radius:10px;font-weight:700;font-size:.9rem;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><i class="fas fa-mobile-alt"></i> Payer par YAS (Tmoney)</button>
+<button id="btn-pay-card" class="btn btn-block" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;padding:.9rem;border-radius:10px;font-weight:700;font-size:.9rem;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><i class="fas fa-credit-card"></i> Payer par Carte bancaire</button>
+</div>
+</div>
+<button id="btn-cancel-payment" style="margin-top:.8rem;background:none;border:none;color:var(--text-light);cursor:pointer;font-size:.78rem">Annuler</button>
+</div>
+</div>
+
+<div id="detail-modal" class="modal-overlay">
+<div class="modal-content" style="position:relative">
+<button id="btn-close-detail" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-light)">&times;</button>
+<div id="detail-content"></div>
+</div>
+</div>
+
+<div id="edit-modal" class="modal-overlay">
+<div class="modal-content">
+<h3><i class="fas fa-edit"></i> Modifier le produit</h3>
+<form id="edit-form" novalidate>
+<input type="hidden" id="edit-id">
+<div class="form-group"><label>Nom *</label><input type="text" id="edit-name" required></div>
+<div class="form-group"><label>Marque</label><input type="text" id="edit-brand"></div>
+<div class="form-group"><label>Catégorie</label><select id="edit-cat"><option>TV & Audio</option><option>Smartphone</option><option>Informatique</option><option>Électroménager</option><option>Climatisation</option><option>Accessoires</option></select></div>
+<div class="form-group"><label>Prix détail (FCFA) *</label><input type="number" id="edit-price" required min="0"></div>
+<div class="form-group"><label>Prix de gros (FCFA) *</label><input type="number" id="edit-wprice" required min="0"></div>
+<div class="form-group"><label>Seuil gros</label><input type="number" id="edit-wqty" min="2"></div>
+<div class="form-group"><label>Promo (%)</label><input type="number" id="edit-promo" min="0" max="100"></div>
+<div class="form-group"><label>Garantie</label><input type="text" id="edit-warranty"></div>
+<div class="form-group"><label>Stock *</label><input type="number" id="edit-stock" min="0" required></div>
+<div class="form-group"><label>Alerte stock min</label><input type="number" id="edit-minstock" min="1"></div>
+<div class="form-group"><label>Image URL</label><input type="url" id="edit-img"></div>
+<div class="form-group"><label>Description</label><textarea id="edit-desc" rows="2"></textarea></div>
+<div class="form-group"><label>Livraison (FCFA)</label><input type="number" id="edit-delivery" min="0"></div>
+<div style="display:flex;gap:8px">
+<button type="submit" class="btn btn-primary" style="flex:1"><i class="fas fa-save"></i> Enregistrer</button>
+<button type="button" class="btn btn-outline" onclick="closeModal('edit-modal')" style="flex:0">Annuler</button>
+</div>
+</form>
+</div>
+</div>
+
+<div id="vendor-login-modal" class="modal-overlay">
+<div class="modal-content" style="max-width:340px">
+<div style="text-align:center;margin-bottom:.8rem"><div style="font-size:2.2rem">🏪</div><h3>Connexion Vendeur</h3></div>
+<form id="vendor-login-form" novalidate>
+<div class="form-group"><label>Identifiant</label><input type="text" id="vl-user" required></div>
+<div class="form-group"><label>Mot de passe</label><input type="password" id="vl-pass" required></div>
+<button type="submit" class="btn btn-primary btn-block"><i class="fas fa-sign-in-alt"></i> Se connecter</button>
+<p id="vl-error" style="color:#ef4444;font-size:.78rem;text-align:center;margin-top:6px;display:none"></p>
+</form>
+<p style="text-align:center;margin-top:.8rem;font-size:.78rem">Pas encore vendeur ? <a href="#" onclick="event.preventDefault();closeModal('vendor-login-modal');openModal('vendor-register-modal')" style="color:var(--primary);font-weight:600">Créer un compte</a></p>
+</div>
+</div>
+
+<div id="vendor-register-modal" class="modal-overlay">
+<div class="modal-content" style="max-width:380px">
+<div style="text-align:center;margin-bottom:.8rem"><div style="font-size:2.2rem">📝</div><h3>Créer un compte vendeur</h3><p style="font-size:.75rem;color:var(--text-light)">Valable 30 jours. Identifiants générés.</p></div>
+<form id="vendor-register-form" novalidate>
+<div class="form-group"><label>Nom complet *</label><input type="text" id="vr-name" required></div>
+<div class="form-group"><label>Nom de la boutique *</label><input type="text" id="vr-shop" required></div>
+<div class="form-group"><label>Téléphone WhatsApp *</label><input type="tel" id="vr-phone" required></div>
+<button type="submit" class="btn btn-primary btn-block"><i class="fab fa-whatsapp"></i> Créer mon compte</button>
+<div id="vr-result" style="margin-top:8px;padding:10px;border-radius:8px;font-size:.8rem;text-align:center;display:none"></div>
+</form>
+<p style="text-align:center;margin-top:.8rem;font-size:.78rem">Déjà un compte ? <a href="#" onclick="event.preventDefault();closeModal('vendor-register-modal');openModal('vendor-login-modal')" style="color:var(--primary);font-weight:600">Se connecter</a></p>
+</div>
+</div>
+
+<footer>
+<div class="container">
+<p><strong>ETS EL Arafat</strong> — Électronique & Accessoires</p>
+<p style="margin-top:.3rem;font-size:.72rem">Atakpamé, ENS-Togo, Face station TEXACO — <i class="fab fa-whatsapp" style="color:#25D366"></i> +228 91 98 46 98</p>
+</div>
+</footer>
+
+<div id="toast-container" class="toast-container"></div>
+<div id="lightbox" class="lightbox-overlay" onclick="closeLightbox()">
+    <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+    <img id="lightbox-img" src="" alt="Agrandissement">
+</div>
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-chevron-up"></i></button>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+'use strict';
+
+/* =========== CONFIG (mêmes clés que electro-shop.html) =========== */
+const C = {
+    wa:'22891984698',
+    shop:[7.528691,1.130505],
+    keys:{
+        products:'esodi-products',
+        cart:'esodi-cart',
+        orders:'esodi-orders',
+        session:'esodi-session',
+        vendors:'esodi-vendors',
+        wishlist:'esodi-wishlist'
+    },
+    img:'images/placeholder.jpg',
+    imgS:'https://via.placeholder.com/50',
+    placeholder:'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400'
+};
+
+/* =========== STATE =========== */
+let products=[], cart=[], wishlist=[], currentCat='all', adminUser=null, vendorUser=null, mapInst=null, userMkr=null, routeLn=null, searchTm=null, prodPage=1, salesPage=1, prodPerPage=12, salesPerPage=20;
+
+/* =========== STORAGE =========== */
+function ld(k,f){try{return JSON.parse(localStorage.getItem(k))||f}catch{return f}}
+function sd(k,d){try{localStorage.setItem(k,JSON.stringify(d))}catch(e){}}
+function saveState(){sd(C.keys.products,products);sd(C.keys.cart,cart);sd(C.keys.wishlist,wishlist)}
+function orders(){return ld(C.keys.orders,[])}
+function saveOrders(o){sd(C.keys.orders,o)}
+function productById(id){return products.find(p=>p.id===id)}
+
+/* =========== INIT =========== */
+function init(){
+    document.getElementById('products-grid').innerHTML=showSkeleton(8);
+    products=ld(C.keys.products,initialProducts().map(p=>({...p,vendor:'admin'})));
+    cart=ld(C.keys.cart,[]);
+    wishlist=ld(C.keys.wishlist,[]);
+    adminUser=ld(C.keys.session,null);
+    initVendors();
+    const vs=ld('esodi-vendor-session',null);if(vs&&Date.now()<vs.expires){vendorUser=vs.user;showVendorUI(true)}else{localStorage.removeItem('esodi-vendor-session')}
+    initCats();initEvents();
+    filterProducts();updateCartUI();updateWishUI();
+    if(adminUser&&adminUser.user)showAdmin(true);
+}
+
+function initialProducts(){
+    return[
+        {id:1,name:'Lampe Solaire LED',brand:'Bea-Store',cat:'Éclairage',price:25000,wprice:20000,wqty:10,promo:15,warranty:'1 an',img:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400',desc:'Lampe solaire LED rechargeable, haute luminosité.',delivery:2000,seller:'ETS EL Arafat',stock:20,minStock:5},
+        {id:2,name:'Ampoule LED Économique',brand:'Bea-Store',cat:'Éclairage',price:5000,wprice:3500,wqty:20,promo:10,warranty:'6 mois',img:'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400',desc:'Ampoule LED 12W, économe en énergie.',delivery:1000,seller:'ETS EL Arafat',stock:50,minStock:10},
+        {id:3,name:'Robot Culinaire Moulinex',brand:'Moulinex',cat:'Électroménager',price:45000,wprice:38000,wqty:5,promo:5,warranty:'2 ans',img:'https://images.unsplash.com/photo-1585664811087-47f65abbad64?w=400',desc:'Robot culinaire multifonction 1.2L.',delivery:3000,seller:'ETS EL Arafat',stock:8,minStock:2},
+        {id:4,name:'Batterie Externe 20000mAh',brand:'Bea-Store',cat:'Accessoires',price:18000,wprice:14000,wqty:15,promo:0,warranty:'1 an',img:'https://images.unsplash.com/photo-1609091839311-d5767feb8c4b?w=400',desc:'Batterie externe rapide 20000mAh, double USB.',delivery:1500,seller:'ETS EL Arafat',stock:25,minStock:5},
+        {id:5,name:'Écouteurs Bluetooth',brand:'Bea-Store',cat:'Accessoires',price:12000,wprice:9000,wqty:20,promo:10,warranty:'6 mois',img:'https://images.unsplash.com/photo-1590658268037-6bf12f032f55?w=400',desc:'Écouteurs bluetooth sans fil, autonomie 8h.',delivery:1000,seller:'ETS EL Arafat',stock:30,minStock:8},
+        {id:6,name:'Casque Audio Filé',brand:'Bea-Store',cat:'Accessoires',price:15000,wprice:11000,wqty:15,promo:0,warranty:'1 an',img:'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400',desc:'Casque audio filé, son stéréo qualité.',delivery:1000,seller:'ETS EL Arafat',stock:18,minStock:5},
+        {id:7,name:'Trépied Universel',brand:'Bea-Store',cat:'Accessoires',price:8000,wprice:6000,wqty:20,promo:5,warranty:'6 mois',img:'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=400',desc:'Trépied universel pliable pour smartphone.',delivery:1000,seller:'ETS EL Arafat',stock:22,minStock:5},
+        {id:8,name:'Support Téléphone Voiture',brand:'Bea-Store',cat:'Accessoires',price:7000,wprice:5000,wqty:20,promo:0,warranty:'6 mois',img:'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400',desc:'Support téléphone magnétique pour voiture.',delivery:1000,seller:'ETS EL Arafat',stock:20,minStock:5},
+        {id:9,name:'TV Smart 43" 4K UHD',brand:'Samsung',cat:'TV & Audio',price:350000,wprice:300000,wqty:5,promo:10,warranty:'2 ans',img:'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400',desc:'Smart TV 43 pouces 4K UHD, WiFi intégré.',delivery:5000,seller:'ETS EL Arafat',stock:6,minStock:2},
+        {id:10,name:'Réfrigérateur 250L',brand:'Hisense',cat:'Électroménager',price:280000,wprice:240000,wqty:3,promo:5,warranty:'2 ans',img:'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=400',desc:'Réfrigérateur 250L classe A+, double porte.',delivery:7000,seller:'ETS EL Arafat',stock:4,minStock:2},
+        {id:11,name:'iPhone 15 Pro Max',brand:'Apple',cat:'Smartphone',price:950000,wprice:880000,wqty:3,promo:3,warranty:'1 an',img:'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400',desc:'iPhone 15 Pro Max 256 Go, puce A17 Pro.',delivery:3000,seller:'ETS EL Arafat',stock:3,minStock:2},
+        {id:12,name:'Climatiseur 12000 BTU',brand:'LG',cat:'Climatisation',price:320000,wprice:270000,wqty:3,promo:10,warranty:'3 ans',img:'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=400',desc:'Split climatiseur 12000 BTU froid seul.',delivery:10000,seller:'ETS EL Arafat',stock:2,minStock:2},
+        {id:13,name:'Laptop Dell Inspiron 15',brand:'Dell',cat:'Informatique',price:450000,wprice:390000,wqty:3,promo:5,warranty:'2 ans',img:'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?w=400',desc:'i7, 16Go RAM, 512Go SSD, écran 15.6".',delivery:3000,seller:'ETS EL Arafat',stock:4,minStock:2},
+        {id:14,name:'Machine à Laver 7kg',brand:'Samsung',cat:'Électroménager',price:250000,wprice:210000,wqty:3,promo:15,warranty:'2 ans',img:'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=400',desc:'Machine à laver frontale 7kg, 1200 tr/min.',delivery:8000,seller:'ETS EL Arafat',stock:3,minStock:2},
+        {id:15,name:'AirPods Pro 2',brand:'Apple',cat:'Accessoires',price:150000,wprice:120000,wqty:5,promo:5,warranty:'1 an',img:'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=400',desc:'AirPods Pro 2ème gen, réduction de bruit.',delivery:1500,seller:'ETS EL Arafat',stock:6,minStock:3},
+        {id:16,name:'Micro-Ondes 30L',brand:'Sharp',cat:'Électroménager',price:85000,wprice:70000,wqty:5,promo:5,warranty:'1 an',img:'https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=400',desc:'Four micro-ondes 30L, 800W, grille intégrée.',delivery:3000,seller:'ETS EL Arafat',stock:8,minStock:3}
+    ];
+}
+
+function initVendors(){
+    if(!localStorage.getItem(C.keys.vendors)){
+        const exp=Date.now()+2592000000*12;
+        sd(C.keys.vendors,[
+            {user:'admin',pass:hash('admin123'),created:Date.now(),expires:exp},
+            {user:'VEN01',pass:hash('VEN123'),created:Date.now(),expires:Date.now()+2592000000,profile:{name:'Tech Distrib',shop:'Tech Distrib',phone:'+22800000001'}},
+            {user:'VEN02',pass:hash('VEN456'),created:Date.now(),expires:Date.now()+2592000000,profile:{name:'Mama Textile',shop:'Mama Textile',phone:'+22800000002'}}
+        ]);
+    }
+}
+function hash(p){let h=0;for(let i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeAt(i);h|=0}return 'h'+Math.abs(h).toString(36)}
+
+function fmt(n){return new Intl.NumberFormat('fr-FR',{style:'currency',currency:'XOF',minimumFractionDigits:0}).format(n)}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function imgErr(el,fb){if(!el.src||el.src.includes('placeholder')){el.src=fb||C.img;el.onerror=null;return}el.src=C.img;el.onerror=null}
+function promoPrice(p){return p.promo?Math.round(p.price*(1-p.promo/100)):p.price}
+function stockBadge(p){if(p.stock>10)return'<i class="fas fa-check-circle" style="color:var(--green)"></i> En stock ('+p.stock+')';if(p.stock>0)return'<i class="fas fa-exclamation-triangle" style="color:var(--accent)"></i> Plus que '+p.stock;return'<i class="fas fa-times-circle" style="color:var(--red)"></i> Rupture de stock'}
+function nombreEnLettres(n){
+    const units=['','un','deux','trois','quatre','cinq','six','sept','huit','neuf','dix','onze','douze','treize','quatorze','quinze','seize','dix-sept','dix-huit','dix-neuf'];
+    const tens=['','','vingt','trente','quarante','cinquante','soixante','soixante-dix','quatre-vingt','quatre-vingt-dix'];
+    function convertBelow1000(num){let s='';const h=Math.floor(num/100);num%=100;if(h){s+=h>1?units[h]+' cent ':'cent '}if(num<20){s+=units[num]}else{const t=Math.floor(num/10);num%=10;if(t===7||t===9){s+=tens[t-1]+'-'+units[num+10]}else{s+=tens[t];if(num)s+=num===1&&t<8?'-et-un':'-'+units[num]}}return s.replace(/\s+/g,' ').trim()}
+    if(n===0)return'zéro';let res='';const billions=Math.floor(n/1000000000);n%=1000000000;const millions=Math.floor(n/1000000);n%=1000000;const thousands=Math.floor(n/1000);n%=1000;
+    if(billions){res+=convertBelow1000(billions)+(billions>1?' milliards ':' milliard ')}
+    if(millions){res+=convertBelow1000(millions)+(millions>1?' millions ':' million ')}
+    if(thousands){if(thousands===1)res+='mille ';else res+=convertBelow1000(thousands)+' mille '}
+    if(n)res+=convertBelow1000(n);
+    return res.trim();
+}
+
+function initCats(){
+    const cats=[...new Set(products.map(p=>p.cat))].sort();
+    const el=document.getElementById('filters');
+    el.innerHTML='<button class="filter-btn active" data-cat="all">Tous</button>';
+    cats.forEach(c=>{el.innerHTML+=`<button class="filter-btn" data-cat="${c}">${c}</button>`});
+}
+function setCat(cat,btn){
+    currentCat=cat;prodPage=1;
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    if(btn)btn.classList.add('active');
+    filterProducts();
+}
+
+function isWish(id){return wishlist.includes(id)}
+function toggleWish(id){
+    const idx=wishlist.indexOf(id);
+    if(idx>-1)wishlist.splice(idx,1);else wishlist.push(id);
+    saveState();updateWishUI();filterProducts();
+    showToast(isWish(id)?'Ajouté aux favoris':'Retiré des favoris','info');
+}
+function updateWishUI(){
+    const b=document.getElementById('wish-badge');
+    if(b){b.textContent=wishlist.length;b.style.display=wishlist.length?'flex':'none'}
+}
+
+function renderProductCard(p){
+    const pp=promoPrice(p),w=isWish(p.id);
+    return `<div class="product-card">
+        ${p.promo?`<div class="promo-badge">-${p.promo}%</div>`:''}
+        <button class="product-wish ${w?'active':''}" onclick="toggleWish(${p.id})" title="Favoris"><i class="fa${w?'s':'r'} fa-heart"></i></button>
+        <img class="product-img" src="${esc(p.img)}" loading="lazy" onerror="imgErr(this)" onclick="openLightbox('${esc(p.img)}')">
+        <div class="product-body">
+            <div class="product-cat">${esc(p.cat)}</div>
+            <div class="product-name" onclick="openDetail(${p.id})">${esc(p.name)}</div>
+            ${p.brand?`<div class="product-brand"><i class="fas fa-tag"></i> ${esc(p.brand)}</div>`:''}
+            ${p.seller?`<div class="product-brand"><i class="fas fa-store"></i> ${esc(p.seller)}</div>`:''}
+            <div class="product-price">${fmt(pp)}${p.promo?` <span class="product-ogprice">${fmt(p.price)}</span>`:''}</div>
+            <div class="product-wprice">Gros (\u2265${p.wqty}) : <strong>${fmt(p.wprice)}</strong>/u</div>
+            ${p.warranty?`<div class="product-warranty"><i class="fas fa-shield-alt"></i> Garantie ${esc(p.warranty)}</div>`:''}
+            <div style="font-size:.68rem;margin-top:2px">${stockBadge(p)}</div>
+            <div class="product-actions">
+                <button class="btn btn-primary" onclick="addToCart(${p.id})" ${p.stock<1?'disabled':''}><i class="fas fa-cart-plus"></i> ${p.stock<1?'Rupture':'Ajouter'}</button>
+                <button class="btn btn-accent btn-sm" onclick="openDetail(${p.id})"><i class="fas fa-eye"></i></button>
+                <button class="btn btn-sm btn-outline" onclick="shareProduct(${p.id})" title="Partager"><i class="fas fa-share-alt"></i></button>
+            </div>
+        </div>
+    </div>`;
+}
+
+/* LIGHTBOX */
+function openLightbox(src){
+    document.getElementById('lightbox-img').src=src;
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow='hidden';
+}
+function closeLightbox(){
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow='';
+}
+
+/* SHARE */
+function shareProduct(id){
+    const p=productById(id);if(!p)return;
+    const pp=promoPrice(p);
+    if(navigator.share){
+        navigator.share({title:p.name,text:`${p.name} - ${fmt(pp)} chez ETS EL Arafat`,url:window.location.href}).catch(()=>{});
+    }else{
+        const msg=`*${p.name}* - ETS EL Arafat\n💰 Prix: ${fmt(pp)}\n📞 +228 91 98 46 98`;
+        window.open(`https://wa.me/${C.wa}?text=${encodeURIComponent(msg)}`,'_blank');
+    }
+}
+
+/* SKELETON LOADING */
+function showSkeleton(count){
+    let html='';
+    for(let i=0;i<count;i++)html+=`<div class="skeleton-card"><div class="skeleton skeleton-img"></div><div class="skeleton-body"><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line" style="width:60%"></div></div></div>`;
+    return html;
+}
+
+/* SEARCH SUGGESTIONS */
+function showSuggestions(q){
+    const el=document.getElementById('search-suggest');
+    if(!q||q.length<2){el.classList.remove('show');return}
+    const words=q.toLowerCase().split(/\s+/);
+    const found=products.filter(p=>words.some(w=>p.name.toLowerCase().includes(w)||(p.brand||'').toLowerCase().includes(w))).slice(0,6);
+    if(!found.length){el.classList.remove('show');return}
+    el.innerHTML=found.map(p=>`<div class="search-suggest-item" onclick="selectSuggestion(${p.id})"><img src="${esc(p.img)}" onerror="imgErr(this)" loading="lazy"><span>${esc(p.name)} - ${fmt(promoPrice(p))}</span></div>`).join('');
+    el.classList.add('show');
+}
+function selectSuggestion(id){
+    document.getElementById('search-suggest').classList.remove('show');
+    openDetail(id);
+}
+document.addEventListener('click',function(e){const el=document.getElementById('search-suggest');if(el&&!e.target.closest('.search-bar'))el.classList.remove('show')});
+
+function filterProducts(){
+    const q=document.getElementById('search').value.toLowerCase().trim();
+    const grid=document.getElementById('products-grid');
+    const f=products.filter(p=>{
+        const mc=currentCat==='all'||p.cat===currentCat;
+        const ms=!q||p.name.toLowerCase().includes(q)||(p.brand||'').toLowerCase().includes(q);
+        return mc&&ms;
+    });
+    if(!f.length){grid.innerHTML='<div class="empty-state"><i class="fas fa-box-open"></i><p>Aucun produit trouvé.</p></div>';document.getElementById('prod-pagination').innerHTML='';return}
+    const totalPages=Math.ceil(f.length/prodPerPage);
+    if(prodPage>totalPages)prodPage=totalPages;
+    const start=(prodPage-1)*prodPerPage,end=start+prodPerPage;
+    grid.innerHTML=f.slice(start,end).map(p=>renderProductCard(p)).join('');
+    renderProdPagination(totalPages);
+}
+
+function renderProdPagination(tp){
+    const el=document.getElementById('prod-pagination');if(tp<=1){el.innerHTML='';return}
+    let html='<button class="page-btn" onclick="prodPage=Math.max(1,prodPage-1);filterProducts()"'+(prodPage<=1?' disabled':'')+'><i class="fas fa-chevron-left" style="font-size:.65rem"></i></button>';
+    for(let i=1;i<=tp;i++)html+=`<button class="page-btn ${i===prodPage?'active':''}" onclick="prodPage=${i};filterProducts()">${i}</button>`;
+    html+=`<button class="page-btn" onclick="prodPage=Math.min(${tp},prodPage+1);filterProducts()"'+(prodPage>=tp?' disabled':'')+'><i class="fas fa-chevron-right" style="font-size:.65rem"></i></button>`;
+    el.innerHTML=html;
+}
+function renderPromos(){
+    const grid=document.getElementById('promos-grid');
+    const p=products.filter(x=>x.promo>0);
+    if(!p.length){grid.innerHTML='<div class="empty-state"><i class="fas fa-tags"></i><p>Aucune promotion en cours.</p></div>';return}
+    grid.innerHTML=p.map(x=>renderProductCard(x)).join('');
+}
+
+function renderWishlist(){
+    const grid=document.getElementById('wishlist-grid');
+    const p=products.filter(x=>wishlist.includes(x.id));
+    if(!p.length){grid.innerHTML='<div class="empty-state"><i class="fas fa-heart" style="color:var(--rose)"></i><p>Aucun favori pour le moment.</p></div>';return}
+    grid.innerHTML=p.map(x=>renderProductCard(x)).join('');
+}
+
+function openDetail(id){
+    const p=productById(id);if(!p)return;
+    const pp=promoPrice(p);
+    document.getElementById('detail-content').innerHTML=`
+        <img src="${esc(p.img)}" style="width:100%;max-height:260px;object-fit:cover;border-radius:12px;margin-bottom:.8rem" onerror="imgErr(this)">
+        <span class="badge badge-blue">${esc(p.cat)}</span>${p.brand?`<span class="badge badge-gray" style="margin-left:4px">${esc(p.brand)}</span>`:''}${p.promo?`<span class="badge badge-red" style="margin-left:4px">-${p.promo}%</span>`:''}
+        <h2 style="margin:.4rem 0">${esc(p.name)}</h2>
+        ${p.desc?`<p style="font-size:.8rem;color:var(--text-light);margin-bottom:.6rem">${esc(p.desc)}</p>`:''}
+        <div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:.8rem">
+            <div style="background:#eff6ff;padding:.7rem;border-radius:8px;flex:1;min-width:120px;text-align:center">
+                <div style="font-size:.65rem;color:var(--text-light)">Prix</div>
+                <div style="font-size:1.2rem;font-weight:800;color:var(--primary)">${fmt(pp)}</div>
+                ${p.promo?`<div style="font-size:.7rem;color:#94a3b8;text-decoration:line-through">${fmt(p.price)}</div>`:''}
+            </div>
+            <div style="background:#fef3c7;padding:.7rem;border-radius:8px;flex:1;min-width:120px;text-align:center">
+                <div style="font-size:.65rem;color:var(--text-light)">Gros (\u2265${p.wqty})</div>
+                <div style="font-size:1.2rem;font-weight:800;color:var(--accent)">${fmt(p.wprice)}/u</div>
+            </div>
+        </div>
+        <div style="background:#f8fafc;padding:.7rem;border-radius:8px;margin-bottom:.8rem;font-size:.8rem">
+            ${p.warranty?`<i class="fas fa-shield-alt" style="color:var(--green)"></i> Garantie ${esc(p.warranty)}<br>`:''}
+            ${p.delivery?`<i class="fas fa-truck" style="color:var(--primary)"></i> Livraison : ${fmt(p.delivery)}<br>`:''}
+            ${p.seller?`<i class="fas fa-store" style="color:var(--text-light)"></i> Vendu par : <strong>${esc(p.seller)}</strong><br>`:''}
+            <i class="fas fa-boxes" style="color:var(--text-light)"></i> ${stockBadge(p)}
+        </div>
+        <div style="display:flex;gap:6px">
+            <button class="btn btn-primary" style="flex:1" onclick="closeDetail();addToCart(${p.id})" ${p.stock<1?'disabled':''}>${p.stock<1?'<i class="fas fa-times-circle"></i> Rupture':'<i class="fas fa-cart-plus"></i> Ajouter'}</button>
+            <button class="btn btn-whatsapp btn-sm" onclick="shareProduct(${p.id})" title="Partager"><i class="fab fa-whatsapp"></i></button>
+            <button class="btn btn-outline btn-sm ${isWish(p.id)?'btn-rose':''}" onclick="toggleWish(${p.id});openDetail(${p.id})" title="Favoris"><i class="fa${isWish(p.id)?'s':'r'} fa-heart"></i></button>
+        </div>`;
+    openModal('detail-modal');
+}
+function closeDetail(){closeModal('detail-modal')}
+
+function addToCart(id){
+    const p=productById(id);if(!p)return;
+    if(p.stock<1){showToast('Rupture de stock','error');return}
+    const e=cart.find(i=>i.id===id);
+    if(e&&e.qty>=p.stock){showToast('Stock insuffisant','error');return}
+    if(e)e.qty++;else cart.push({id:p.id,name:p.name,price:p.price,wprice:p.wprice,wqty:p.wqty,promo:p.promo,img:p.img,brand:p.brand,delivery:p.delivery,warranty:p.warranty,qty:1});
+    saveState();updateCartUI();showToast('Ajouté au panier','success');
+}
+
+function updateCartUI(){
+    const count=cart.reduce((s,i)=>s+i.qty,0);
+    const el=document.getElementById('cart-count');
+    el.textContent=count;el.style.display=count?'flex':'none';
+    const c=document.getElementById('cart-items');
+    if(!cart.length){c.innerHTML='<div class="empty-state"><i class="fas fa-shopping-cart"></i><p>Votre panier est vide.</p></div>';document.getElementById('cart-total').innerHTML='0 FCFA';return}
+    let sub=0,del=0;
+    c.innerHTML=cart.map(i=>{
+        const w=i.qty>=i.wqty,up=w?i.wprice:promoPrice(i),lt=up*i.qty;sub+=lt;if(i.delivery)del+=i.delivery;
+        return `<div class="cart-item">
+            <img src="${esc(i.img)}" onerror="imgErr(this,'${C.imgS}')">
+            <div class="cart-item-info"><strong>${esc(i.name)}</strong><small>${fmt(up)} ${w?'<span class="badge badge-green">Gros</span>':'<span class="badge badge-blue">Détail</span>'}</small>${i.delivery?`<br><small><i class="fas fa-truck"></i> ${fmt(i.delivery)}</small>`:''}</div>
+            <div style="display:flex;align-items:center;gap:5px">
+                <button class="qty-btn" onclick="cq(${i.id},-1)">−</button>
+                <span style="font-weight:700;min-width:18px;text-align:center">${i.qty}</span>
+                <button class="qty-btn" onclick="cq(${i.id},1)">+</button>
+            </div>
+        </div>`;
+    }).join('');
+    document.getElementById('cart-total').innerHTML=`${fmt(sub+del)} <small>dont ${fmt(del)} livraison</small>`;
+}
+function cq(id,d){const i=cart.find(x=>x.id===id);if(!i)return;i.qty+=d;if(i.qty<=0)cart=cart.filter(x=>x.id!==id);saveState();updateCartUI()}
+
+function openCheckout(){
+    if(!cart.length)return;
+    let sub=0,del=0;
+    const items=cart.map(i=>{const w=i.qty>=i.wqty,up=w?i.wprice:promoPrice(i);sub+=up*i.qty;if(i.delivery)del+=i.delivery;return{id:i.id,name:i.name,qty:i.qty,price:up,delivery:i.delivery}});
+    const t=sub+del;
+    let msg='🛳️ *COMMANDE ETS EL Arafat*\n==============================\n';
+    items.forEach(i=>{msg+=`📦 *${i.name}* x${i.qty} → ${fmt(i.price*i.qty)}\n`});
+    msg+=`==============================\n🚚 Livraison : ${fmt(del)}\n💵 *Total : ${fmt(t)}*\n🏪 ETS EL Arafat\n📍 Atakpamé, ENS-Togo, Face station TEXACO\n📞 +228 91 98 46 98\n💳 Flooz: +228 99 14 06 06\n💳 YAS: +228 91 98 46 98\n==============================`;
+    window._ck={msg,total:t,delivery:del,items};
+    document.getElementById('pay-summary').innerHTML=`<strong>Total : ${fmt(t)}</strong><br><small>dont ${fmt(del)} livraison</small>`;
+    document.getElementById('checkout-name').value='';document.getElementById('checkout-phone').value='';
+    openModal('payment-modal');
+    document.getElementById('btn-pay-whatsapp').style.display='flex';
+    document.getElementById('payment-options').style.display='none';
+}
+
+function processOrder(method){
+    const n=document.getElementById('checkout-name').value.trim(),p=document.getElementById('checkout-phone').value.trim();
+    if(!n||!p){showToast('Veuillez entrer votre nom et téléphone','warning');return false}
+    const d=window._ck;if(!d){showToast('Erreur de commande','error');return false}
+    const o=orders();
+    o.push({id:Date.now(),date:new Date().toISOString(),client:n,phone:p,items:d.items,total:d.total,delivery:d.delivery,status:'payé',method:method});
+    saveOrders(o);
+    d.items.forEach(i=>{const prod=productById(i.id);if(prod&&prod.stock>0)prod.stock=Math.max(0,prod.stock-i.qty)});saveState();
+    cart=[];updateCartUI();window._ck=null;closeModal('payment-modal');
+    showToast('Commande confirmée !','success');
+    if(adminUser){renderDash();renderSales()}
+    return true;
+}
+
+/* AUTH */
+function adminLogin(u,pw){
+    const v=ld(C.keys.vendors,[]),hashed=hash(pw),acc=v.find(x=>x.user===u&&x.pass===hashed);
+    if(!acc)return 'Identifiant ou mot de passe incorrect';
+    adminUser={user:u};sd(C.keys.session,adminUser);closeModal('login-modal');
+    showAdmin(true);showToast('Connecté','success');switchView('dash');return'';
+}
+function adminLogout(){adminUser=null;localStorage.removeItem(C.keys.session);showAdmin(false);showToast('Déconnecté','info');switchView('store')}
+function showAdmin(s){
+    ['nav-li-dash','nav-li-prod','nav-li-orders','nav-m-li-dash','nav-m-li-prod','nav-m-li-orders','logout-btn','admin-info'].forEach(id=>{const e=document.getElementById(id);if(e)e.hidden=!s});
+    if(s){document.getElementById('admin-info').textContent='👤 Connecté';renderDash();renderAdmin();renderSales()}
+}
+function showLogin(){document.getElementById('login-user').value='';document.getElementById('login-pass').value='';document.getElementById('login-error').style.display='none';openModal('login-modal')}
+
+/* DASHBOARD */
+function renderDash(){
+    const o=orders(),ca=o.reduce((s,x)=>s+x.total,0),cnt=o.length,avg=cnt?Math.round(ca/cnt):0,del=o.reduce((s,x)=>s+(x.delivery||0),0);
+    document.getElementById('kpi-grid').innerHTML=`
+        <div class="kpi-card"><div class="icon">💰</div><div class="value">${fmt(ca)}</div><div class="label">CA Total</div></div>
+        <div class="kpi-card"><div class="icon">📦</div><div class="value">${cnt}</div><div class="label">Commandes</div></div>
+        <div class="kpi-card"><div class="icon">📊</div><div class="value">${fmt(avg)}</div><div class="label">Panier moyen</div></div>
+        <div class="kpi-card"><div class="icon">🚚</div><div class="value">${fmt(del)}</div><div class="label">Livraison</div></div>`;
+    renderChart(o);renderTop(o);renderRecent(o);
+}
+function renderChart(o){
+    const days=[];for(let i=29;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push(d.toISOString().slice(0,10))}
+    const daily=days.map(d=>({date:d,total:o.filter(x=>x.date&&x.date.slice(0,10)===d).reduce((s,x)=>s+x.total,0)}));
+    const max=Math.max(...daily.map(d=>d.total),1);
+    document.getElementById('revenue-chart').innerHTML=daily.map(d=>`<div class="col"><div class="bar" style="height:${Math.max(3,(d.total/max)*100)}%;background:var(--primary)" title="${fmt(d.total)}"></div><span class="lbl">${d.date.slice(5)}</span></div>`).join('');
+    const lowStock=products.filter(p=>p.stock>0&&p.stock<=(p.minStock||3));
+    const alertEl=document.createElement('div');
+    if(lowStock.length){alertEl.style.cssText='margin:8px 0 0;padding:8px 12px;background:#fef3c7;border-radius:6px;font-size:.75rem;color:#92400e;display:flex;align-items:center;gap:6px;flex-wrap:wrap';alertEl.innerHTML='<i class="fas fa-exclamation-triangle"></i> <strong>Stock bas :</strong> '+lowStock.map(p=>esc(p.name)+' ('+p.stock+')').join(', ');const card=document.querySelector('#view-dash .admin-layout');if(card)card.parentNode.insertBefore(alertEl,card.nextSibling)}else{const existing=document.querySelector('#view-dash .low-stock-alert');if(existing)existing.remove()}
+    if(alertEl.innerHTML)alertEl.className='low-stock-alert'
+}
+function renderTop(o){
+    const c={};o.forEach(x=>(x.items||[]).forEach(i=>{c[i.name]=(c[i.name]||0)+i.qty}));
+    const top=Object.entries(c).sort((a,b)=>b[1]-a[1]).slice(0,5),maxQ=Math.max(...top.map(t=>t[1]),1);
+    const el=document.getElementById('top-products');
+    if(!top.length){el.innerHTML='<div class="empty-state"><i class="fas fa-chart-bar"></i><p>Aucune vente</p></div>';return}
+    el.innerHTML=top.map(([n,q])=>`<div style="display:flex;align-items:center;gap:6px"><span style="flex:1;font-size:.78rem">${esc(n)}</span><span style="font-weight:700;font-size:.78rem;width:35px;text-align:right">${q}</span><div style="flex:2;height:18px;background:#f1f5f9;border-radius:4px;overflow:hidden"><div style="height:100%;width:${(q/maxQ)*100}%;background:var(--accent);border-radius:4px;transition:width .5s"></div></div></div>`).join('');
+}
+function renderSalesPagination(tp){
+    const el=document.getElementById('sales-pagination');if(tp<=1){el.innerHTML='';return}
+    let html='<button class="page-btn" onclick="salesPage=Math.max(1,salesPage-1);renderSales()"'+(salesPage<=1?' disabled':'')+'><i class="fas fa-chevron-left" style="font-size:.65rem"></i></button>';
+    for(let i=1;i<=tp;i++)html+=`<button class="page-btn ${i===salesPage?'active':''}" onclick="salesPage=${i};renderSales()">${i}</button>`;
+    html+=`<button class="page-btn" onclick="salesPage=Math.min(${tp},salesPage+1);renderSales()"'+(salesPage>=tp?' disabled':'')+'><i class="fas fa-chevron-right" style="font-size:.65rem"></i></button>`;
+    el.innerHTML=html;
+}
+function renderRecent(o){
+    const r=o.slice(-5).reverse();
+    const tbody=document.getElementById('recent-sales');
+    if(!r.length){tbody.innerHTML='<tr><td colspan="5" class="empty-state">Aucune vente</td></tr>';return}
+    tbody.innerHTML=r.map(x=>`<tr><td>${new Date(x.date).toLocaleDateString('fr-FR')}</td><td>${esc(x.client)}</td><td>${esc((x.items||[]).map(i=>i.name+' x'+i.qty).join(', '))}</td><td>${fmt(x.total)}</td><td><select onchange="updateOrderStatus(${x.id},this.value)" style="font-size:.7rem;padding:2px 4px;border-radius:4px;border:1px solid var(--border);background:var(--card)"><option value="payé" ${x.status==='payé'?'selected':''}>Payé</option><option value="livré" ${x.status==='livré'?'selected':''}>Livré</option><option value="livré et payé" ${x.status==='livré et payé'?'selected':''}>Livré et payé</option><option value="annulé" ${x.status==='annulé'?'selected':''}>Annulé</option></select></td></tr>`).join('');
+}
+
+/* ORDER TIMELINE */
+function renderOrderTimeline(containerId,status){
+    const steps=[
+        {key:'payé',label:'Commandé',icon:'fa-clipboard-list'},
+        {key:'livré',label:'Expédié',icon:'fa-truck'},
+        {key:'livré et payé',label:'Livré',icon:'fa-check-circle'},
+        {key:'annulé',label:'Annulé',icon:'fa-times-circle'}
+    ];
+    let idx=steps.findIndex(s=>s.key===status);
+    if(idx===-1)idx=0;
+    if(status==='annulé'){idx=3}
+    let html='<div class="order-timeline">';
+    steps.forEach((s,i)=>{
+        if(s.key==='annulé'&&status!=='annulé')return;
+        let cls='';
+        if(i<idx)cls='completed';
+        else if(i===idx)cls='active';
+        html+=`<div class="order-step ${cls}"><div class="dot"><i class="fas ${s.icon}" style="font-size:9px"></i></div><div class="label">${s.label}</div></div>`;
+    });
+    html+='</div>';
+    if(typeof containerId==='string'){const el=document.getElementById(containerId);if(el)el.innerHTML=html}
+    else if(containerId&&containerId.innerHTML!==undefined)containerId.innerHTML=html;
+}
+function exportCSV(){
+    const o=orders();
+    if(!o.length){showToast('Aucune vente à exporter','warning');return}
+    let csv='Date;Client;Téléphone;Produits;Total;Livraison;Statut;Méthode\n';
+    o.forEach(x=>{const items=(x.items||[]).map(i=>i.name+' x'+i.qty).join(', ');csv+=`${new Date(x.date).toLocaleDateString('fr-FR')};${x.client};${x.phone};"${items}";${x.total};${x.delivery||0};${x.status||'payé'};${x.method||''}\n`});
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);a.download=`ventes-ets-el-arafat-${new Date().toISOString().slice(0,10)}.csv`;a.click();
+    showToast('Export CSV téléchargé','success');
+}
+
+/* VENDOR */
+function vendorLogin(u,pw){
+    const v=ld(C.keys.vendors,[]),hashed=hash(pw),acc=v.find(x=>x.user===u&&x.pass===hashed);
+    if(!acc)return 'Identifiant ou mot de passe incorrect';
+    if(Date.now()>acc.expires)return 'expired';
+    vendorUser=u;const exp=Date.now()+2592000000;acc.expires=exp;
+    sd(C.keys.vendors,v);sd('esodi-vendor-session',{user:u,expires:exp});
+    closeModal('vendor-login-modal');showVendorUI(true);
+    showToast('Connecté comme '+u,'success');switchView('vendor');return'';
+}
+function vendorLogout(){
+    vendorUser=null;localStorage.removeItem('esodi-vendor-session');
+    showVendorUI(false);showToast('Déconnecté','info');switchView('store');
+}
+function showVendorUI(s){
+    const e=document.getElementById('vendor-info');if(e){e.style.display=s?'':'none';if(s){const a=ld(C.keys.vendors,[]).find(x=>x.user===vendorUser);if(a)e.textContent='👤 '+(a.profile?esc(a.profile.name)||a.profile.shop:vendorUser)+' ⏳ '+Math.ceil((a.expires-Date.now())/86400000)+'j'}}
+    document.getElementById('vendor-logout-btn').style.display=s?'':'none';
+    if(s){renderVendorProducts();renderVendorOrders();populateVendorDeliverySelect()}
+}
+function renderVendorProducts(){
+    const tbody=document.getElementById('vendor-tbody');if(!tbody)return;
+    const mine=products.filter(p=>p.vendor===vendorUser);
+    const cnt=document.getElementById('vendor-prod-count');if(cnt)cnt.textContent='('+mine.length+')';
+    if(!mine.length){tbody.innerHTML='<tr><td colspan="6" class="empty-state">Aucun produit. Ajoutez-en un !</td></tr>';return}
+    tbody.innerHTML=mine.slice().reverse().map(p=>`<tr>
+        <td><strong>${esc(p.name)}</strong>${p.brand?'<br><small>'+esc(p.brand)+'</small>':''}${p.seller?'<br><small style="color:var(--text-light)">'+esc(p.seller)+'</small>':''}</td>
+        <td>${fmt(promoPrice(p))}${p.promo?`<br><small style="color:var(--red)">-${p.promo}%</small>`:''}</td>
+        <td>${fmt(p.wprice)}<small>(\u2265${p.wqty})</small></td>
+        <td>${p.stock<1?'<span class="badge badge-red">Rupture</span>':p.stock<=(p.minStock||3)?'<span class="badge badge-orange">'+p.stock+'</span>':'<span class="badge badge-green">'+p.stock+'</span>'}</td>
+        <td>${p.promo?`<span class="badge badge-red">-${p.promo}%</span>`:'-'}</td>
+        <td><button class="btn btn-sm btn-red" onclick="vendorDelProd(${p.id})" title="Supprimer">🗑️</button></td>
+    </tr>`).join('');
+}
+function vendorDelProd(id){
+    const p=productById(id);if(!p||p.vendor!==vendorUser)return;
+    if(!confirm('Supprimer "'+p.name+'" ?'))return;
+    products=products.filter(x=>x.id!==id);saveState();renderVendorProducts();populateVendorDeliverySelect();filterProducts();showToast('Produit supprimé','warning');
+}
+function populateVendorDeliverySelect(){
+    const opts='<option value="">--</option>'+products.filter(p=>p.vendor===vendorUser).map(p=>`<option value="${p.id}">${esc(p.name)} (${fmt(promoPrice(p))})</option>`).join('');
+    document.querySelectorAll('.vd-prod').forEach(s=>{const c=s.value;s.innerHTML=opts;s.value=c||''});
+}
+function vdAddRow(){
+    const container=document.getElementById('vd-items');
+    const row=document.createElement('div');row.className='vd-item-row';row.style.cssText='display:flex;gap:6px;margin-bottom:6px;align-items:end;flex-wrap:wrap';
+    row.innerHTML=`<div style="flex:2;min-width:120px"><select class="vd-prod" required style="width:100%;padding:.55rem;border:1px solid var(--border);border-radius:8px;font-size:.82rem;background:var(--card)"><option value="">--</option></select></div>
+<div style="flex:0 0 60px"><input type="number" class="vd-qty" value="1" min="1" placeholder="Qté" style="width:100%;padding:.55rem;border:1px solid var(--border);border-radius:8px;font-size:.82rem"></div>
+<div style="flex:1;min-width:90px"><input type="number" class="vd-amt" placeholder="Montant" required min="0" style="width:100%;padding:.55rem;border:1px solid var(--border);border-radius:8px;font-size:.82rem"></div>
+<button type="button" class="vd-remove-row btn btn-sm btn-red" style="padding:.4rem .5rem" title="Retirer"><i class="fas fa-times"></i></button>`;
+    row.querySelector('.vd-remove-row').addEventListener('click',function(){row.remove();vdCalcTotal()});
+    row.querySelectorAll('.vd-qty,.vd-amt').forEach(el=>el.addEventListener('input',vdCalcTotal));
+    row.querySelector('.vd-prod').addEventListener('change',function(){
+        const p=productById(parseInt(this.value));if(!p)return;
+        const qtyInput=this.closest('.vd-item-row').querySelector('.vd-qty');
+        const amtInput=this.closest('.vd-item-row').querySelector('.vd-amt');
+        if(amtInput&&!amtInput.value)amtInput.value=p.price*parseInt(qtyInput.value);
+        vdCalcTotal();
+    });
+    container.appendChild(row);
+    populateVendorDeliverySelect();
+    vdCalcTotal();
+}
+function vdCalcTotal(){
+    let t=0;
+    document.querySelectorAll('.vd-item-row').forEach(r=>{const a=parseInt(r.querySelector('.vd-amt').value)||0;t+=a});
+    document.getElementById('vd-total').textContent=t.toLocaleString('fr-FR');
+}
+function renderVendorOrders(){
+    const tbody=document.getElementById('vendor-orders-tbody');if(!tbody)return;
+    const o=ld('esodi-vendor-orders',[]).filter(x=>x.vendor===vendorUser).reverse();
+    const cnt=document.getElementById('vendor-orders-count');if(cnt)cnt.textContent='('+o.length+')';
+    if(!o.length){tbody.innerHTML='<tr><td colspan="7" class="empty-state">Aucune commande.</td></tr>';return}
+    tbody.innerHTML=o.map(x=>{
+        if(x.items){return `<tr><td>${esc(x.client)}<br><small style="color:var(--text-light)">${esc(x.phone)}</small></td><td>${esc(x.items.map(i=>i.name+' x'+i.qty).join(', '))}</td><td>${x.items.reduce((s,i)=>s+i.qty,0)}</td><td style="font-weight:700;color:var(--green)">${fmt(x.total)}</td><td><span class="badge badge-green">${esc(x.status)}</span></td><td style="font-size:.72rem">${x.date}</td><td><button class="btn btn-sm btn-outline" onclick="printVendorInvoice(${x.id})" title="Facture" style="padding:2px 6px">🧾</button></td></tr>`}
+        const p=productById(x.productId);
+        return `<tr><td>${esc(x.client)}<br><small style="color:var(--text-light)">${esc(x.phone)}</small></td><td>${p?esc(p.name):'—'}</td><td>${x.qty}</td><td style="font-weight:700;color:var(--green)">${fmt(x.amount)}</td><td><span class="badge badge-green">${esc(x.status)}</span></td><td style="font-size:.72rem">${x.date}</td><td><button class="btn btn-sm btn-outline" onclick="printVendorInvoice(${x.id})" title="Facture" style="padding:2px 6px">🧾</button></td></tr>`;
+    }).join('');
+}
+
+function renderVendorAccounts(){
+    const all=ld('esodi-vendor-orders',[]).filter(x=>x.vendor===vendorUser);
+    const today=new Date().toLocaleDateString('fr-FR');
+    const todayOrders=all.filter(x=>x.date===today);
+    const todayRevenue=todayOrders.reduce((s,x)=>s+(x.total||x.amount||0),0);
+    const todayClients=[...new Set(todayOrders.map(x=>x.client))].length;
+    const todayCount=todayOrders.length;
+    const totalRevenue=all.reduce((s,x)=>s+(x.total||x.amount||0),0);
+    const totalCount=all.length;
+    const mine=products.filter(p=>p.vendor===vendorUser);
+    const totalStock=mine.reduce((s,p)=>s+p.stock,0);
+    const totalValue=mine.reduce((s,p)=>s+p.stock*promoPrice(p),0);
+    const summaryEl=document.getElementById('vendor-today-summary');
+    if(summaryEl){
+        summaryEl.innerHTML=`<div style="flex:1;min-width:140px;background:var(--bg);border-radius:10px;padding:.8rem;text-align:center"><div style="font-size:1.6rem;font-weight:800;color:var(--green)">${fmt(todayRevenue)}</div><div style="font-size:.78rem;color:var(--text-light);margin-top:2px">CA Aujourd'hui</div></div>
+<div style="flex:1;min-width:100px;background:var(--bg);border-radius:10px;padding:.8rem;text-align:center"><div style="font-size:1.6rem;font-weight:800;color:var(--accent)">${todayCount}</div><div style="font-size:.78rem;color:var(--text-light);margin-top:2px">Ventes</div></div>
+<div style="flex:1;min-width:100px;background:var(--bg);border-radius:10px;padding:.8rem;text-align:center"><div style="font-size:1.6rem;font-weight:800;color:var(--text)">${todayClients}</div><div style="font-size:.78rem;color:var(--text-light);margin-top:2px">Clients</div></div>
+<div style="flex:1;min-width:100px;background:var(--bg);border-radius:10px;padding:.8rem;text-align:center"><div style="font-size:1.2rem;font-weight:800;color:var(--blue)">${nombreEnLettres(todayRevenue).charAt(0).toUpperCase()+nombreEnLettres(todayRevenue).slice(1)}</div><div style="font-size:.78rem;color:var(--text-light);margin-top:2px">En lettres</div></div>
+<div style="flex:1;min-width:140px;background:var(--bg);border-radius:10px;padding:.8rem;text-align:center;border:2px solid var(--green)"><div style="font-size:1.4rem;font-weight:800;color:var(--green)">${fmt(totalRevenue)}</div><div style="font-size:.78rem;color:var(--text-light);margin-top:2px">💰 CA Total (${totalCount} ventes)</div></div>
+<div style="flex:1;min-width:140px;background:var(--bg);border-radius:10px;padding:.8rem;text-align:center;border:2px solid var(--accent)"><div style="font-size:1.4rem;font-weight:800;color:var(--accent)">${totalStock} unités</div><div style="font-size:.78rem;color:var(--text-light);margin-top:2px">📦 Stock (${fmt(totalValue)})</div></div>`;
+    }
+    const histEl=document.getElementById('vendor-daily-history');if(!histEl)return;
+    const byDate={};
+    all.forEach(x=>{const d=x.date||'Inconnu';if(!byDate[d])byDate[d]={orders:0,revenue:0,clients:new Set()};byDate[d].orders++;byDate[d].revenue+=(x.total||x.amount||0);byDate[d].clients.add(x.client)});
+    const sorted=Object.entries(byDate).sort((a,b)=>b[0].localeCompare(a[0],undefined,{numeric:true}));
+    if(!sorted.length){histEl.innerHTML='<div class="empty-state"><p>Aucune donnée.</p></div>';return}
+    histEl.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Date</th><th>Commandes</th><th>Clients</th><th>Chiffre d'affaires</th></tr></thead><tbody>${sorted.map(([d,v])=>`<tr><td>${esc(d)}</td><td>${v.orders}</td><td>${v.clients.size}</td><td style="font-weight:600;color:var(--green)">${fmt(v.revenue)}</td></tr>`).join('')}</tbody></table></div>
+<div style="text-align:right;margin-top:.6rem;font-weight:700;font-size:.95rem">Total général : <span style="color:var(--green)">${fmt(all.reduce((s,x)=>s+(x.total||x.amount||0),0))}</span></div>`;
+
+    /* Developer fee */
+    const devFee=Math.round(totalRevenue*25/100);
+    const devEl=document.getElementById('dev-fee-summary');
+    if(devEl){
+        devEl.innerHTML=`
+<div style="flex:1;min-width:140px;background:var(--bg);border-radius:10px;padding:.8rem;text-align:center;border:2px solid var(--accent)"><div style="font-size:1.6rem;font-weight:800;color:var(--accent)">${fmt(totalRevenue)}</div><div style="font-size:.78rem;color:var(--text-light);margin-top:2px">💰 CA Total</div></div>
+<div style="flex:1;min-width:140px;background:var(--bg);border-radius:10px;padding:.8rem;text-align:center;border:2px solid var(--red)"><div style="font-size:1.6rem;font-weight:800;color:var(--red)">${fmt(devFee)}</div><div style="font-size:.78rem;color:var(--text-light);margin-top:2px">💻 Part Développeur (25%)</div></div>
+<div style="flex:1;min-width:140px;background:var(--bg);border-radius:10px;padding:.8rem;text-align:center;border:2px solid var(--green)"><div style="font-size:1.6rem;font-weight:800;color:var(--green)">${fmt(totalRevenue-devFee)}</div><div style="font-size:.78rem;color:var(--text-light);margin-top:2px">💰 Net après part développeur</div></div>
+<div style="flex:1;min-width:100px;background:var(--bg);border-radius:10px;padding:.8rem;text-align:center"><div style="font-size:1rem;font-weight:800;color:var(--text)">${nombreEnLettres(devFee).charAt(0).toUpperCase()+nombreEnLettres(devFee).slice(1)}</div><div style="font-size:.78rem;color:var(--text-light);margin-top:2px">En lettres (25%)</div></div>`;
+    }
+}
+
+/* VENDOR EXPORT / IMPORT / DEV INVOICE */
+function exportVendorJSON(){
+    const all=ld('esodi-vendor-orders',[]).filter(x=>x.vendor===vendorUser);
+    const data={exportDate:new Date().toISOString(),vendor:vendorUser,orders:all,products:products.filter(p=>p.vendor===vendorUser)};
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`ets-el-arafat-${vendorUser}-${new Date().toISOString().slice(0,10)}.json`;a.click();
+    showToast('Export JSON téléchargé','success');
+}
+function importVendorJSON(event){
+    const file=event.target.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=function(e){
+        try{
+            const data=JSON.parse(e.target.result);
+            if(!data.orders||!Array.isArray(data.orders)){showToast('Fichier JSON invalide','error');return}
+            const existing=ld('esodi-vendor-orders',[]);
+            const merged=[...existing];
+            data.orders.forEach(function(o){
+                if(!merged.find(function(x){return x.id===o.id}))merged.push(o);
+            });
+            sd('esodi-vendor-orders',merged);
+            renderVendorOrders();renderVendorAccounts();
+            showToast(data.orders.length+' commandes importées avec succès','success');
+        }catch(err){showToast('Erreur de lecture du fichier JSON','error')}
+    };
+    reader.readAsText(file);
+    event.target.value='';
+}
+function printDevInvoice(){
+    if(!confirm('⚠️ L\'impression de la facture développeur va SUPPRIMER toutes les commandes de votre onglet Mes Comptes.\n\nVoulez-vous continuer ?'))return;
+    const w=window.open('','_blank');
+    const all=ld('esodi-vendor-orders',[]).filter(x=>x.vendor===vendorUser);
+    const total=all.reduce((s,x)=>s+(x.total||x.amount||0),0);
+    const dev=Math.round(total*25/100);
+    const net=total-dev;
+    const totalLettres=nombreEnLettres(total);
+    const devLettres=nombreEnLettres(dev);
+    const netLettres=nombreEnLettres(net);
+    const count=all.length;
+    const today=new Date().toLocaleDateString('fr-FR');
+    w.document.write(`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Facture Développeur - ETS EL Arafat</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,sans-serif}
+        body{padding:20px;color:#1e293b}
+        .header{text-align:center;border-bottom:2px solid #16a34a;padding-bottom:12px;margin-bottom:16px}
+        .header h1{font-size:20px;color:#16a34a}
+        .header p{font-size:12px;color:#64748b;margin-top:4px}
+        .info{display:flex;justify-content:space-between;margin-bottom:16px;font-size:12px;color:#64748b}
+        table{width:100%;border-collapse:collapse;margin-bottom:16px;font-size:12px}
+        th,td{padding:8px 6px;border:1px solid #e2e8f0;text-align:left}
+        th{background:#f1f5f9;font-size:11px;text-transform:uppercase;color:#64748b}
+        .totals{text-align:right;font-size:13px;border-top:2px solid #16a34a;padding-top:8px;margin-top:8px}
+        .totals .row{display:flex;justify-content:space-between;gap:20px;padding:4px 0}
+        .totals .label{font-weight:600}
+        .totals .dev{color:#ef4444;font-weight:800;font-size:15px}
+        .totals .net{color:#16a34a;font-weight:800;font-size:15px}
+        .totals .total{color:#2563eb;font-weight:800;font-size:17px}
+        .footer{text-align:center;font-size:10px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:12px;margin-top:16px}
+        .badge{display:inline-block;background:#dcfce7;color:#166534;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600}
+        .montant-lettres{background:#f8fafc;padding:10px;border-radius:6px;margin:12px 0;font-size:11px;color:#475569;line-height:1.6;text-align:center;border:1px dashed #cbd5e1}
+        @media print{body{padding:10px}}
+    </style>
+</head><body>
+    <div class="header">
+        <h1>ETS EL Arafat</h1>
+        <p>Atakpamé, ENS-Togo, Face station TEXACO &bull; +228 91 98 46 98</p>
+        <p>📧 contact@etselarafat.tg</p>
+    </div>
+    <div class="info">
+        <div><strong>Facture Développeur</strong> &bull; ${today}<br>Vendeur : ${esc(vendorUser||'')} &bull; Période soldée</div>
+        <div><span class="badge">${count} commande${count>1?'s':''}</span></div>
+    </div>
+    <table><thead><tr><th>Date</th><th>Client</th><th>Produits</th><th>Montant</th></tr></thead><tbody>
+        ${all.map(function(x){return '<tr><td>'+esc(x.date)+'</td><td>'+esc(x.client)+'</td><td>'+(x.items?esc(x.items.map(function(i){return i.name+' x'+i.qty}).join(', ')):'—')+'</td><td style="font-weight:600;color:#16a34a">'+fmt(x.total||x.amount||0)+'</td></tr>'}).join('')}
+    </tbody></table>
+    <div class="montant-lettres">
+        <strong>Montant total en lettres :</strong> ${totalLettres.charAt(0).toUpperCase()+totalLettres.slice(1)} francs CFA<br>
+        <strong>Part développeur (25%) :</strong> ${devLettres.charAt(0).toUpperCase()+devLettres.slice(1)} francs CFA
+    </div>
+    <div class="totals">
+        <div class="row"><span class="label">💰 TOTAL CHIFFRE D'AFFAIRES :</span><span class="total">${fmt(total)}</span></div>
+        <div class="row"><span class="label">💻 PART DÉVELOPPEUR (25%) :</span><span class="dev">${fmt(dev)}</span></div>
+        <div class="row"><span class="label">💰 NET APRÈS PART DÉVELOPPEUR :</span><span class="net">${fmt(net)}</span></div>
+    </div>
+    <div class="footer">
+        ETS EL Arafat &bull; Atakpamé, ENS-Togo, Face station TEXACO &bull; +228 91 98 46 98<br>
+        Document généré le ${today}
+    </div>
+</body></html>`);
+    w.document.close();
+    setTimeout(function(){
+        w.print();
+        /* Send invoice to developer via WhatsApp */
+        const devMsg=encodeURIComponent(
+            `🧾 *FACTURE DÉVELOPPEUR - ETS EL Arafat*\n`+
+            `━━━━━━━━━━━━━━━━━━━\n`+
+            `📅 ${today}\n`+
+            `👤 Vendeur : ${vendorUser||'N/A'}\n`+
+            `━━━━━━━━━━━━━━━━━━━\n`+
+            `📦 Commandes : ${count}\n`+
+            `💰 CA Total : ${fmt(total)}\n`+
+            `💻 *Part Développeur (25%) : ${fmt(dev)}*\n`+
+            `💰 Net : ${fmt(net)}\n`+
+            `━━━━━━━━━━━━━━━━━━━\n`+
+            `📝 Total en lettres : ${totalLettres}\n`+
+            `💻 Dev en lettres : ${devLettres}\n`+
+            `━━━━━━━━━━━━━━━━━━━\n`+
+            `✅ Période soldée`
+        );
+        window.open(`https://wa.me/22892871605?text=${devMsg}`,'_blank');
+        /* Clear vendor orders after print */
+        const resto=ld('esodi-vendor-orders',[]).filter(function(x){return x.vendor!==vendorUser});
+        sd('esodi-vendor-orders',resto);
+        renderVendorOrders();
+        renderVendorAccounts();
+        showToast('Facture imprimée, comptes soldés et notification envoyée au développeur !','success');
+    },500);
+}
+
+/* PRICE MANAGEMENT - QR CODES */
+let pmStream=null,pmScanActive=false,pmScanRaf=null,pmLastScan=0;
+function renderPriceMgmtQR(){
+    const grid=document.getElementById('pm-qr-grid');if(!grid)return;
+    const mine=products.filter(p=>p.vendor===vendorUser||p.vendor==='admin');
+    const cnt=document.getElementById('pm-qr-count');if(cnt)cnt.textContent='('+mine.length+')';
+    if(!mine.length){grid.innerHTML='<div class="empty-state"><p>Aucun produit disponible</p></div>';return}
+    grid.innerHTML='';
+    mine.forEach(p=>{
+        const card=document.createElement('div');
+        card.style.cssText='background:var(--bg);padding:10px;border-radius:var(--radius);text-align:center;border:1px solid var(--border)';
+        card.innerHTML=`<div id="qr-${p.id}"></div><div style="font-weight:700;font-size:.78rem;margin-top:4px">${esc(p.name)}</div><div style="color:var(--accent);font-weight:800;font-size:.85rem">${fmt(promoPrice(p))}</div><div style="font-size:.65rem;color:var(--text-light)">${esc(p.brand||'')} · Stock: ${p.stock}</div>`;
+        grid.appendChild(card);
+        if(typeof QRCode!=='undefined'){
+            QRCode.toCanvas(document.createElement('canvas'),JSON.stringify({id:p.id,name:p.name,price:promoPrice(p),brand:p.brand||'',stock:p.stock}),{width:120,margin:1},function(err,canvas){
+                if(!err&&canvas){canvas.style.cssText='margin:0 auto;display:block';const el=document.getElementById('qr-'+p.id);if(el){el.innerHTML='';el.appendChild(canvas)}}
+            });
+        }
+    });
+}
+function pmStartScanner(){
+    if(pmStream)return;
+    navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(s=>{
+        pmStream=s;pmScanActive=true;
+        const v=document.getElementById('pm-video');v.srcObject=s;
+        document.getElementById('pm-start-scan').style.display='none';
+        document.getElementById('pm-stop-scan').style.display='inline-flex';
+        pmScanLoop();showToast('Scanner activé','success');
+    }).catch(()=>showToast('Accès caméra refusé','error'));
+}
+function pmStopScanner(){
+    pmScanActive=false;
+    if(pmScanRaf){cancelAnimationFrame(pmScanRaf);pmScanRaf=null}
+    if(pmStream){pmStream.getTracks().forEach(t=>t.stop());pmStream=null}
+    document.getElementById('pm-start-scan').style.display='inline-flex';
+    document.getElementById('pm-stop-scan').style.display='none';
+}
+function pmScanLoop(){
+    if(!pmScanActive)return;
+    const v=document.getElementById('pm-video');
+    if(v.readyState<2){pmScanRaf=requestAnimationFrame(pmScanLoop);return}
+    const now=Date.now();if(now-pmLastScan<500){pmScanRaf=requestAnimationFrame(pmScanLoop);return}
+    pmLastScan=now;
+    const c=document.createElement('canvas');c.width=v.videoWidth;c.height=v.videoHeight;
+    const ctx=c.getContext('2d');ctx.drawImage(v,0,0);
+    const data=ctx.getImageData(0,0,c.width,c.height);
+    if(typeof jsQR!=='undefined'){
+        const code=jsQR(data.data,data.width,data.height);
+        if(code)pmProcessScan(code.data);
+    }
+    pmScanRaf=requestAnimationFrame(pmScanLoop);
+}
+/* SOUNDS */
+function playBeep(type){
+    try{
+        const ctx=new(window.AudioContext||window.webkitAudioContext)();
+        const osc=ctx.createOscillator();const gain=ctx.createGain();
+        osc.connect(gain);gain.connect(ctx.destination);
+        if(type==='success'){
+            osc.type='sine';osc.frequency.setValueAtTime(1200,ctx.currentTime);osc.frequency.setValueAtTime(1600,ctx.currentTime+.08);
+            gain.gain.setValueAtTime(.3,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+.18);
+            osc.start();osc.stop(ctx.currentTime+.18);
+        }else if(type==='warning'){
+            osc.type='square';osc.frequency.setValueAtTime(800,ctx.currentTime);osc.frequency.setValueAtTime(600,ctx.currentTime+.15);
+            gain.gain.setValueAtTime(.2,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+.35);
+            osc.start();osc.stop(ctx.currentTime+.35);
+        }else if(type==='error'){
+            osc.type='sawtooth';osc.frequency.setValueAtTime(400,ctx.currentTime);osc.frequency.exponentialRampToValueAtTime(200,ctx.currentTime+.3);
+            gain.gain.setValueAtTime(.2,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+.3);
+            osc.start();osc.stop(ctx.currentTime+.3);
+        }else if(type==='sold'){
+            osc.type='sine';osc.frequency.setValueAtTime(800,ctx.currentTime);osc.frequency.setValueAtTime(1000,ctx.currentTime+.1);osc.frequency.setValueAtTime(1200,ctx.currentTime+.2);
+            gain.gain.setValueAtTime(.3,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(.01,ctx.currentTime+.35);
+            osc.start();osc.stop(ctx.currentTime+.35);
+        }
+    }catch(e){}
+}
+function pmProcessScan(raw){
+    try{
+        const d=JSON.parse(raw);
+        const p=productById(parseInt(d.id));
+        if(!p){playBeep('error');showToast('Produit non trouvé','error');return}
+        if(p.stock<=0){playBeep('sold');showToast('Stock épuisé : '+p.name,'warning');pmShowProduct(p);pmStopScanner();return}
+        playBeep('success');
+        pmShowProduct(p);
+        pmStopScanner();
+        showToast('Produit trouvé : '+p.name,'success');
+    }catch(e){playBeep('error');showToast('QR Code invalide','error')}
+}
+function pmShowProduct(p){
+    const el=document.getElementById('pm-product-info');if(!el)return;
+    const pp=promoPrice(p);
+    el.innerHTML=`<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:start">
+<div style="flex:0 0 100px"><img src="${esc(p.img)}" onerror="imgErr(this)" style="width:100px;height:80px;object-fit:cover;border-radius:8px"></div>
+<div style="flex:1;min-width:150px">
+<div style="font-weight:800;font-size:1rem">${esc(p.name)}</div>
+<div style="font-size:.78rem;color:var(--text-light)">${esc(p.brand||'')} · ${esc(p.cat)}</div>
+<div style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap">
+<div style="background:#eff6ff;padding:6px 12px;border-radius:8px;text-align:center"><div style="font-size:.6rem;color:var(--text-light)">Prix</div><div style="font-weight:800;color:var(--primary)">${fmt(pp)}</div></div>
+<div style="background:#fef3c7;padding:6px 12px;border-radius:8px;text-align:center"><div style="font-size:.6rem;color:var(--text-light)">Gros</div><div style="font-weight:800;color:var(--accent)">${fmt(p.wprice)}/u</div></div>
+<div style="background:#dcfce7;padding:6px 12px;border-radius:8px;text-align:center"><div style="font-size:.6rem;color:var(--text-light)">Stock</div><div style="font-weight:800;color:var(--green)">${p.stock}</div></div>
+</div>
+${p.warranty?`<div style="font-size:.75rem;margin-top:4px;color:var(--green)"><i class="fas fa-shield-alt"></i> ${esc(p.warranty)}</div>`:''}
+</div></div>
+<hr class="divider">
+<div style="font-weight:600;font-size:.85rem;margin-bottom:6px"><i class="fas fa-shopping-cart"></i> Enregistrer la vente</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">
+<div style="flex:1;min-width:120px"><input type="text" id="pm-sale-client" placeholder="Nom du client" required style="width:100%;padding:.5rem;border:1px solid var(--border);border-radius:8px;font-size:.82rem"></div>
+<div style="flex:1;min-width:120px"><input type="tel" id="pm-sale-phone" placeholder="Téléphone" required style="width:100%;padding:.5rem;border:1px solid var(--border);border-radius:8px;font-size:.82rem"></div>
+</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">
+<div style="flex:0 0 70px"><input type="number" id="pm-sale-qty" value="1" min="1" max="${p.stock}" style="width:100%;padding:.5rem;border:1px solid var(--border);border-radius:8px;font-size:.82rem"></div>
+<div style="flex:1;min-width:100px"><input type="number" id="pm-sale-amount" value="${pp}" placeholder="Montant" style="width:100%;padding:.5rem;border:1px solid var(--border);border-radius:8px;font-size:.82rem"></div>
+</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<button class="btn btn-sm btn-green" onclick="pmConfirmSale(${p.id})" style="flex:1"><i class="fas fa-check"></i> Valider la vente</button>
+<button class="btn btn-sm btn-whatsapp" onclick="pmSendWhatsApp(${p.id})" style="flex:1"><i class="fab fa-whatsapp"></i> Commander via WA</button>
+</div>`;
+}
+function pmConfirmSale(pid){
+    const p=productById(pid);if(!p){showToast('Produit introuvable','error');return}
+    const client=document.getElementById('pm-sale-client').value.trim();
+    const phone=document.getElementById('pm-sale-phone').value.trim();
+    const qty=parseInt(document.getElementById('pm-sale-qty').value)||1;
+    const amount=parseInt(document.getElementById('pm-sale-amount').value)||0;
+    if(!client||!phone){showToast('Nom et téléphone requis','warning');return}
+    if(!amount){showToast('Montant invalide','warning');return}
+    if(qty>p.stock){showToast('Stock insuffisant','error');return}
+    const now=new Date();
+    const unitPrice=Math.round(amount/qty);
+    const order={id:Date.now(),date:now.toISOString(),client,phone,items:[{id:p.id,name:p.name,qty,price:unitPrice}],total:amount,delivery:0,status:'livré et payé',method:'scan-qr',seller:p.seller||'ETS EL Arafat'};
+    const o=orders();o.push(order);saveOrders(o);
+    const vendorId=p.vendor||vendorUser||'admin';
+    const vendorOrder={id:Date.now()+1,vendor:vendorId,client,phone,city:'',items:[{productId:p.id,name:p.name,qty,amount:unitPrice*qty}],total:amount,status:'Livré et payé',date:now.toLocaleDateString('fr-FR'),method:'scan-qr',unitPrice};
+    const vo=ld('esodi-vendor-orders',[]);vo.push(vendorOrder);sd('esodi-vendor-orders',vo);
+    p.stock=Math.max(0,p.stock-qty);saveState();
+    let msg=`✅ *BON DE VENTE ETS EL Arafat*\n━━━━━━━━━━━━━━━━━━━\n`;
+    msg+=`📋 N° ${order.id}\n📅 ${now.toLocaleDateString('fr-FR')} ${now.toLocaleTimeString('fr-FR')}\n`;
+    msg+=`👤 *Client:* ${client}\n📱 *Tél:* ${phone}\n`;
+    msg+=`━━━━━━━━━━━━━━━━━━━\n`;
+    msg+=`📦 *${p.name}*\n   ${qty} x ${fmt(unitPrice)} = *${fmt(amount)}*\n`;
+    msg+=`━━━━━━━━━━━━━━━━━━━\n`;
+    msg+=`💰 *TOTAL: ${fmt(amount)}*\n`;
+    msg+=`📊 *Stock:* ${p.stock} restant(s)\n`;
+    msg+=`✅ Statut: Livré et payé\n`;
+    msg+=`🏪 Vendu par: ${p.seller||'ETS EL Arafat'}\n`;
+    msg+=`📍 ${vendorUser||'Admin'}`;
+    window.open(`https://wa.me/22891984698?text=${encodeURIComponent(msg)}`,'_blank');
+    showToast(`Vente confirmée ! Stock: ${p.stock} restant(s) — ${fmt(amount)}`,'success');playBeep('success');
+    const el=document.getElementById('pm-product-info');if(el)el.innerHTML=`<div class="alert" style="background:#dcfce7;color:#166534;border-left:4px solid var(--green)"><i class="fas fa-check-circle"></i> Vente enregistrée ! N° ${order.id}<br><small>📦 ${qty} vendu(s) → Stock: ${p.stock} | Prix: ${fmt(unitPrice)}/u | Total: ${fmt(amount)}</small></div>`;
+    syncAllTabs();
+}
+function syncAllTabs(){
+    renderDash();renderSales();renderVendorOrders();renderVendorAccounts();renderAdmin();renderVendorProducts();
+    renderPriceMgmtQR();filterProducts();renderPromos();renderWishlist();
+    if(typeof updateCartUI==='function')updateCartUI();
+}
+function pmSendWhatsApp(pid){
+    const p=productById(pid);if(!p)return;
+    const pp=promoPrice(p);
+    const msg=`🏷️ *Demande de prix ETS EL Arafat*\n━━━━━━━━━━━━━━━━━━━\n📦 *${p.name}*\n${p.brand?'🏷️ '+p.brand+'\n':''}💰 Prix: ${fmt(pp)}\n${p.wprice?' wholesale: '+fmt(p.wprice)+'/u\n':''}${p.warranty?'🛡️ Garantie: '+p.warranty+'\n':''}📊 Stock: ${p.stock}\n━━━━━━━━━━━━━━━━━━━\n📞 +228 91 98 46 98\n💳 Flooz: +228 99 14 06 06\n💳 YAS: +228 91 98 46 98`;
+    window.open(`https://wa.me/22891984698?text=${encodeURIComponent(msg)}`,'_blank');
+    showToast('Message WhatsApp envoyé','success');
+}
+function pmPrintAll(){
+    const mine=products.filter(p=>p.vendor===vendorUser||p.vendor==='admin');
+    if(!mine.length){showToast('Aucun produit','warning');return}
+    let pending=mine.length,cards=[];
+    mine.forEach((p,i)=>{
+        const pp=promoPrice(p);
+        if(typeof QRCode!=='undefined'){
+            QRCode.toDataURL(JSON.stringify({id:p.id,name:p.name,price:pp}),{width:150,margin:1},function(err,url){
+                cards[i]=`<div style="text-align:center;border:1px solid #ddd;padding:12px;border-radius:10px;page-break-inside:avoid"><img src="${err?'':url}" style="max-width:130px"><div style="font-weight:700;font-size:14px;margin-top:4px">${esc(p.name)}</div><div style="color:#f59e0b;font-weight:800;font-size:16px">${fmt(pp)}</div><div style="font-size:11px;color:#666">${esc(p.brand||'')} · Stock: ${p.stock}</div></div>`;
+                if(--pending===0)pmOpenPrintWindow(cards);
+            });
+        }else{
+            cards[i]=`<div style="text-align:center;border:1px solid #ddd;padding:12px;border-radius:10px;page-break-inside:avoid"><div style="font-weight:700;font-size:14px">${esc(p.name)}</div><div style="color:#f59e0b;font-weight:800;font-size:16px">${fmt(pp)}</div><div style="font-size:11px;color:#666">${esc(p.brand||'')}</div></div>`;
+            if(--pending===0)pmOpenPrintWindow(cards);
+        }
+    });
+}
+function pmOpenPrintWindow(cards){
+    const w=window.open('','_blank');
+    w.document.write(`<!DOCTYPE html><html><head><title>Étiquettes ETS EL Arafat</title><style>
+body{font-family:Arial,sans-serif;padding:20px;text-align:center}
+h1{color:#f59e0b;font-size:18px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+@media print{@page{margin:8mm}.grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:768px){.grid{grid-template-columns:repeat(2,1fr)}}
+</style></head><body><h1>🏷️ ETS EL Arafat — Étiquettes Prix</h1><div class="grid">${cards.join('')}</div></body></html>`);
+    w.document.close();setTimeout(()=>w.print(),300);
+    showToast('Impression lancée','success');
+}
+function pmExportQR(){
+    const mine=products.filter(p=>p.vendor===vendorUser||p.vendor==='admin');
+    const data=mine.map(p=>({id:p.id,name:p.name,brand:p.brand||'',price:promoPrice(p),wprice:p.wprice,stock:p.stock,cat:p.cat,warranty:p.warranty||''}));
+    const blob=new Blob([JSON.stringify({products:data,exportDate:new Date().toISOString(),store:'ETS EL Arafat'},null,2)],{type:'application/json'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`ets-el-arafat-prix-${new Date().toISOString().slice(0,10)}.json`;a.click();
+    showToast('Export JSON téléchargé','success');
+}
+function pmImportQR(e){
+    const file=e.target.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=function(ev){
+        try{
+            const data=JSON.parse(ev.target.result);
+            if(data.products&&Array.isArray(data.products)){
+                let added=0;
+                data.products.forEach(dp=>{
+                    const existing=products.find(p=>p.id===dp.id);
+                    if(!existing){
+                        products.push({id:dp.id||Date.now(),vendor:vendorUser||'admin',name:dp.name,brand:dp.brand||'',cat:dp.cat||'Accessoires',price:dp.price||0,wprice:dp.wprice||dp.price||0,wqty:5,promo:0,warranty:dp.warranty||'',stock:dp.stock||0,minStock:3,img:C.placeholder,desc:'',delivery:0,seller:'ETS EL Arafat'});
+                        added++;
+                    }
+                });
+                saveState();renderPriceMgmtQR();filterProducts();
+                showToast(added+' produit(s) importé(s)','success');
+            }else{showToast('Format JSON invalide','error')}
+        }catch(err){showToast('Fichier invalide','error')}
+    };
+    reader.readAsText(file);e.target.value='';
+}
+
+/* ADMIN PRODUCTS */
+function renderAdmin(){
+    const tbody=document.getElementById('admin-tbody');if(!tbody)return;
+    const mine=products.filter(p=>p.vendor==='admin');
+    const cnt=document.getElementById('stock-count');if(cnt)cnt.textContent=`(${mine.length} produit${mine.length>1?'s':''})`;
+    if(!mine.length){tbody.innerHTML='<tr><td colspan="6" class="empty-state">Aucun produit.</td></tr>';return}
+    tbody.innerHTML=mine.slice().reverse().map(p=>`<tr>
+        <td><strong>${esc(p.name)}</strong>${p.brand?'<br><small>'+esc(p.brand)+'</small>':''}</td>
+        <td>${fmt(promoPrice(p))}${p.promo?`<br><small style="color:var(--red)">-${p.promo}%</small>`:''}</td>
+        <td>${fmt(p.wprice)}<small>(\u2265${p.wqty})</small></td>
+        <td>${p.stock<1?'<span class="badge badge-red">Rupture</span>':p.stock<=(p.minStock||3)?'<span class="badge badge-orange">'+p.stock+'</span>':'<span class="badge badge-green">'+p.stock+'</span>'}</td>
+        <td>${p.promo?`<span class="badge badge-red">-${p.promo}%</span>`:'-'}</td>
+        <td style="display:flex;gap:4px">
+            <button class="btn btn-sm btn-primary" onclick="editProduct(${p.id})" title="Modifier">✏️</button>
+            <button class="btn btn-sm btn-red" onclick="delProd(${p.id})" title="Supprimer">🗑️</button>
+        </td>
+    </tr>`).join('');
+}
+function delProd(id){
+    const p=productById(id);if(!p||!adminUser)return;
+    if(!confirm(`Supprimer "${p.name}" ?`))return;
+    products=products.filter(x=>x.id!==id);saveState();renderAdmin();filterProducts();showToast('Produit supprimé','warning');
+}
+function editProduct(id){
+    const p=productById(id);if(!p||!adminUser)return;
+    document.getElementById('edit-id').value=p.id;document.getElementById('edit-name').value=p.name;
+    document.getElementById('edit-brand').value=p.brand||'';document.getElementById('edit-cat').value=p.cat;
+    document.getElementById('edit-price').value=p.price;document.getElementById('edit-wprice').value=p.wprice;
+    document.getElementById('edit-wqty').value=p.wqty||5;document.getElementById('edit-promo').value=p.promo||0;
+    document.getElementById('edit-warranty').value=p.warranty||'';document.getElementById('edit-stock').value=p.stock||0;document.getElementById('edit-minstock').value=p.minStock||3;document.getElementById('edit-img').value=p.img||'';
+    document.getElementById('edit-desc').value=p.desc||'';document.getElementById('edit-delivery').value=p.delivery||0;
+    openModal('edit-modal');
+}
+
+/* SALES */
+function renderSales(){
+    const tbody=document.getElementById('sales-tbody');if(!tbody)return;
+    const sel=document.getElementById('ms-product');
+    if(sel){
+        const cur=sel.value;
+        sel.innerHTML='<option value="">--</option>'+products.map(p=>`<option value="${p.id}">${esc(p.name)} (${fmt(promoPrice(p))})</option>`).join('');
+        sel.value=cur||'';
+    }
+    let o=orders();
+    const from=document.getElementById('filter-from').value,to=document.getElementById('filter-to').value;
+    if(from){const fd=new Date(from);o=o.filter(x=>new Date(x.date)>=fd)}
+    if(to){const td=new Date(to);td.setDate(td.getDate()+1);o=o.filter(x=>new Date(x.date)<td)}
+    o=o.reverse();
+    const cnt=document.getElementById('sales-count');if(cnt)cnt.textContent=`(${o.length} ${o.length>1?'ventes':'vente'})`;
+    if(!o.length){tbody.innerHTML='<tr><td colspan="7" class="empty-state">Aucune vente trouvée.</td></tr>';document.getElementById('sales-pagination').innerHTML='';return}
+    const totalPages=Math.ceil(o.length/salesPerPage);
+    if(salesPage>totalPages)salesPage=totalPages;
+    const start=(salesPage-1)*salesPerPage,end=start+salesPerPage;
+    const page=o.slice(start,end);
+    tbody.innerHTML=page.map(x=>`<tr>
+        <td>${new Date(x.date).toLocaleDateString('fr-FR')}</td>
+        <td>${esc(x.client)}</td><td>${esc(x.phone)}</td>
+        <td>${esc((x.items||[]).map(i=>i.name+' x'+i.qty).join(', '))}</td>
+        <td>${fmt(x.total)}</td>
+        <td><select onchange="updateOrderStatus(${x.id},this.value)" style="font-size:.7rem;padding:2px 4px;border-radius:4px;border:1px solid var(--border);background:var(--card)">
+            <option value="payé" ${x.status==='payé'?'selected':''}>Payé</option>
+            <option value="livré" ${x.status==='livré'?'selected':''}>Livré</option>
+            <option value="livré et payé" ${x.status==='livré et payé'?'selected':''}>Livré et payé</option>
+            <option value="annulé" ${x.status==='annulé'?'selected':''}>Annulé</option>
+        </select></td>
+        <td style="display:flex;gap:3px">
+            <button class="btn btn-sm btn-outline" onclick="printInvoice(${x.id})" title="Facture" style="padding:2px 6px">🧾</button>
+            <button class="btn btn-sm btn-red" onclick="delOrder(${x.id})" style="padding:2px 6px" title="Supprimer">🗑️</button>
+        </td>
+    </tr>`).join('');
+    renderSalesPagination(totalPages);
+}
+function delOrder(id){
+    if(!confirm('Supprimer cette vente ?'))return;
+    let o=orders().filter(x=>x.id!==id);saveOrders(o);renderSales();renderDash();showToast('Vente supprimée','warning');
+}
+function updateOrderStatus(id,status){
+    let o=orders();
+    const ord=o.find(x=>x.id===id);if(!ord)return;
+    ord.status=status;saveOrders(o);renderSales();renderDash();showToast('Statut mis à jour','info');
+}
+function printInvoice(id){
+    const ord=orders().find(x=>x.id===id);if(!ord){showToast('Commande introuvable','error');return}
+    const items=(ord.items||[]).map(i=>`<tr><td style="padding:6px;border-bottom:1px solid #ddd">${esc(i.name)}</td><td style="padding:6px;border-bottom:1px solid #ddd;text-align:center">${i.qty}</td><td style="padding:6px;border-bottom:1px solid #ddd;text-align:right">${fmt(i.price)}</td><td style="padding:6px;border-bottom:1px solid #ddd;text-align:right">${fmt(i.price*i.qty)}</td></tr>`).join('');
+    const w=window.open('','_blank');
+    w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Facture #${id}</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"><style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+        body{padding:20px;color:#1e293b;font-size:13px}
+        .header{text-align:center;border-bottom:2px solid #16a34a;padding-bottom:12px;margin-bottom:16px}
+        .header h1{font-size:20px;color:#16a34a}
+        .header p{color:#64748b;font-size:12px}
+        .info{display:flex;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+        .info div{flex:1;min-width:200px}
+        .info h3{font-size:12px;color:#64748b;text-transform:uppercase;margin-bottom:4px}
+        table{width:100%;border-collapse:collapse;margin-bottom:12px}
+        th{background:#f1f5f9;padding:8px 6px;text-align:left;font-size:11px;text-transform:uppercase;color:#64748b}
+        .total{text-align:right;font-size:15px;font-weight:800;color:#16a34a;border-top:2px solid #16a34a;padding-top:8px}
+        .footer{text-align:center;margin-top:20px;color:#94a3b8;font-size:11px;border-top:1px solid #e2e8f0;padding-top:12px}
+        .status{display:inline-block;padding:3px 10px;border-radius:4px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+        @media print{body{padding:10px}}
+    </style></head><body>
+        <div class="header">
+            <h1><i class="fas fa-bolt"></i> ETS EL Arafat</h1>
+            <p>Atakpamé, ENS-Togo, Face station TEXACO &bull; +228 91 98 46 98 &bull; contact@etselarafat.tg</p>
+        </div>
+        <div class="info">
+            <div><h3>Facture #${id}</h3><p>Date : ${new Date(ord.date).toLocaleDateString('fr-FR')}</p><p><span class="status">${esc(ord.status||'payé')}</span></p></div>
+            <div><h3>Client</h3><p>${esc(ord.client)}</p><p>${esc(ord.phone)}</p></div>
+        </div>
+        <table><thead><tr><th>Produit</th><th style="text-align:center">Qté</th><th style="text-align:right">Prix unitaire</th><th style="text-align:right">Total</th></tr></thead><tbody>${items}</tbody></table>
+        <div style="text-align:right;font-size:14px;border-top:2px solid #2563eb;padding-top:8px">
+            <p style="color:#64748b;font-size:12px">Livraison : ${fmt(ord.delivery||0)}</p>
+            <p class="total">Total : ${fmt(ord.total)}</p>
+            <p style="color:#475569;font-size:11px;margin-top:4px"><em>Soit ${nombreEnLettres(ord.total).charAt(0).toUpperCase()+nombreEnLettres(ord.total).slice(1)} francs CFA</em></p>
+        </div>
+        <div class="footer">
+            <p>Merci de votre confiance ! &bull; <strong>ETS EL Arafat</strong> &bull; Électronique &amp; Accessoires</p>
+            <p style="margin-top:4px"><i class="fab fa-whatsapp"></i> +228 91 98 46 98 &bull; contact@etselarafat.tg</p>
+        </div>
+        <script>window.onload=function(){window.print()}<\/script>
+    </body></html>`);
+    w.document.close();
+}
+function printVendorInvoice(id){
+    const ord=ld('esodi-vendor-orders',[]).find(x=>x.id===id);if(!ord){showToast('Commande introuvable','error');return}
+    const itemsHtml=ord.items?ord.items.map(i=>`<tr><td style="padding:6px;border-bottom:1px solid #ddd">${esc(i.name)}</td><td style="padding:6px;border-bottom:1px solid #ddd;text-align:center">${i.qty}</td><td style="padding:6px;border-bottom:1px solid #ddd;text-align:right">${fmt(i.amount/i.qty)}</td><td style="padding:6px;border-bottom:1px solid #ddd;text-align:right">${fmt(i.amount)}</td></tr>`).join(''):(()=>{const p=productById(ord.productId);return `<tr><td style="padding:6px;border-bottom:1px solid #ddd">${p?esc(p.name):'—'}</td><td style="padding:6px;border-bottom:1px solid #ddd;text-align:center">${ord.qty}</td><td style="padding:6px;border-bottom:1px solid #ddd;text-align:right">${fmt(ord.amount/ord.qty)}</td><td style="padding:6px;border-bottom:1px solid #ddd;text-align:right">${fmt(ord.amount)}</td></tr>`})();
+    const totalAmount=ord.total||ord.amount||0;
+    const sellerName=ord.items?ord.items.map(i=>{const p=productById(i.productId);return p?esc(p.seller):''}).filter(Boolean)[0]||'' : (productById(ord.productId)?esc(productById(ord.productId).seller):'');
+    const w=window.open('','_blank');
+    w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Facture #${id}</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"><style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+        body{padding:20px;color:#1e293b;font-size:13px}
+        .header{text-align:center;border-bottom:2px solid #16a34a;padding-bottom:12px;margin-bottom:16px}
+        .header h1{font-size:20px;color:#16a34a}
+        .header p{color:#64748b;font-size:12px}
+        .info{display:flex;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+        .info div{flex:1;min-width:200px}
+        .info h3{font-size:12px;color:#64748b;text-transform:uppercase;margin-bottom:4px}
+        table{width:100%;border-collapse:collapse;margin-bottom:12px}
+        th{background:#f1f5f9;padding:8px 6px;text-align:left;font-size:11px;text-transform:uppercase;color:#64748b}
+        .total{text-align:right;font-size:15px;font-weight:800;color:#16a34a;border-top:2px solid #16a34a;padding-top:8px}
+        .footer{text-align:center;margin-top:20px;color:#94a3b8;font-size:11px;border-top:1px solid #e2e8f0;padding-top:12px}
+        .status{display:inline-block;padding:3px 10px;border-radius:4px;font-size:11px;font-weight:600;background:#dcfce7;color:#166534}
+        @media print{body{padding:10px}}
+    </style></head><body>
+        <div class="header">
+            <h1><i class="fas fa-store"></i> ETS EL Arafat — ${esc(sellerName||'Boutique')}</h1>
+            <p>Atakpamé, ENS-Togo, Face station TEXACO &bull; +228 91 98 46 98</p>
+        </div>
+        <div class="info">
+            <div><h3>Facture #${id}</h3><p>Date : ${ord.date}</p><p><span class="status">${esc(ord.status)}</span></p></div>
+            <div><h3>Client</h3><p>${esc(ord.client)}</p><p>${esc(ord.phone)}</p>${ord.city?`<p>${esc(ord.city)}</p>`:''}</div>
+        </div>
+        <table><thead><tr><th>Produit</th><th style="text-align:center">Qté</th><th style="text-align:right">Prix unitaire</th><th style="text-align:right">Total</th></tr></thead><tbody>${itemsHtml}</tbody></table>
+        <div style="text-align:right;font-size:14px;border-top:2px solid #16a34a;padding-top:8px">
+            <p class="total">Total : ${fmt(totalAmount)}</p>
+            <p style="color:#475569;font-size:11px;margin-top:4px"><em>Soit ${nombreEnLettres(totalAmount).charAt(0).toUpperCase()+nombreEnLettres(totalAmount).slice(1)} francs CFA</em></p>
+        </div>
+        <div class="footer">
+            <p>Merci de votre confiance ! &bull; <strong>ETS EL Arafat</strong> &bull; Vente en Gros &amp; Détail</p>
+            <p style="margin-top:4px"><i class="fab fa-whatsapp"></i> +228 91 98 46 98</p>
+        </div>
+        <script>window.onload=function(){window.print()}<\/script>
+    </body></html>`);
+    w.document.close();
+}
+
+/* TRACK */
+function trackOrder(e){
+    e.preventDefault();
+    const phone=document.getElementById('track-phone').value.trim();
+    const el=document.getElementById('track-results');
+    if(!phone){el.innerHTML='<p style="color:var(--red);font-size:.85rem">Veuillez entrer un numéro</p>';return}
+    const found=orders().filter(o=>o.phone.includes(phone)).reverse();
+    if(!found.length){el.innerHTML='<div class="empty-state"><i class="fas fa-search"></i><p>Aucune commande trouvée.</p></div>';return}
+    el.innerHTML=found.map(o=>{
+        const items=(o.items||[]).map(i=>i.name+' x'+i.qty).join(', ');
+        const sc=o.status==='livré'||o.status==='livré et payé'?'badge-green':'badge-orange';
+        return `<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.8rem;margin-bottom:.5rem">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px"><strong>#${o.id}</strong><span class="badge ${sc}">${esc(o.status||'payé')}</span></div>
+            <div style="font-size:.8rem;color:var(--text-light);margin-top:4px">
+                <div>📅 ${new Date(o.date).toLocaleDateString('fr-FR')}</div>
+                <div>📦 ${esc(items)}</div>
+                <div>💰 ${fmt(o.total)}</div>
+                <div>👤 ${esc(o.client)}</div>
+            </div>
+            <div id="track-timeline-${o.id}" style="margin-top:.5rem"></div>
+        </div>`;
+    }).join('');
+    found.forEach(o=>{
+        const el2=document.getElementById('track-timeline-'+o.id);
+        if(el2)renderOrderTimeline(el2,o.status||'payé');
+    });
+}
+
+/* CONTACT */
+function sendContact(e){
+    e.preventDefault();
+    const n=document.getElementById('contact-name').value.trim(),p=document.getElementById('contact-phone').value.trim(),m=document.getElementById('contact-msg').value.trim(),em=document.getElementById('contact-email').value.trim();
+    if(!n||!p||!m){showToast('Remplissez les champs requis','warning');return}
+    let msg=`👤 ${n}%0A📞 ${p}`;if(em)msg+=`%0A📧 ${em}`;
+    msg+=`%0A%0A${m}%0A%0A---%0ADepuis ETS EL Arafat`;
+    window.open(`https://wa.me/${C.wa}?text=${msg.replace(/%0A/g,'\\n')}`,'_blank');
+    showToast('Message envoyé !','success');
+}
+
+/* VIEW */
+function switchView(v){
+    if((v==='dash'||v==='prod'||v==='orders')&&!adminUser){showLogin();return}
+    if((v==='vendor'||v==='vendor-orders'||v==='vendor-accounts')&&!vendorUser){openModal('vendor-login-modal');return}
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    const sec=document.getElementById('view-'+v);if(sec)sec.classList.add('active');
+    document.querySelectorAll('.desktop-nav button, .mobile-nav button').forEach(b=>b.classList.remove('active'));
+    const btn=document.querySelector(`[data-view="${v}"]`);if(btn)btn.classList.add('active');
+    if(v==='map')initMap();if(v==='dash')renderDash();if(v==='orders')renderSales();if(v==='cart')updateCartUI();
+    if(v==='prod')renderAdmin();if(v==='promos')renderPromos();if(v==='wishlist')renderWishlist();
+    if(v==='vendor'){renderVendorProducts();populateVendorDeliverySelect()}
+    if(v==='vendor-orders'){populateVendorDeliverySelect();renderVendorOrders()}
+    if(v==='vendor-accounts')renderVendorAccounts();
+    if(v==='price-mgmt')renderPriceMgmtQR();
+    window.scrollTo({top:0,behavior:'smooth'});closeMenu();
+}
+function closeMenu(){document.querySelector('.mobile-nav').classList.remove('active');document.querySelector('.mobile-nav-overlay').classList.remove('active')}
+function toggleMob(){document.querySelector('.mobile-nav').classList.toggle('active');document.querySelector('.mobile-nav-overlay').classList.toggle('active')}
+
+/* MAP */
+function initMap(){
+    if(mapInst)return;
+    const el=document.getElementById('shop-map');if(!el)return;
+    mapInst=L.map('shop-map',{center:C.shop,zoom:15,zoomControl:true});
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap'}).addTo(mapInst);
+    L.marker(C.shop).addTo(mapInst).bindPopup('<b>ETS EL Arafat</b><br>Atakpamé, ENS-Togo<br>Face station TEXACO<br>📞 +228 91 98 46 98').openPopup();
+    setTimeout(()=>mapInst.invalidateSize(),300);
+}
+function getRouteOSM(){
+    const info=document.getElementById('route-info');
+    if(!navigator.geolocation){info.textContent='Géolocalisation non disponible';return}
+    info.innerHTML='<span class="loading-spinner"></span> Localisation...';
+    navigator.geolocation.getCurrentPosition(pos=>{
+        const lat=pos.coords.latitude,lng=pos.coords.longitude;
+        if(userMkr)mapInst.removeLayer(userMkr);
+        userMkr=L.marker([lat,lng]).addTo(mapInst).bindPopup(`<b>Ma position</b><br>${lat.toFixed(4)}, ${lng.toFixed(4)}`).openPopup();
+        info.textContent='Calcul...';
+        fetch(`https://router.project-osrm.org/route/v1/driving/${lng},${lat};${C.shop[1]},${C.shop[0]}?overview=full&geometries=geojson&language=fr`)
+        .then(r=>r.json()).then(d=>{
+            if(!d||!d.routes||!d.routes.length){info.textContent='Aucun itinéraire';return}
+            const r=d.routes[0],coords=r.geometry.coordinates.map(c=>[c[1],c[0]]);
+            if(routeLn)mapInst.removeLayer(routeLn);
+            routeLn=L.polyline(coords,{color:'#2563eb',weight:4,opacity:.8}).addTo(mapInst).bindPopup(`${(r.distance/1000).toFixed(1)} km · ${Math.round(r.duration/60)} min`);
+            mapInst.fitBounds(routeLn.getBounds().pad(0.1));
+            info.innerHTML=`${(r.distance/1000).toFixed(1)} km · ${Math.round(r.duration/60)} min`;
+        }).catch(()=>{info.textContent='Erreur'});
+    },err=>{const m={1:'Autorisation refusée',2:'Position indisponible',3:'Délai dépassé'};info.textContent=m[err.code]||'Erreur'},{enableHighAccuracy:true,timeout:10000});
+}
+function clearRouteMap(){
+    if(userMkr){mapInst.removeLayer(userMkr);userMkr=null}
+    if(routeLn){mapInst.removeLayer(routeLn);routeLn=null}
+    document.getElementById('route-info').textContent='';mapInst.setView(C.shop,15);
+}
+function openGoogleMaps(){
+    const info=document.getElementById('route-info');
+    if(!navigator.geolocation){info.textContent='Géolocalisation non disponible';return}
+    info.textContent='Localisation...';
+    navigator.geolocation.getCurrentPosition(pos=>{window.open(`https://www.google.com/maps/dir/${pos.coords.latitude},${pos.coords.longitude}/${C.shop[0]},${C.shop[1]}`,'_blank');info.textContent=''},err=>{const m={1:'Autorisation refusée',2:'Position indisponible',3:'Délai dépassé'};info.textContent=m[err.code]||'Erreur'},{enableHighAccuracy:true,timeout:10000});
+}
+
+/* MODALS */
+function openModal(id){
+    if(id==='vendor-register-modal'){document.getElementById('vendor-register-form').querySelector('button').disabled=false;document.getElementById('vr-result').style.display='none'}
+    document.getElementById(id).classList.add('active');document.body.style.overflow='hidden'
+}
+function closeModal(id){
+    document.getElementById(id).classList.remove('active');
+    document.body.style.overflow='';
+    if(id==='payment-modal'){
+        const w=document.getElementById('btn-pay-whatsapp');
+        if(w)w.style.display='flex';
+        const p=document.getElementById('payment-options');
+        if(p)p.style.display='none';
+    }
+}
+
+/* TOAST */
+function showToast(msg,type){
+    const c=document.getElementById('toast-container'),icons={success:'✅',warning:'⚠️',error:'❌',info:'ℹ️'};
+    const t=document.createElement('div');t.className=`toast toast-${type||'info'}`;t.innerHTML=`${icons[type]||''} ${msg}`;
+    c.appendChild(t);
+    setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(50px)';t.style.transition='all .3s ease';setTimeout(()=>t.remove(),300)},3000);
+}
+
+/* EVENTS */
+function initEvents(){
+    document.querySelectorAll('[data-view]').forEach(el=>{el.addEventListener('click',e=>{e.preventDefault();switchView(el.dataset.view)})});
+    document.querySelectorAll('.desktop-nav button[data-view]').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.desktop-nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active')})});
+    document.querySelector('.mobile-menu-btn').addEventListener('click',toggleMob);
+    document.querySelector('.mobile-nav-overlay').addEventListener('click',closeMenu);
+    document.querySelector('.close-menu-btn').addEventListener('click',closeMenu);
+    document.querySelectorAll('.mobile-nav button[data-view]').forEach(b=>{b.addEventListener('click',closeMenu)});
+    document.getElementById('search').addEventListener('input',function(){
+        clearTimeout(searchTm);
+        prodPage=1;
+        searchTm=setTimeout(function(){
+            filterProducts();
+            var q=document.getElementById('search').value.trim();
+            if(q.length>=2)showSuggestions(q);
+            else document.getElementById('search-suggest').classList.remove('show');
+        },300);
+    });
+    document.getElementById('search').addEventListener('blur',function(){setTimeout(function(){document.getElementById('search-suggest').classList.remove('show')},300)});
+    document.getElementById('filters').addEventListener('click',e=>{const b=e.target.closest('.filter-btn');if(!b)return;setCat(b.dataset.cat,b)});
+
+    document.getElementById('login-form').addEventListener('submit',e=>{
+        e.preventDefault();const u=document.getElementById('login-user').value.trim(),pw=document.getElementById('login-pass').value,err=adminLogin(u,pw),el=document.getElementById('login-error');
+        if(err){el.style.display='block';el.textContent=err}else el.style.display='none';
+    });
+
+    document.getElementById('add-form').addEventListener('submit',e=>{
+        e.preventDefault();if(!adminUser){showToast('Connectez-vous','warning');return}
+        const p={id:Date.now(),vendor:'admin',name:document.getElementById('f-name').value.trim(),brand:document.getElementById('f-brand').value.trim(),cat:document.getElementById('f-cat').value,price:parseInt(document.getElementById('f-price').value)||0,wprice:parseInt(document.getElementById('f-wprice').value)||0,wqty:parseInt(document.getElementById('f-wqty').value)||5,promo:parseInt(document.getElementById('f-promo').value)||0,warranty:document.getElementById('f-warranty').value.trim()||'',stock:parseInt(document.getElementById('f-stock').value)||0,minStock:parseInt(document.getElementById('f-minstock').value)||3,img:document.getElementById('f-img').value.trim()||C.placeholder,desc:document.getElementById('f-desc').value.trim()||'',delivery:parseInt(document.getElementById('f-delivery').value)||0,seller:'ETS EL Arafat'};
+        if(!p.name||!p.price){showToast('Nom et prix requis','warning');return}
+        products.push(p);saveState();e.target.reset();document.getElementById('f-delivery').value='0';document.getElementById('f-wqty').value='5';document.getElementById('f-promo').value='0';document.getElementById('f-stock').value='10';document.getElementById('f-minstock').value='3';
+        renderAdmin();filterProducts();showToast('Produit ajouté','success');
+    });
+
+    document.getElementById('edit-form').addEventListener('submit',e=>{
+        e.preventDefault();if(!adminUser){showToast('Connectez-vous','warning');return}
+        const id=parseInt(document.getElementById('edit-id').value),p=productById(id);if(!p)return;
+        p.name=document.getElementById('edit-name').value.trim();p.brand=document.getElementById('edit-brand').value.trim();p.cat=document.getElementById('edit-cat').value;
+        p.price=parseInt(document.getElementById('edit-price').value)||0;p.wprice=parseInt(document.getElementById('edit-wprice').value)||0;
+        p.wqty=parseInt(document.getElementById('edit-wqty').value)||5;p.promo=parseInt(document.getElementById('edit-promo').value)||0;
+        p.warranty=document.getElementById('edit-warranty').value.trim()||'';p.stock=parseInt(document.getElementById('edit-stock').value)||0;p.minStock=parseInt(document.getElementById('edit-minstock').value)||3;p.img=document.getElementById('edit-img').value.trim()||C.placeholder;
+        p.desc=document.getElementById('edit-desc').value.trim()||'';p.delivery=parseInt(document.getElementById('edit-delivery').value)||0;
+        saveState();closeModal('edit-modal');renderAdmin();filterProducts();showToast('Produit modifié','success');
+    });
+
+    document.getElementById('manual-sale-form').addEventListener('submit',e=>{
+        e.preventDefault();if(!adminUser){showToast('Connectez-vous','warning');return}
+        const cl=document.getElementById('ms-client').value.trim(),ph=document.getElementById('ms-phone').value.trim(),pid=parseInt(document.getElementById('ms-product').value),qty=parseInt(document.getElementById('ms-qty').value)||1,amt=parseInt(document.getElementById('ms-amount').value),del=parseInt(document.getElementById('ms-delivery').value)||0,st=document.getElementById('ms-status').value;
+        if(!cl||!ph||!pid||!amt){showToast('Champs requis','warning');return}
+        const prod=productById(pid);if(!prod){showToast('Produit introuvable','error');return}
+        const ord=orders();ord.push({id:Date.now(),date:new Date().toISOString(),client:cl,phone:ph,items:[{id:prod.id,name:prod.name,qty,price:amt/qty}],total:amt,delivery:del,status:st,method:'manuel'});saveOrders(ord);
+        if(prod.stock>0)prod.stock=Math.max(0,prod.stock-qty);saveState();
+        e.target.reset();document.getElementById('ms-delivery').value='0';document.getElementById('ms-qty').value='1';renderSales();renderAdmin();renderDash();showToast('Vente enregistrée !','success');
+    });
+
+    document.getElementById('track-form').addEventListener('submit',trackOrder);
+    document.getElementById('contact-form').addEventListener('submit',sendContact);
+    document.getElementById('btn-checkout').addEventListener('click',openCheckout);
+    document.getElementById('btn-pay-whatsapp').addEventListener('click',()=>{
+        const d=window._ck;
+        if(!d){showToast('Erreur de commande','error');return}
+        const n=document.getElementById('checkout-name').value.trim(),p=document.getElementById('checkout-phone').value.trim();
+        if(!n||!p){showToast('Veuillez entrer votre nom et téléphone','warning');return}
+        window.open(`https://wa.me/${C.wa}?text=${encodeURIComponent(d.msg)}`,'_blank');
+        document.getElementById('btn-pay-whatsapp').style.display='none';
+        document.getElementById('payment-options').style.display='block';
+        showToast('Commande envoyée ! Choisissez votre moyen de paiement','success');
+    });
+    document.getElementById('btn-pay-flooz').addEventListener('click',()=>{
+        const d=window._ck,total=d?d.total:0,phone=document.getElementById('checkout-phone').value,name=document.getElementById('checkout-name').value;
+        if(processOrder('flooz')){
+            window.open(`https://wa.me/22899140606?text=${encodeURIComponent(`💳 *PAIEMENT FLOOZ*\n━━━━━━━━━━━━━━━━━━━\n💰 Montant: ${fmt(total)}\n📱 Envoyer au: +228 99 14 06 06\n👤 Nom: ${name}\n📞 Tél: ${phone}\n━━━━━━━━━━━━━━━━━━━\n✅ Merci !`)}`,'_blank');
+            window.open('https://play.google.com/store/apps/details?id=com.huawei.moovmoney.tg.uat','_blank');
+        }
+    });
+    document.getElementById('btn-pay-yas').addEventListener('click',()=>{processOrder('yas')&&window.open('https://play.google.com/store/apps/details?id=tg.togocom.tmoney','_blank')});
+    document.getElementById('btn-pay-card').addEventListener('click',()=>{processOrder('card')&&window.open('https://cvl2togo.netlify.app/','_blank')});
+    document.getElementById('btn-cancel-payment').addEventListener('click',()=>closeModal('payment-modal'));
+    document.getElementById('btn-route-osm').addEventListener('click',getRouteOSM);
+    document.getElementById('btn-route-gmaps').addEventListener('click',openGoogleMaps);
+    document.getElementById('btn-clear-route').addEventListener('click',clearRouteMap);
+    document.getElementById('btn-filter-sales').addEventListener('click',()=>{salesPage=1;renderSales()});
+    document.getElementById('btn-reset-filters').addEventListener('click',()=>{document.getElementById('filter-from').value='';document.getElementById('filter-to').value='';salesPage=1;renderSales()});
+    document.getElementById('btn-export-csv').addEventListener('click',exportCSV);
+    document.getElementById('logout-btn').addEventListener('click',adminLogout);
+    document.getElementById('btn-close-detail').addEventListener('click',closeDetail);
+
+    /* VENDOR EVENTS */
+    document.getElementById('vendor-login-form').addEventListener('submit',e=>{
+        e.preventDefault();const u=document.getElementById('vl-user').value.trim(),pw=document.getElementById('vl-pass').value,err=vendorLogin(u,pw),el=document.getElementById('vl-error');
+        if(err==='expired'){el.style.display='block';el.innerHTML='⌛ Compte expiré. Contactez l\'administrateur.'}else if(err){el.style.display='block';el.textContent=err}else el.style.display='none';
+    });
+    document.getElementById('vendor-register-form').addEventListener('submit',e=>{
+        e.preventDefault();const name=document.getElementById('vr-name').value.trim(),shop=document.getElementById('vr-shop').value.trim(),phone=document.getElementById('vr-phone').value.trim();
+        if(!name||!shop||!phone){showToast('Remplissez tous les champs','warning');return}
+        const v=ld(C.keys.vendors,[]);let idx=0;v.forEach(x=>{const m=x.user.match(/VEN(\d+)/);if(m)idx=Math.max(idx,parseInt(m[1]))});
+        const user='VEN'+(idx+1).toString().padStart(2,'0'),pass='VEN'+(Math.random().toString(36).slice(2,6).toUpperCase())+Math.floor(Math.random()*999).toString().padStart(3,'0'),expires=Date.now()+2592000000;
+        v.push({user,pass:hash(pass),created:Date.now(),expires,profile:{name,shop,phone}});sd(C.keys.vendors,v);
+        const msg=encodeURIComponent(`🆕 *NOUVEAU VENDEUR ETS EL Arafat*\n━━━━━━━━━━━━━━━━\n👤 ${name}\n🏪 ${shop}\n📱 ${phone}\n━━━━━━━━━━━━━━━━\n🔑 Identifiant : ${user}\n🔐 Mot de passe : ${pass}\n📅 Expire : ${new Date(expires).toLocaleDateString()}\n━━━━━━━━━━━━━━━━`);
+        window.open(`https://wa.me/${C.wa}?text=${msg}`,'_blank');
+        const el=document.getElementById('vr-result');el.style.display='block';el.style.background='#dcfce7';el.style.color='#166534';
+        el.innerHTML=`✅ Compte créé !<br><strong>Identifiant:</strong> ${user}<br><strong>Mot de passe:</strong> ${pass}`;
+        document.getElementById('vendor-register-form').querySelector('button').disabled=true;
+        setTimeout(()=>{closeModal('vendor-register-modal');document.getElementById('vl-user').value=user;document.getElementById('vl-pass').value=pass;openModal('vendor-login-modal')},4000);
+    });
+    document.getElementById('vendor-add-form').addEventListener('submit',e=>{
+        e.preventDefault();if(!vendorUser){showToast('Connectez-vous d\'abord','warning');return}
+        const p={id:Date.now(),vendor:vendorUser,name:document.getElementById('vf-name').value.trim(),brand:document.getElementById('vf-brand').value.trim(),cat:document.getElementById('vf-cat').value,price:parseInt(document.getElementById('vf-price').value)||0,wprice:parseInt(document.getElementById('vf-wprice').value)||0,wqty:parseInt(document.getElementById('vf-wqty').value)||5,promo:parseInt(document.getElementById('vf-promo').value)||0,warranty:document.getElementById('vf-warranty').value.trim()||'',minStock:parseInt(document.getElementById('vf-minstock').value)||3,stock:parseInt(document.getElementById('vf-stock').value)||0,img:document.getElementById('vf-img').value.trim()||C.placeholder,desc:document.getElementById('vf-desc').value.trim()||'',delivery:parseInt(document.getElementById('vf-delivery').value)||0,seller:document.getElementById('vf-seller').value.trim()};
+        if(!p.name||!p.price||!p.seller){showToast('Nom, prix et boutique requis','warning');return}
+        products.push(p);saveState();e.target.reset();document.getElementById('vf-delivery').value='0';document.getElementById('vf-wqty').value='5';document.getElementById('vf-promo').value='0';document.getElementById('vf-stock').value='10';document.getElementById('vf-minstock').value='3';
+        renderVendorProducts();populateVendorDeliverySelect();filterProducts();showToast('Produit publié !','success');
+    });
+    document.getElementById('vd-add-row').addEventListener('click',vdAddRow);
+    document.querySelectorAll('.vd-remove-row').forEach(b=>b.addEventListener('click',function(){this.closest('.vd-item-row').remove();vdCalcTotal()}));
+    document.querySelectorAll('.vd-qty,.vd-amt').forEach(el=>el.addEventListener('input',vdCalcTotal));
+    document.querySelectorAll('.vd-prod').forEach(el=>el.addEventListener('change',function(){
+        const p=productById(parseInt(this.value));if(!p)return;
+        const row=this.closest('.vd-item-row');if(!row)return;
+        const amt=row.querySelector('.vd-amt');const qty=row.querySelector('.vd-qty');
+        if(amt&&!amt.value)amt.value=p.price*parseInt(qty.value);
+        vdCalcTotal();
+    }));
+    document.getElementById('vendor-delivery-form').addEventListener('submit',e=>{
+        e.preventDefault();if(!vendorUser){showToast('Connectez-vous d\'abord','warning');return}
+        const items=[];let total=0;
+        document.querySelectorAll('.vd-item-row').forEach(r=>{
+            const pid=parseInt(r.querySelector('.vd-prod').value);if(!pid)return;
+            const qty=parseInt(r.querySelector('.vd-qty').value)||1,amt=parseInt(r.querySelector('.vd-amt').value)||0;
+            const prod=productById(pid);if(prod){items.push({productId:pid,name:prod.name,qty,amount:amt});total+=amt}
+        });
+        if(!items.length){showToast('Ajoutez au moins un produit','warning');return}
+        const o=ld('esodi-vendor-orders',[]);
+        o.push({id:Date.now(),vendor:vendorUser,client:document.getElementById('vd-client').value.trim(),phone:document.getElementById('vd-phone').value.trim(),city:document.getElementById('vd-city').value.trim(),items,total,status:document.getElementById('vd-status').value,date:new Date().toLocaleDateString('fr-FR')});
+        sd('esodi-vendor-orders',o);e.target.reset();document.getElementById('vd-items').innerHTML='';vdAddRow();populateVendorDeliverySelect();renderVendorOrders();showToast('Livraison enregistrée !','success');
+    });
+
+    /* PRICE MANAGEMENT EVENTS */
+    document.getElementById('pm-start-scan').addEventListener('click',pmStartScanner);
+    document.getElementById('pm-stop-scan').addEventListener('click',pmStopScanner);
+    document.getElementById('pm-gen-all').addEventListener('click',function(){if(!vendorUser){showToast('Connectez-vous d\'abord','warning');return}renderPriceMgmtQR();showToast('QR Codes générés','success')});
+    document.getElementById('pm-print-all').addEventListener('click',pmPrintAll);
+    document.getElementById('pm-export-qr').addEventListener('click',pmExportQR);
+    document.getElementById('pm-import-qr').addEventListener('click',function(){document.getElementById('pm-file-input').click()});
+    document.getElementById('pm-file-input').addEventListener('change',pmImportQR);
+    document.getElementById('pm-reset-db').addEventListener('click',function(){
+        if(confirm('⚠️ ATTENTION : Cette action va supprimer TOUTES les données de la boutique (produits, commandes, clients, vendeurs, etc.).\n\nVoulez-vous vraiment réinitialiser la base ?')){
+            if(confirm('DERNIÈRE CHANCE : Êtes-vous sûr de vouloir tout supprimer ?')){
+                Object.keys(localStorage).forEach(function(key){
+                    if(key.startsWith('esodi-')) localStorage.removeItem(key);
+                });
+                showToast('Base réinitialisée ! Rechargement...','success');
+                setTimeout(function(){location.reload()},1500);
+            }
+        }
+    });
+
+    document.querySelectorAll('.modal-overlay').forEach(m=>{m.addEventListener('click',function(e){if(e.target===this){this.classList.remove('active');document.body.style.overflow='';if(this.id==='vendor-register-modal'){document.getElementById('vendor-register-form').querySelector('button').disabled=false;document.getElementById('vr-result').style.display='none'};if(this.id==='payment-modal'){document.getElementById('btn-pay-whatsapp').style.display='flex';document.getElementById('payment-options').style.display='none'}}})});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'){document.querySelectorAll('.modal-overlay.active').forEach(function(m){m.classList.remove('active');document.body.style.overflow='';if(m.id==='vendor-register-modal'){document.getElementById('vendor-register-form').querySelector('button').disabled=false;document.getElementById('vr-result').style.display='none'};if(m.id==='payment-modal'){document.getElementById('btn-pay-whatsapp').style.display='flex';document.getElementById('payment-options').style.display='none'}});}});
+
+    /* SCROLL TO TOP */
+    window.addEventListener('scroll',function(){
+        document.getElementById('scroll-top').classList.toggle('visible',window.scrollY>300);
+    });
+
+    /* STORAGE SYNC — multi-onglets */
+    window.addEventListener('storage',function(e){
+        if(e.key&&e.key.startsWith('esodi-')){
+            products=ld(C.keys.products,[]);
+            cart=ld(C.keys.cart,[]);
+            wishlist=ld(C.keys.wishlist,[]);
+            filterProducts();updateCartUI();updateWishUI();
+            if(adminUser&&document.getElementById('view-dash').classList.contains('active'))renderDash();
+            if(document.getElementById('view-orders').classList.contains('active'))renderSales();
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>
