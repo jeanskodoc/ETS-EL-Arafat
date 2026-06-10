@@ -1002,7 +1002,7 @@ function openCheckout(){
     const t=sub+del;
     let msg='🛳️ *COMMANDE ETS EL Arafat*\n==============================\n';
     items.forEach(i=>{msg+=`📦 *${i.name}* x${i.qty} → ${fmt(i.price*i.qty)}\n`});
-    msg+=`==============================\n🚚 Livraison : ${fmt(del)}\n💵 *Total : ${fmt(t)}*\n🏪 ETS EL Arafat\n📍 Atakpamé, ENS-Togo, Face station TEXACO\n📞 +228 91 98 46 98\n💳 Flooz: +228 99 14 06 06\n💳 YAS: +228 91 98 46 98\n==============================`;
+    msg+=`==============================\n🚚 Livraison : ${fmt(del)}\n💵 *Total : ${fmt(t)}*\n🏪 ETS EL Arafat\n📍 Atakpamé, ENS-Togo, Face station MRS\n📞 +228 91 98 46 98\n💳 Flooz: +228 99 14 06 06\n💳 YAS: +228 91 98 46 98\n==============================`;
     window._ck={msg,total:t,delivery:del,items};
     document.getElementById('pay-summary').innerHTML=`<strong>Total : ${fmt(t)}</strong><br><small>dont ${fmt(del)} livraison</small>`;
     document.getElementById('checkout-name').value='';document.getElementById('checkout-phone').value='';
@@ -1222,7 +1222,7 @@ function renderVendorAccounts(){
 <div style="text-align:right;margin-top:.6rem;font-weight:700;font-size:.95rem">Total général : <span style="color:var(--green)">${fmt(all.reduce((s,x)=>s+(x.total||x.amount||0),0))}</span></div>`;
 
     /* Developer fee */
-    const devFee=Math.round(totalRevenue*25/100);
+    const devFee=Math.round(totalRevenue*10/100);
     const devEl=document.getElementById('dev-fee-summary');
     if(devEl){
         devEl.innerHTML=`
@@ -1310,15 +1310,15 @@ function printDevInvoice(){
     </tbody></table>
     <div class="montant-lettres">
         <strong>Montant total en lettres :</strong> ${totalLettres.charAt(0).toUpperCase()+totalLettres.slice(1)} francs CFA<br>
-        <strong>Part développeur (25%) :</strong> ${devLettres.charAt(0).toUpperCase()+devLettres.slice(1)} francs CFA
+        <strong>Part développeur (10%) :</strong> ${devLettres.charAt(0).toUpperCase()+devLettres.slice(1)} francs CFA
     </div>
     <div class="totals">
         <div class="row"><span class="label">💰 TOTAL CHIFFRE D'AFFAIRES :</span><span class="total">${fmt(total)}</span></div>
-        <div class="row"><span class="label">💻 PART DÉVELOPPEUR (25%) :</span><span class="dev">${fmt(dev)}</span></div>
+        <div class="row"><span class="label">💻 PART DÉVELOPPEUR (10%) :</span><span class="dev">${fmt(dev)}</span></div>
         <div class="row"><span class="label">💰 NET APRÈS PART DÉVELOPPEUR :</span><span class="net">${fmt(net)}</span></div>
     </div>
     <div class="footer">
-        ETS EL Arafat &bull; Atakpamé, ENS-Togo, Face station TEXACO &bull; +228 91 98 46 98<br>
+        ETS EL Arafat &bull; Atakpamé, ENS-Togo, Face station MRS &bull; +228 91 98 46 98<br>
         Document généré le ${today}
     </div>
 </body></html>`);
@@ -1334,7 +1334,7 @@ function printDevInvoice(){
             `━━━━━━━━━━━━━━━━━━━\n`+
             `📦 Commandes : ${count}\n`+
             `💰 CA Total : ${fmt(total)}\n`+
-            `💻 *Part Développeur (25%) : ${fmt(dev)}*\n`+
+            `💻 *Part Développeur (10%) : ${fmt(dev)}*\n`+
             `💰 Net : ${fmt(net)}\n`+
             `━━━━━━━━━━━━━━━━━━━\n`+
             `📝 Total en lettres : ${totalLettres}\n`+
@@ -1677,7 +1677,7 @@ function printInvoice(id){
     </style></head><body>
         <div class="header">
             <h1><i class="fas fa-bolt"></i> ETS EL Arafat</h1>
-            <p>Atakpamé, ENS-Togo, Face station TEXACO &bull; +228 91 98 46 98 &bull; contact@etselarafat.tg</p>
+            <p>Atakpamé, ENS-Togo, Face station MRS &bull; +228 91 98 46 98 &bull; contact@etselarafat.tg</p>
         </div>
         <div class="info">
             <div><h3>Facture #${id}</h3><p>Date : ${new Date(ord.date).toLocaleDateString('fr-FR')}</p><p><span class="status">${esc(ord.status||'payé')}</span></p></div>
@@ -1721,7 +1721,7 @@ function printVendorInvoice(id){
     </style></head><body>
         <div class="header">
             <h1><i class="fas fa-store"></i> ETS EL Arafat — ${esc(sellerName||'Boutique')}</h1>
-            <p>Atakpamé, ENS-Togo, Face station TEXACO &bull; +228 91 98 46 98</p>
+            <p>Atakpamé, ENS-Togo, Face station MRS &bull; +228 91 98 46 98</p>
         </div>
         <div class="info">
             <div><h3>Facture #${id}</h3><p>Date : ${ord.date}</p><p><span class="status">${esc(ord.status)}</span></p></div>
@@ -1805,7 +1805,7 @@ function initMap(){
     const el=document.getElementById('shop-map');if(!el)return;
     mapInst=L.map('shop-map',{center:C.shop,zoom:15,zoomControl:true});
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap'}).addTo(mapInst);
-    L.marker(C.shop).addTo(mapInst).bindPopup('<b>ETS EL Arafat</b><br>Atakpamé, ENS-Togo<br>Face station TEXACO<br>📞 +228 91 98 46 98').openPopup();
+    L.marker(C.shop).addTo(mapInst).bindPopup('<b>ETS EL Arafat</b><br>Atakpamé, ENS-Togo<br>Face station MRS<br>📞 +228 91 98 46 98').openPopup();
     setTimeout(()=>mapInst.invalidateSize(),300);
 }
 function getRouteOSM(){
