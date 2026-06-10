@@ -1227,9 +1227,9 @@ function renderVendorAccounts(){
     if(devEl){
         devEl.innerHTML=`
 <div style="flex:1;min-width:140px;background:var(--bg);border-radius:10px;padding:.8rem;text-align:center;border:2px solid var(--accent)"><div style="font-size:1.6rem;font-weight:800;color:var(--accent)">${fmt(totalRevenue)}</div><div style="font-size:.78rem;color:var(--text-light);margin-top:2px">💰 CA Total</div></div>
-<div style="flex:1;min-width:140px;background:var(--bg);border-radius:10px;padding:.8rem;text-align:center;border:2px solid var(--red)"><div style="font-size:1.6rem;font-weight:800;color:var(--red)">${fmt(devFee)}</div><div style="font-size:.78rem;color:var(--text-light);margin-top:2px">💻 Part Développeur (25%)</div></div>
+<div style="flex:1;min-width:140px;background:var(--bg);border-radius:10px;padding:.8rem;text-align:center;border:2px solid var(--red)"><div style="font-size:1.6rem;font-weight:800;color:var(--red)">${fmt(devFee)}</div><div style="font-size:.78rem;color:var(--text-light);margin-top:2px">💻 Part Développeur (10%)</div></div>
 <div style="flex:1;min-width:140px;background:var(--bg);border-radius:10px;padding:.8rem;text-align:center;border:2px solid var(--green)"><div style="font-size:1.6rem;font-weight:800;color:var(--green)">${fmt(totalRevenue-devFee)}</div><div style="font-size:.78rem;color:var(--text-light);margin-top:2px">💰 Net après part développeur</div></div>
-<div style="flex:1;min-width:100px;background:var(--bg);border-radius:10px;padding:.8rem;text-align:center"><div style="font-size:1rem;font-weight:800;color:var(--text)">${nombreEnLettres(devFee).charAt(0).toUpperCase()+nombreEnLettres(devFee).slice(1)}</div><div style="font-size:.78rem;color:var(--text-light);margin-top:2px">En lettres (25%)</div></div>`;
+<div style="flex:1;min-width:100px;background:var(--bg);border-radius:10px;padding:.8rem;text-align:center"><div style="font-size:1rem;font-weight:800;color:var(--text)">${nombreEnLettres(devFee).charAt(0).toUpperCase()+nombreEnLettres(devFee).slice(1)}</div><div style="font-size:.78rem;color:var(--text-light);margin-top:2px">En lettres (10%)</div></div>`;
     }
 }
 
