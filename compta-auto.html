@@ -127,10 +127,43 @@ tbody tr:last-child td { border-bottom: none; }
 .toast-error { background: var(--danger); }
 .toast-info { background: var(--primary); }
 .toast-warning { background: var(--warning); }
-.login-overlay { position: fixed; inset: 0; z-index: 9999; background: linear-gradient(135deg,#0f172a 0%,#1e293b 100%); display: flex; align-items: center; justify-content: center; padding: clamp(12px,4vw,24px); }
+
+/* Login with background image */
+.login-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: url('E2.jpeg') center/cover no-repeat fixed;
+  display: flex; align-items: center; justify-content: center;
+  padding: clamp(12px,4vw,24px);
+}
+.login-overlay::before {
+  content: ''; position: absolute; inset: 0;
+  background: rgba(15,23,42,0.75);
+  z-index: 0;
+}
 .login-overlay.hidden { display: none; }
-.login-box { background: var(--surface); border-radius: var(--radius); padding: clamp(24px,6vw,40px) clamp(20px,5vw,36px); width: 100%; max-width: min(400px,calc(100vw - 24px)); text-align: center; }
-.login-box h2 { font-size: clamp(1.2rem,5vw,1.5rem); font-weight: 700; background: linear-gradient(135deg,#60a5fa,#a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.login-box {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: clamp(24px,6vw,40px) clamp(20px,5vw,36px);
+  width: 100%; max-width: min(400px,calc(100vw - 24px));
+  text-align: center;
+  position: relative; z-index: 1;
+}
+.login-logo {
+  width: 80px; height: 80px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  border: 3px solid var(--primary-light);
+}
+.login-box h2 {
+  font-size: clamp(1.2rem,5vw,1.5rem);
+  font-weight: 700;
+  background: linear-gradient(135deg,#60a5fa,#a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 .login-box p { color: var(--text-light); font-size: clamp(.75rem,2.2vw,.8rem); margin-bottom: clamp(16px,4vw,24px); }
 .login-form { display: flex; flex-direction: column; gap: clamp(8px,2vw,12px); }
 .login-form input { padding: clamp(10px,2.5vw,11px) clamp(10px,3vw,14px); border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: clamp(.82rem,2.4vw,.9rem); min-height: clamp(40px,10vw,44px); }
@@ -168,6 +201,7 @@ tbody tr:last-child td { border-bottom: none; }
   .search-bar input { min-height: 30px; font-size: .75rem; padding: 5px 8px; }
   .btn { min-height: 28px; padding: 5px 10px; font-size: .72rem; }
   .btn-sm { min-height: 22px; padding: 3px 6px; font-size: .62rem; }
+  .login-logo { width: 60px; height: 60px; }
 }
 
 /* Tablets & small screens (< 768px) */
@@ -226,9 +260,7 @@ tbody tr:last-child td { border-bottom: none; }
 }
 
 /* Sidebar overlay only on small/tablet */
-@media (min-width: 769px) {
-  .sidebar-overlay { display: none !important; }
-}
+@media (min-width: 769px) { .sidebar-overlay { display: none !important; } }
 
 /* Landscape phones */
 @media (max-width: 768px) and (orientation: landscape) {
@@ -261,11 +293,6 @@ tbody tr:last-child td { border-bottom: none; }
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
   .card:hover { transform: none; }
   .btn:active { transform: none; }
-}
-
-/* Dark mode support (optional, with data-theme) */
-@media (prefers-color-scheme: dark) {
-  /* Keep app light for now - accounting apps prefer light */
 }
 </style>
 </head>
@@ -325,6 +352,7 @@ tbody tr:last-child td { border-bottom: none; }
 </div>
 <div id="login-overlay" class="login-overlay">
   <div class="login-box">
+    <img src="E1.jpeg" alt="Logo" class="login-logo">
     <h2>ComptaAuto</h2>
     <p>Gestion comptable et stocks automatis&eacute;e</p>
     <div class="login-form">
@@ -465,7 +493,6 @@ function imprimerModule(){
   setTimeout(function(){w.print()},500);
 }
 
-// Quick action panel for dashboard
 function getQuickActions(){
   return '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(120px,100%),1fr));gap:clamp(4px,1vw,8px);margin-bottom:clamp(8px,2vw,16px);width:100%">'+
     '<button class="btn btn-sm btn-primary" onclick="navigateTo(\'mouvements\')" style="justify-content:center">+ Mouvement stock</button>'+
@@ -475,7 +502,6 @@ function getQuickActions(){
     '</div>';
 }
 
-// Status bar helpers
 function getStatusBar(){
   var nbEcritures=DB.all('journal').length;
   var nbMvt=DB.all('mouvements').length;
@@ -483,7 +509,6 @@ function getStatusBar(){
   return '<div style="margin-top:clamp(12px,3vw,20px);padding:clamp(6px,1.5vw,10px) clamp(10px,2.5vw,16px);background:var(--secondary-light);border-radius:var(--radius-sm);font-size:clamp(.65rem,1.8vw,.75rem);color:var(--text-secondary);display:flex;gap:clamp(8px,2vw,24px);flex-wrap:wrap;align-items:center"><span>&#128203; Ex: <strong>'+exo+'</strong></span><span>&#128221; &Eacute;critures: <strong>'+nbEcritures+'</strong></span><span>&#128666; Mouv.: <strong>'+nbMvt+'</strong></span><span style="margin-left:auto;opacity:.5">ComptaAuto</span></div>';
 }
 
-// "Ajouter" header button helper
 function addBtn(){
   var h=ADD_HANDLERS[currentActiveModule];
   return h?'<button class="btn btn-primary" onclick="openAddModal()">+ Ajouter</button>':'';
@@ -506,11 +531,9 @@ DB.update=function(k,id,data){var items=DB.all(k);var idx=items.findIndex(functi
 DB.remove=function(k,id){localStorage.setItem(STORE_PREFIX+k,JSON.stringify(DB.all(k).filter(function(i){return i.id!==id})))};
 DB.clear=function(k){localStorage.setItem(STORE_PREFIX+k,'[]')};
 
-// Init
 (function(){
   if(localStorage.getItem(APP_KEY))return;
   DB.keys.forEach(function(k){if(!localStorage.getItem(STORE_PREFIX+k))localStorage.setItem(STORE_PREFIX+k,'[]')});
-  // Plan comptable SYSCOHADA
   var accounts=[
     {numero:'101',intitule:'Capital social',classe:'1',type:'passif'},
     {numero:'106',intitule:'Reserves',classe:'1',type:'passif'},
@@ -586,17 +609,14 @@ DB.clear=function(k){localStorage.setItem(STORE_PREFIX+k,'[]')};
     {numero:'78',intitule:'Reprises provisions',classe:'7',type:'produit'}
   ];
   accounts.forEach(function(a){DB.add('plan_comptable',a)});
-  // Exercice
   var y=new Date().getFullYear();
   DB.add('exercices',{code:String(y),libelle:'Exercice '+y,dateDebut:y+'-01-01',dateFin:y+'-12-31',cloture:false});
-  // Regles par defaut
   DB.add('regles_comptabilisation',{libelle:'Achat stock (Entree)',declencheur:'mouvement_stock',categorie:'achat',compteDebit:'37',compteCredit:'401',libelleModele:'Achat {nom} - {montant} FCFA',modeCalcul:'quantite_x_prix',champMontant:'prixAchat',actif:true,notes:'Automatique: entree stock -> debit stock, credit fournisseur'});
   DB.add('regles_comptabilisation',{libelle:'Vente stock (Sortie)',declencheur:'mouvement_stock',categorie:'vente',compteDebit:'411',compteCredit:'701',libelleModele:'Vente {nom} - {montant} FCFA',modeCalcul:'quantite_x_prix',champMontant:'prixVente',actif:true,notes:'Automatique: sortie stock -> debit client, credit vente'});
   DB.add('regles_comptabilisation',{libelle:'Variation stock (Sortie)',declencheur:'mouvement_stock',categorie:'stock',compteDebit:'603',compteCredit:'37',libelleModele:'Sortie stock {nom} - qte {quantite}',modeCalcul:'quantite_x_prix',champMontant:'prixAchat',actif:true,notes:'Constatation sortie de stock'});
   localStorage.setItem(APP_KEY,'1');
 })();
 
-// Compta functions
 var Compta={};
 Compta.getSolde=function(numero,dateFin){
   var es=DB.all('journal');
@@ -629,7 +649,6 @@ DB.getExerciceCourant=function(){
   return a?a.code:(exs[0]?exs[0].code:String(new Date().getFullYear()));
 };
 
-// Regles
 var Regles={};
 Regles.executer=function(evenement,data){
   var regles=DB.all('regles_comptabilisation').filter(function(r){return r.actif!==false&&r.declencheur===evenement});
@@ -652,7 +671,6 @@ Regles.executer=function(evenement,data){
   return created;
 };
 
-// Navigation
 var MODULES={},ADD_HANDLERS={},SAVE_HANDLERS={};
 var currentActiveModule='dashboard',currentEditId=null,currentModule=null;
 
@@ -673,11 +691,9 @@ function navigateTo(m){
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('sidebarOverlay').classList.remove('open');
   mod.render();
-  // Add status bar if not already added by the module
   var mc=document.getElementById('module-content');
   if(!mc.querySelector('.status-bar-placeholder')){
     var sb=getStatusBar();
-    // Check if render already appended a status bar
     if(mc.innerHTML.indexOf('Ex:')===-1)mc.insertAdjacentHTML('beforeend','<div class="status-bar-placeholder">'+sb+'</div>');
   }
   updateAlertBadge();
@@ -721,710 +737,835 @@ function closeModal(e){
   currentEditId=null;currentModule=null;
 }
 
-// ============================================================
-// MODULE: DASHBOARD
-// ============================================================
-MODULES.dashboard={title:'Tableau de bord',headerActions:function(){return getQuickActions()+readonlyToolbar()},
-render:function(){
-  var journal=DB.all('journal');
-  var mvts=DB.all('mouvements');
-  var fours=DB.all('fournisseurs');
-  var regles=DB.all('regles_comptabilisation');
-  var totalEcritures=journal.length;
-  var totalMontant=journal.reduce(function(s,e){return s+(Number(e.montant)||0)},0);
-  var totalMvts=mvts.length;
-  var nbRegles=regles.filter(function(r){return r.actif!==false}).length;
-  var soldeBanque=Compta.getSolde('501');
-  var soldeCaisse=Compta.getSolde('502');
-  var totalVentes=journal.filter(function(e){return e.compteCredit&&e.compteCredit.charAt(0)==='7'}).reduce(function(s,e){return s+(Number(e.montant)||0)},0);
-  var totalAchats=journal.filter(function(e){return e.compteDebit&&e.compteDebit.charAt(0)==='6'}).reduce(function(s,e){return s+(Number(e.montant)||0)},0);
-  var c=document.getElementById('module-content');
-  c.innerHTML='<div class="cards">'+
-    '<div class="card" data-accent="blue"><h4>Ecritures comptables</h4><div class="value blue">'+totalEcritures+'</div></div>'+
-    '<div class="card" data-accent="orange"><h4>Mouvements stock</h4><div class="value orange">'+totalMvts+'</div></div>'+
-    '<div class="card" data-accent="green"><h4>Fournisseurs</h4><div class="value green">'+fours.length+'</div></div>'+
-    '<div class="card" data-accent="purple"><h4>Regles actives</h4><div class="value purple">'+nbRegles+'</div></div>'+
-    '<div class="card" data-accent="green"><h4>Solde banque</h4><div class="value green">'+ef(soldeBanque)+'</div></div>'+
-    '<div class="card" data-accent="blue"><h4>Solde caisse</h4><div class="value blue">'+ef(soldeCaisse)+'</div></div>'+
-    '<div class="card" data-accent="green"><h4>Total ventes</h4><div class="value green">'+ef(totalVentes)+'</div></div>'+
-    '<div class="card" data-accent="red"><h4>Total achats</h4><div class="value red">'+ef(totalAchats)+'</div></div>'+
-    '</div><h3 class="section-title">Dernieres ecritures</h3>'+
-    '<div class="table-wrapper"><div class="table-scroll"><table><thead><tr><th>Date</th><th>Libelle</th><th>Debit</th><th>Credit</th><th>Montant</th></tr></thead><tbody id="dash-tbody"></tbody></table></div></div>';
-  var tbody=document.getElementById('dash-tbody');
-  var recent=journal.slice(-10).reverse();
-  if(!recent.length){tbody.innerHTML='<tr><td colspan="5" class="empty-state"><span class="icon">&#128203;</span>Aucune ecriture</td></tr>'}
+// ===== MODULES =====
 
-else{recent.forEach(function(e){
-    var r=document.createElement('tr');
-    r.innerHTML='<td>'+formatDate(e.date)+'</td><td><strong>'+esc(e.libelle)+'</strong></td><td>'+esc(e.compteDebit)+'</td><td>'+esc(e.compteCredit)+'</td><td style="font-weight:600">'+ef(e.montant)+'</td>';
-    tbody.appendChild(r)
-  })}
-  document.getElementById('module-content').insertAdjacentHTML('beforeend',getStatusBar());
-  document.getElementById('exercice-badge').textContent=DB.getExerciceCourant()||'';
-  updateAlertBadge();
-}};
-
-// ============================================================
-// MODULE: PLAN COMPTABLE
-// ============================================================
-MODULES['plan-comptable']={title:'Plan comptable',headerActions:function(){return fullToolbar()},
-render:function(){
-  var comptes=DB.all('plan_comptable');
-  var c=document.getElementById('module-content');
-  c.innerHTML='<div class="search-bar"><input type="text" id="search-pc" placeholder="Rechercher..." oninput="filterTable(\'search-pc\',\'pc-tbody\')"></div>'+
-    '<div class="table-wrapper"><div class="table-scroll"><table><thead><tr><th>Numero</th><th>Intitule</th><th>Classe</th><th>Type</th><th>Solde</th><th>Actions</th></tr></thead><tbody id="pc-tbody"></tbody></table></div></div>';
-  var tbody=document.getElementById('pc-tbody');
-  if(!comptes.length){tbody.innerHTML='<tr><td colspan="6" class="empty-state"><span class="icon">&#128203;</span>Aucun compte</td></tr>';return}
-  comptes.forEach(function(cpt){
-    var solde=Compta.getSolde(cpt.numero);
-    var cls={'1':'Capitaux','2':'Immobilisations','3':'Stocks','4':'Tiers','5':'Tresorerie','6':'Charges','7':'Produits'}[cpt.classe]||cpt.classe;
-    var r=document.createElement('tr');
-    r.innerHTML='<td><strong>'+esc(cpt.numero)+'</strong></td><td>'+esc(cpt.intitule)+'</td><td>'+esc(cls)+'</td><td>'+esc(cpt.type)+'</td><td style="font-weight:600;color:'+(solde>=0?'var(--success)':'var(--danger)')+'">'+ef(solde)+'</td>'+
-      '<td class="actions-cell"><button class="btn btn-sm btn-primary" onclick="editCompte(\''+cpt.id+'\')">Modifier</button><button class="btn btn-sm btn-danger" onclick="deleteCompte(\''+cpt.id+'\')">Suppr.</button></td>';
-    tbody.appendChild(r)
-  })
-}};
-function compteForm(item){
-  return '<div class="form-row"><div class="form-group"><label>Numero *</label><input type="text" id="f-numero" value="'+esc(item?.numero||'')+'"></div>'+
-    '<div class="form-group"><label>Intitule *</label><input type="text" id="f-intitule" value="'+esc(item?.intitule||'')+'"></div></div>'+
-    '<div class="form-row"><div class="form-group"><label>Classe</label><select id="f-classe"><option value="1"'+(item?.classe==='1'?' selected':'')+'>1-Capitaux</option><option value="2"'+(item?.classe==='2'?' selected':'')+'>2-Immobilisations</option><option value="3"'+(item?.classe==='3'?' selected':'')+'>3-Stocks</option><option value="4"'+(item?.classe==='4'?' selected':'')+'>4-Tiers</option><option value="5"'+(item?.classe==='5'?' selected':'')+'>5-Tresorerie</option><option value="6"'+(item?.classe==='6'?' selected':'')+'>6-Charges</option><option value="7"'+(item?.classe==='7'?' selected':'')+'>7-Produits</option></select></div>'+
-    '<div class="form-group"><label>Type</label><select id="f-type"><option value="actif"'+(item?.type==='actif'?' selected':'')+'>Actif</option><option value="passif"'+(item?.type==='passif'?' selected':'')+'>Passif</option><option value="charge"'+(item?.type==='charge'?' selected':'')+'>Charge</option><option value="produit"'+(item?.type==='produit'?' selected':'')+'>Produit</option></select></div></div>';
-}
-function compteSave(){return{numero:document.getElementById('f-numero').value,intitule:document.getElementById('f-intitule').value,classe:document.getElementById('f-classe').value,type:document.getElementById('f-type').value}}
-function openAddCompte(){currentModule='plan-comptable';currentEditId=null;openModal('Ajouter compte',compteForm())}
-function editCompte(id){currentModule='plan-comptable';currentEditId=id;var item=DB.get('plan_comptable',id);if(item)openModal('Modifier compte',compteForm(item))}
-function deleteCompte(id){if(!confirm('Supprimer ce compte ?'))return;DB.remove('plan_comptable',id);showToast('Compte supprime');MODULES['plan-comptable'].render()}
-ADD_HANDLERS['plan-comptable']=openAddCompte;SAVE_HANDLERS['plan-comptable']=compteSave;
-
-// ============================================================
-// MODULE: JOURNAL
-// ============================================================
-MODULES.journal={title:'Journal comptable',headerActions:function(){return fullToolbar()},
-render:function(){
-  var es=DB.all('journal');
-  var c=document.getElementById('module-content');
-  c.innerHTML='<div class="search-bar"><input type="text" id="search-j" placeholder="Rechercher..." oninput="filterTable(\'search-j\',\'j-tbody\')"></div>'+
-    '<div class="table-wrapper"><div class="table-scroll"><table><thead><tr><th>Date</th><th>Libelle</th><th>Debit</th><th>Credit</th><th>Montant</th><th>Type</th><th>Val.</th><th>Actions</th></tr></thead><tbody id="j-tbody"></tbody></table></div></div>';
-  var tbody=document.getElementById('j-tbody');
-  if(!es.length){tbody.innerHTML='<tr><td colspan="8" class="empty-state"><span class="icon">&#128221;</span>Aucune ecriture</td></tr>';return}
-  es.forEach(function(e){
-    var r=document.createElement('tr');
-    var tLbl=e.type==='automatique'?'<span class="badge badge-purple">Auto</span>':'<span class="badge badge-info">Manuelle</span>';
-    var vLbl=e.validation==='validee'?'<span class="badge badge-success">Validee</span>':'<span class="badge badge-warning">Prov.</span>';
-    r.innerHTML='<td>'+formatDate(e.date)+'</td><td><strong>'+esc(e.libelle)+'</strong></td><td>'+esc(e.compteDebit)+'</td><td>'+esc(e.compteCredit)+'</td><td style="font-weight:600">'+ef(e.montant)+'</td><td>'+tLbl+'</td><td>'+vLbl+'</td>'+
-      '<td class="actions-cell"><button class="btn btn-sm btn-primary" onclick="editEcriture(\''+e.id+'\')">Modifier</button>'+
-      '<button class="btn btn-sm '+(e.validation==='validee'?'btn-ghost':'btn-success')+'" onclick="validerEcriture(\''+e.id+'\')">'+(e.validation==='validee'?'Devalider':'Valider')+'</button>'+
-      '<button class="btn btn-sm btn-danger" onclick="deleteEcriture(\''+e.id+'\')">Suppr.</button></td>';
-    tbody.appendChild(r)
-  })
-}};
-
-function ecritureForm(item){
-  var comptes=DB.all('plan_comptable');
-  var opts=comptes.map(function(c){return'<option value="'+esc(c.numero)+'">'+esc(c.numero)+' - '+esc(c.intitule)+'</option>'}).join('');
-  return '<div class="form-row"><div class="form-group"><label>Date *</label><input type="date" id="f-date" value="'+(item?.date||today())+'"></div>'+
-    '<div class="form-group"><label>Categorie</label><select id="f-cat"><option value="">--</option><option value="achat"'+(item?.categorie==='achat'?' selected':'')+'>Achat</option><option value="vente"'+(item?.categorie==='vente'?' selected':'')+'>Vente</option><option value="salaire"'+(item?.categorie==='salaire'?' selected':'')+'>Salaire</option><option value="frais"'+(item?.categorie==='frais'?' selected':'')+'>Frais</option><option value="tva"'+(item?.categorie==='tva'?' selected':'')+'>TVA</option><option value="amortissement"'+(item?.categorie==='amortissement'?' selected':'')+'>Amortissement</option><option value="investissement"'+(item?.categorie==='investissement'?' selected':'')+'>Investissement</option><option value="autre"'+(item?.categorie==='autre'?' selected':'')+'>Autre</option></select></div></div>'+
-    '<div class="form-group"><label>Libelle *</label><input type="text" id="f-libelle" value="'+esc(item?.libelle||'')+'"></div>'+
-    '<div class="form-row"><div class="form-group"><label>Compte Debit *</label><select id="f-cd">'+opts+'</select></div>'+
-    '<div class="form-group"><label>Compte Credit *</label><select id="f-cc">'+opts+'</select></div></div>'+
-    '<div class="form-group"><label>Montant * (FCFA)</label><input type="number" step="0.01" id="f-montant" value="'+(item?.montant||0)+'"></div>'+
-    '<div class="form-row"><div class="form-group"><label>Reference</label><input type="text" id="f-ref" value="'+esc(item?.reference||'')+'"></div>'+
-    '<div class="form-group"><label>Validation</label><select id="f-val"><option value="provisoire"'+(item?.validation!=='validee'?' selected':'')+'>Provisoire</option><option value="validee"'+(item?.validation==='validee'?' selected':'')+'>Validee</option></select></div></div>'+
-    '<div class="form-group"><label>Notes</label><textarea id="f-notes" rows="2">'+esc(item?.notes||'')+'</textarea></div>';
-}
-function ecritureSave(){
-  var d={date:document.getElementById('f-date').value,libelle:document.getElementById('f-libelle').value,compteDebit:document.getElementById('f-cd').value,compteCredit:document.getElementById('f-cc').value,montant:parseFloat(document.getElementById('f-montant').value)||0,categorie:document.getElementById('f-cat').value,reference:document.getElementById('f-ref').value,validation:document.getElementById('f-val').value,notes:document.getElementById('f-notes').value};
-  if(!d.libelle||!d.compteDebit||!d.compteCredit||d.montant<=0){showToast('Libelle, comptes et montant requis','error');return false}
-  d.exercice=DB.getExerciceCourant();return d;
-}
-function openAddEcriture(){currentModule='journal';currentEditId=null;openModal('Ajouter ecriture',ecritureForm())}
-function editEcriture(id){currentModule='journal';currentEditId=id;var item=DB.get('journal',id);if(item)openModal('Modifier ecriture',ecritureForm(item))}
-function deleteEcriture(id){if(!confirm('Supprimer ?'))return;DB.remove('journal',id);showToast('Supprimee');MODULES.journal.render()}
-function validerEcriture(id){
-  var e=DB.get('journal',id);if(!e)return;
-  DB.update('journal',id,{validation:e.validation==='validee'?'provisoire':'validee'});
-  showToast(e.validation==='validee'?'Devalidee':'Validee');MODULES.journal.render();
-}
-ADD_HANDLERS.journal=openAddEcriture;SAVE_HANDLERS.journal=ecritureSave;
-
-// ============================================================
-// MODULE: BALANCE GENERALE
-// ============================================================
-MODULES.balance={title:'Balance generale',headerActions:function(){return exportBtn()+csvBtn()+printBtn()+helpBtn()},
-render:function(){
-  var es=DB.all('journal');
-  var comptes=DB.all('plan_comptable');
-  var bal={};
-  es.forEach(function(e){
-    var m=Number(e.montant)||0;
-    if(e.compteDebit){if(!bal[e.compteDebit])bal[e.compteDebit]={compte:e.compteDebit,td:0,tc:0,lib:''};bal[e.compteDebit].td+=m}
-    if(e.compteCredit){if(!bal[e.compteCredit])bal[e.compteCredit]={compte:e.compteCredit,td:0,tc:0,lib:''};bal[e.compteCredit].tc+=m}
-  });
-  Object.keys(bal).forEach(function(k){var c=comptes.find(function(c){return c.numero===k});if(c)bal[k].lib=c.intitule});
-  var rows=Object.values(bal).sort(function(a,b){return a.compte.localeCompare(b.compte)});
-  var ttd=0,ttc=0;
-  var c=document.getElementById('module-content');
-  c.innerHTML='<div class="search-bar"><input type="text" id="search-bal" placeholder="Rechercher..." oninput="filterTable(\'search-bal\',\'bal-tbody\')"></div>'+
-    '<div class="table-wrapper"><div class="table-scroll"><table><thead><tr><th>Compte</th><th>Intitule</th><th>Total Debit</th><th>Total Credit</th><th>Solde</th></tr></thead><tbody id="bal-tbody"></tbody></table></div></div>';
-  var tbody=document.getElementById('bal-tbody');
-  if(!rows.length){tbody.innerHTML='<tr><td colspan="5" class="empty-state"><span class="icon">&#128203;</span>Aucune ecriture</td></tr>';return}
-  rows.forEach(function(r){
-    ttd+=r.td;ttc+=r.tc;
-    var solde=Compta.getSoldeNature(r.compte)==='crediteur'?r.tc-r.td:r.td-r.tc;
-    var tr=document.createElement('tr');
-    tr.innerHTML='<td><strong>'+esc(r.compte)+'</strong></td><td>'+esc(r.lib||'-')+'</td><td class="text-right">'+ef(r.td)+'</td><td class="text-right">'+ef(r.tc)+'</td><td style="font-weight:600;color:'+(solde>=0?'var(--success)':'var(--danger)')+'">'+ef(solde)+'</td>';
-    tbody.appendChild(tr)
-  });
-  var tr=document.createElement('tr');
-  tr.style.background='var(--primary-light)';tr.style.fontWeight='700';
-  tr.innerHTML='<td colspan="2"><strong>TOTAUX</strong></td><td class="text-right"><strong>'+ef(ttd)+'</strong></td><td class="text-right"><strong>'+ef(ttc)+'</strong></td><td><strong>'+ef(ttd-ttc)+'</strong></td>';
-  tbody.appendChild(tr)
-}};
-
-// ============================================================
-// MODULE: GRAND LIVRE
-// ============================================================
-MODULES['grand-livre']={title:'Grand livre',headerActions:function(){return exportBtn()+csvBtn()+printBtn()+helpBtn()},
-render:function(){
-  var comptes=DB.all('plan_comptable');
-  var es=DB.all('journal');
-  var c=document.getElementById('module-content');
-  var fils=comptes.map(function(cpt){
-    var lignes=es.filter(function(e){return e.compteDebit===cpt.numero||e.compteCredit===cpt.numero}).sort(function(a,b){return(a.date||'').localeCompare(b.date||'')});
-    if(!lignes.length)return'';
-    var solde=0;
-    var rows=lignes.map(function(e){
-      var md=e.compteDebit===cpt.numero?Number(e.montant)||0:0;
-      var mc=e.compteCredit===cpt.numero?Number(e.montant)||0:0;
-      var nature=Compta.getSoldeNature(cpt.numero);
-      solde+=(nature==='crediteur'?mc-md:md-mc);
-      return'<tr><td>'+formatDate(e.date)+'</td><td>'+esc(e.libelle)+'</td><td class="text-right">'+(md?ef(md):'')+'</td><td class="text-right">'+(mc?ef(mc):'')+'</td><td style="font-weight:600">'+ef(solde)+'</td></tr>'
-    }).join('');
-    return'<div class="gl-section"><h3 class="section-title">'+esc(cpt.numero)+' - '+esc(cpt.intitule)+'</h3><div class="table-wrapper" style="margin-bottom:16px"><div class="table-scroll"><table><thead><tr><th>Date</th><th>Libelle</th><th>Debit</th><th>Credit</th><th>Solde</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>'
-  }).filter(function(s){return s}).join('');
-  c.innerHTML='<div class="search-bar"><input type="text" id="search-gl" placeholder="Filtrer..." oninput="filtrerGL()"></div><div id="gl-content">'+(fils||'<div class="empty-state"><span class="icon">&#128214;</span>Aucune ecriture</div>')+'</div>'
-}};
-function filtrerGL(){
-  var q=document.getElementById('search-gl').value.toLowerCase();
-  document.querySelectorAll('#gl-content .gl-section').forEach(function(el){
-    var h3=el.querySelector('h3');
-    if(!h3)return;
-    var visible=h3.textContent.toLowerCase().includes(q);
-    el.style.display=visible?'':'none';
-  })
-}
-
-// ============================================================
-// MODULE: COMPTES DE RESULTAT
-// ============================================================
-MODULES['comptes-resultat']={title:'Comptes de resultat',headerActions:function(){return exportBtn()+printBtn()+helpBtn()},
-render:function(){
-  var es=DB.all('journal');
-  var chMap={'601':'Achats','602':'Achats matieres','603':'Variation stocks','611':'Services','612':'Loyers','613':'Entretien','614':'Assurances','616':'Transports','617':'Frais banc.','618':'Telecom','62':'Autres serv.','63':'Impots','64':'Personnel','65':'Autres charges','66':'Charges fin.','67':'Dot. amort.','68':'Dot. prov.'};
-  var prMap={'701':'Ventes marchand.','702':'Ventes produits','703':'Prestations','71':'Subventions','75':'Autres prod.','76':'Prod. fin.','77':'Reprises amort.','78':'Reprises prov.'};
-  function calc(m,pref){
-    var t=0,d=[];
-    Object.keys(m).forEach(function(k){
-      var v=es.filter(function(e){return e.compteCredit===k||e.compteDebit===k}).reduce(function(s,e){
-        var mnt=Number(e.montant)||0;
-        if(pref==='c')return s+(e.compteDebit===k?mnt:0);
-        return s+(e.compteCredit===k?mnt:0)
-      },0);
-      if(v){d.push({c:k,l:m[k],m:v});t+=v}
+MODULES['dashboard'] = {
+  title: 'Tableau de bord',
+  render: function() {
+    var es = DB.all('journal');
+    var mvts = DB.all('mouvements');
+    var fours = DB.all('fournisseurs');
+    var totalVentes = 0, totalAchats = 0, totalCharges = 0;
+    es.forEach(function(e) {
+      var m = Number(e.montant) || 0;
+      if (e.compteCredit === '701' || e.compteCredit === '702' || e.compteCredit === '703') totalVentes += m;
+      if (e.compteDebit === '601' || e.compteDebit === '602') totalAchats += m;
+      if ((e.compteDebit||'').startsWith('6')) totalCharges += m;
     });
-    return{t:t,d:d}
-  }
-  var ch=calc(chMap,'c'),pr=calc(prMap,'p');
-  var r=pr.t-ch.t;
-  var c=document.getElementById('module-content');
-  c.innerHTML='<div class="cards"><div class="card" data-accent="red"><h4>Charges</h4><div class="value red">'+ef(ch.t)+'</div></div>'+
-    '<div class="card" data-accent="green"><h4>Produits</h4><div class="value green">'+ef(pr.t)+'</div></div>'+
-    '<div class="card" data-accent="'+(r>=0?'green':'red')+'"><h4>Resultat</h4><div class="value '+(r>=0?'green':'red')+'">'+ef(r)+'</div></div></div>'+
-    '<div class="form-row"><div><h3 class="section-title">Charges</h3><div class="table-wrapper"><table><thead><tr><th>Compte</th><th>Libelle</th><th>Montant</th></tr></thead><tbody>'+
-    (ch.d.length?ch.d.map(function(d){return'<tr><td>'+esc(d.c)+'</td><td>'+esc(d.l)+'</td><td style="font-weight:600;color:var(--danger)">'+ef(d.m)+'</td></tr>'}).join('')+'<tr style="font-weight:700;background:var(--secondary-light)"><td colspan="2">TOTAL</td><td style="color:var(--danger)">'+ef(ch.t)+'</td></tr>':'<tr><td colspan="3" class="empty-state">Aucune</td></tr>')+
-    '</tbody></table></div></div><div><h3 class="section-title">Produits</h3><div class="table-wrapper"><table><thead><tr><th>Compte</th><th>Libelle</th><th>Montant</th></tr></thead><tbody>'+
-    (pr.d.length?pr.d.map(function(d){return'<tr><td>'+esc(d.c)+'</td><td>'+esc(d.l)+'</td><td style="font-weight:600;color:var(--success)">'+ef(d.m)+'</td></tr>'}).join('')+'<tr style="font-weight:700;background:var(--secondary-light)"><td colspan="2">TOTAL</td><td style="color:var(--success)">'+ef(pr.t)+'</td></tr>':'<tr><td colspan="3" class="empty-state">Aucun</td></tr>')+
-    '</tbody></table></div></div></div>'
-}};
-
-// ============================================================
-// MODULE: BILAN COMPTABLE
-// ============================================================
-MODULES.bilan={title:'Bilan comptable',headerActions:function(){return exportBtn()+printBtn()+helpBtn()},
-render:function(){
-  function totalClasse(cls,tp){
-    var total=0;
-    DB.all('plan_comptable').filter(function(c){return c.classe===cls}).forEach(function(c){
-      var s=Compta.getSolde(c.numero);
-      if(s>0)total+=s
+    var stockQte = 0, stockVal = 0;
+    mvts.forEach(function(m) {
+      var q = Number(m.quantite) || 0;
+      if (m.type === 'entree') { stockQte += q; stockVal += q * (Number(m.prixAchat) || 0); }
+      else { stockQte -= q; stockVal -= q * (Number(m.prixAchat) || 0); }
     });
-    return total
-  }
-  var immo=totalClasse('2');var stocks=totalClasse('3');
-  var creances=DB.all('plan_comptable').filter(function(c){return c.type==='actif'&&c.classe==='4'}).reduce(function(s,c){var v=Compta.getSolde(c.numero);return s+(v>0?v:0)},0);
-  var treso=totalClasse('5');
-  var actif=immo+stocks+creances+treso;
-  var capitaux=totalClasse('1');
-  var dettes=DB.all('plan_comptable').filter(function(c){return c.type==='passif'&&c.classe==='4'}).reduce(function(s,c){var v=Compta.getSolde(c.numero);return s+(v>0?v:0)},0);
-  var passif=capitaux+dettes;
-  var c=document.getElementById('module-content');
-  c.innerHTML='<div class="cards"><div class="card" data-accent="blue"><h4>Total Actif</h4><div class="value blue">'+ef(actif)+'</div></div>'+
-    '<div class="card" data-accent="green"><h4>Total Passif</h4><div class="value green">'+ef(passif)+'</div></div>'+
-    '<div class="card" data-accent="'+(Math.abs(actif-passif)<1?'green':'orange')+'"><h4>Equilibre</h4><div class="value '+(Math.abs(actif-passif)<1?'green':'orange')+'">'+ef(actif-passif)+'</div></div></div>'+
-    '<div class="form-row"><div><h3 class="section-title">Actif</h3><div class="table-wrapper"><table><thead><tr><th>Rubrique</th><th>Montant</th></tr></thead><tbody>'+
-    '<tr><td>Immobilisations</td><td style="font-weight:600">'+ef(immo)+'</td></tr><tr><td>Stocks</td><td style="font-weight:600">'+ef(stocks)+'</td></tr><tr><td>Creances</td><td style="font-weight:600">'+ef(creances)+'</td></tr><tr><td>Tresorerie</td><td style="font-weight:600">'+ef(treso)+'</td></tr>'+
-    '<tr style="font-weight:700;background:var(--secondary-light)"><td>TOTAL ACTIF</td><td style="color:var(--primary)">'+ef(actif)+'</td></tr></tbody></table></div></div>'+
-    '<div><h3 class="section-title">Passif</h3><div class="table-wrapper"><table><thead><tr><th>Rubrique</th><th>Montant</th></tr></thead><tbody>'+
-    '<tr><td>Capitaux propres</td><td style="font-weight:600">'+ef(capitaux)+'</td></tr><tr><td>Dettes</td><td style="font-weight:600">'+ef(dettes)+'</td></tr>'+
-    '<tr style="font-weight:700;background:var(--secondary-light)"><td>TOTAL PASSIF</td><td style="color:var(--success)">'+ef(passif)+'</td></tr></tbody></table></div></div></div>'+
-    '<p style="margin-top:12px;font-size:.8rem;color:var(--text-light)"><em>Bilan simplifie calcule depuis les ecritures et le plan comptable.</em></p>'
-}};
-
-// ============================================================
-// MODULE: REGLES DE COMPTABILISATION
-// ============================================================
-MODULES.regles={title:'Regles de comptabilisation',headerActions:function(){return fullToolbar()},
-render:function(){
-  var regles=DB.all('regles_comptabilisation');
-  var c=document.getElementById('module-content');
-  c.innerHTML='<p style="margin-bottom:12px;font-size:.82rem;color:var(--text-secondary)">Configurez les regles de comptabilisation automatique. Les ecritures sont creees automatiquement lors des mouvements de stock.</p>'+
-    '<div class="table-wrapper"><table><thead><tr><th>Libelle</th><th>Declencheur</th><th>Debit</th><th>Credit</th><th>Calcul</th><th>Actif</th><th>Actions</th></tr></thead><tbody id="regles-tbody"></tbody></table></div>';
-  var tbody=document.getElementById('regles-tbody');
-  if(!regles.length){tbody.innerHTML='<tr><td colspan="7" class="empty-state"><span class="icon">&#9881;</span>Aucune regle</td></tr>';return}
-  var dl={'mouvement_stock':'Stock','achat':'Achat','vente':'Vente'};
-  var cl={'fixe':'Fixe','champ_montant':'Champ','quantite_x_prix':'Qte x Prix','pourcentage':'%'};
-  regles.forEach(function(r){
-    var tr=document.createElement('tr');
-    tr.innerHTML='<td><strong>'+esc(r.libelle)+'</strong></td><td>'+esc(dl[r.declencheur]||r.declencheur)+'</td><td>'+esc(r.compteDebit)+'</td><td>'+esc(r.compteCredit)+'</td><td>'+esc(cl[r.modeCalcul]||r.modeCalcul)+'</td><td>'+(r.actif!==false?'<span class="badge badge-success">Actif</span>':'<span class="badge badge-secondary">Inactif</span>')+'</td>'+
-      '<td class="actions-cell"><button class="btn btn-sm btn-primary" onclick="editRegle(\''+r.id+'\')">Modifier</button>'+
-      '<button class="btn btn-sm '+(r.actif!==false?'btn-ghost':'btn-success')+'" onclick="toggleRegle(\''+r.id+'\')">'+(r.actif!==false?'Desactiver':'Activer')+'</button>'+
-      '<button class="btn btn-sm btn-danger" onclick="deleteRegle(\''+r.id+'\')">Suppr.</button></td>';
-    tbody.appendChild(tr)
-  })
-}};
-
-function regleForm(item){
-  var comptes=DB.all('plan_comptable');
-  var opts=comptes.map(function(c){return'<option value="'+esc(c.numero)+'">'+esc(c.numero)+' - '+esc(c.intitule)+'</option>'}).join('');
-  return'<div class="form-group"><label>Libelle *</label><input type="text" id="f-libelle" value="'+esc(item?.libelle||'')+'"></div>'+
-    '<div class="form-row"><div class="form-group"><label>Declencheur</label><select id="f-decl"><option value="mouvement_stock"'+(item?.declencheur==='mouvement_stock'?' selected':'')+'>Mouvement stock</option><option value="achat"'+(item?.declencheur==='achat'?' selected':'')+'>Achat</option><option value="vente"'+(item?.declencheur==='vente'?' selected':'')+'>Vente</option></select></div>'+
-    '<div class="form-group"><label>Categorie</label><select id="f-cat"><option value="">--</option><option value="achat"'+(item?.categorie==='achat'?' selected':'')+'>Achat</option><option value="vente"'+(item?.categorie==='vente'?' selected':'')+'>Vente</option><option value="stock"'+(item?.categorie==='stock'?' selected':'')+'>Stock</option></select></div></div>'+
-    '<div class="form-row"><div class="form-group"><label>Compte Debit *</label><select id="f-cd">'+opts+'</select></div>'+
-    '<div class="form-group"><label>Compte Credit *</label><select id="f-cc">'+opts+'</select></div></div>'+
-    '<div class="form-group"><label>Modele libelle</label><input type="text" id="f-lm" value="'+esc(item?.libelleModele||'{nom} - {montant} FCFA')+'" placeholder="{nom},{reference},{quantite},{montant},{date}"><span class="help-text">Variables: {nom}, {reference}, {quantite}, {montant}, {date}</span></div>'+
-    '<div class="form-row"><div class="form-group"><label>Mode calcul</label><select id="f-mc" onchange="toggleCalc()"><option value="champ_montant"'+(item?.modeCalcul==='champ_montant'||!item?.modeCalcul?' selected':'')+'>Champ montant</option><option value="quantite_x_prix"'+(item?.modeCalcul==='quantite_x_prix'?' selected':'')+'>Qte x Prix</option><option value="fixe"'+(item?.modeCalcul==='fixe'?' selected':'')+'>Montant fixe</option><option value="pourcentage"'+(item?.modeCalcul==='pourcentage'?' selected':'')+'>Pourcentage</option></select></div>'+
-    '<div class="form-group" id="calc-fixe" style="display:'+(item?.modeCalcul==='fixe'?'block':'none')+'"><label>Montant fixe (FCFA)</label><input type="number" id="f-mf" value="'+(item?.montantFixe||0)+'"></div>'+
-    '<div class="form-group" id="calc-pct" style="display:'+(item?.modeCalcul==='pourcentage'?'block':'none')+'"><label>Pourcentage (%)</label><input type="number" step="0.01" id="f-pct" value="'+(item?.pourcentage||0)+'"></div></div>'+
-    '<div class="form-group" id="calc-champ" style="display:'+(item?.modeCalcul==='champ_montant'||!item?.modeCalcul?'block':'none')+'"><label>Champ montant</label><select id="f-cm"><option value="prixAchat"'+(item?.champMontant==='prixAchat'?' selected':'')+'>Prix achat</option><option value="prixVente"'+(item?.champMontant==='prixVente'?' selected':'')+'>Prix vente</option><option value="montant"'+(item?.champMontant==='montant'?' selected':'')+'>Montant</option></select></div>'+
-    '<div class="form-group" id="calc-base" style="display:'+(item?.modeCalcul==='pourcentage'?'block':'none')+'"><label>Champ base</label><select id="f-cb"><option value="montant"'+(item?.champBase==='montant'?' selected':'')+'>Montant</option><option value="prixAchat"'+(item?.champBase==='prixAchat'?' selected':'')+'>Prix achat</option></select></div>'+
-    '<div class="form-group"><label class="checkbox-label"><input type="checkbox" id="f-actif" '+(item?.actif!==false?'checked':'')+'> Regle active</label></div>';
-}
-function toggleCalc(){
-  var v=document.getElementById('f-mc').value;
-  document.getElementById('calc-fixe').style.display=v==='fixe'?'block':'none';
-  document.getElementById('calc-pct').style.display=v==='pourcentage'?'block':'none';
-  document.getElementById('calc-champ').style.display=v==='champ_montant'||v==='quantite_x_prix'?'block':'none';
-  document.getElementById('calc-base').style.display=v==='pourcentage'?'block':'none'
-}
-function regleSave(){
-  return{libelle:document.getElementById('f-libelle').value,declencheur:document.getElementById('f-decl').value,categorie:document.getElementById('f-cat').value,compteDebit:document.getElementById('f-cd').value,compteCredit:document.getElementById('f-cc').value,libelleModele:document.getElementById('f-lm').value,modeCalcul:document.getElementById('f-mc').value,montantFixe:parseFloat(document.getElementById('f-mf').value)||0,pourcentage:parseFloat(document.getElementById('f-pct').value)||0,champMontant:document.getElementById('f-cm')?.value||'prixAchat',champBase:document.getElementById('f-cb')?.value||'montant',actif:document.getElementById('f-actif').checked}
-}
-function openAddRegle(){currentModule='regles';currentEditId=null;openModal('Ajouter regle',regleForm())}
-function editRegle(id){currentModule='regles';currentEditId=id;var item=DB.get('regles_comptabilisation',id);if(item)openModal('Modifier regle',regleForm(item))}
-function deleteRegle(id){if(!confirm('Supprimer ?'))return;DB.remove('regles_comptabilisation',id);showToast('Supprimee');MODULES.regles.render()}
-function toggleRegle(id){var r=DB.get('regles_comptabilisation',id);if(!r)return;DB.update('regles_comptabilisation',id,{actif:r.actif!==false?false:true});showToast(r.actif!==false?'Desactivee':'Activee');MODULES.regles.render()}
-ADD_HANDLERS.regles=openAddRegle;SAVE_HANDLERS.regles=regleSave;
-
-// ============================================================
-// MODULE: ECRITURES AUTO
-// ============================================================
-MODULES['ecritures-auto']={title:'Ecritures automatiques',headerActions:function(){return readonlyToolbar()},
-render:function(){
-  var auto=DB.all('journal').filter(function(e){return e.type==='automatique'});
-  var reglesAct=DB.all('regles_comptabilisation').filter(function(r){return r.actif!==false});
-  var c=document.getElementById('module-content');
-  c.innerHTML='<div class="cards">'+
-    '<div class="card" data-accent="blue"><h4>Ecritures auto</h4><div class="value blue" id="auto-count">'+auto.length+'</div></div>'+
-    '<div class="card" data-accent="green"><h4>Regles actives</h4><div class="value green" id="auto-regles">'+reglesAct.length+'</div></div></div>'+
-    '<div class="module-toolbar">'+
-    '<button class="btn btn-sm btn-success" onclick="genererEcrituresStock()">Generer ecritures stocks</button>'+
-    '<button class="btn btn-sm btn-purple" onclick="genererEcrituresRegles()">Appliquer regles</button>'+
-    '<button class="btn btn-sm btn-ghost" onclick="navigateTo(\'journal\')">Voir journal</button></div>'+
-    '<h3 class="section-title">Dernieres ecritures automatiques</h3>'+
-    '<div class="table-wrapper"><table><thead><tr><th>Date</th><th>Libelle</th><th>Debit</th><th>Credit</th><th>Montant</th></tr></thead><tbody id="auto-tbody"></tbody></table></div>';
-  var tbody=document.getElementById('auto-tbody');
-  var recent=auto.slice(-20).reverse();
-  if(!recent.length){tbody.innerHTML='<tr><td colspan="5" class="empty-state"><span class="icon">&#9889;</span>Aucune ecriture auto</td></tr>';return}
-  recent.forEach(function(e){
-    var r=document.createElement('tr');
-    r.innerHTML='<td>'+formatDate(e.date)+'</td><td><strong>'+esc(e.libelle)+'</strong></td><td>'+esc(e.compteDebit)+'</td><td>'+esc(e.compteCredit)+'</td><td style="font-weight:600">'+ef(e.montant)+'</td>';
-    tbody.appendChild(r)
-  })
-}};
-
-function genererEcrituresStock(){
-  var mvts=DB.all('mouvements');var count=0;
-  mvts.forEach(function(m){
-    if(m._comptabilise)return;
-    if(m.type==='entree'&&(m.prixAchat||0)>0){
-      Compta.addEcriture({date:m.date||today(),libelle:'Achat stock - '+esc(m.articleNom||'Article'),compteDebit:'37',compteCredit:'401',montant:(Number(m.quantite)||1)*(Number(m.prixAchat)||0),type:'automatique',categorie:'achat',reference:m.id,notes:'Generation auto'});
-      DB.update('mouvements',m.id,{_comptabilise:true});count++
-    }
-    if(m.type==='sortie'&&(m.prixVente||0)>0){
-      Compta.addEcriture({date:m.date||today(),libelle:'Vente stock - '+esc(m.articleNom||'Article'),compteDebit:'411',compteCredit:'701',montant:(Number(m.quantite)||1)*(Number(m.prixVente)||0),type:'automatique',categorie:'vente',reference:m.id,notes:'Generation auto'});
-      Compta.addEcriture({date:m.date||today(),libelle:'Sortie stock - '+esc(m.articleNom||'Article'),compteDebit:'603',compteCredit:'37',montant:(Number(m.quantite)||1)*(Number(m.prixAchat)||0),type:'automatique',categorie:'stock',reference:m.id,notes:'Variation stock auto'});
-      DB.update('mouvements',m.id,{_comptabilise:true});count+=2
-    }
-  });
-  showToast(count+' ecritures generees');MODULES['ecritures-auto'].render()
-}
-function genererEcrituresRegles(){
-  var mvts=DB.all('mouvements');var count=0;
-  mvts.forEach(function(m){count+=Regles.executer('mouvement_stock',m).length});
-  showToast(count+' ecritures via regles');MODULES['ecritures-auto'].render()
-}
-
-// ============================================================
-// MODULE: TVA
-// ============================================================
-MODULES.tva={title:'TVA / Taxes',headerActions:function(){return exportBtn()+printBtn()+helpBtn()},
-render:function(){
-  var es=DB.all('journal');
-  var tvaC=es.filter(function(e){return e.compteCredit==='443'}).reduce(function(s,e){return s+(Number(e.montant)||0)},0);
-  var tvaD=es.filter(function(e){return e.compteDebit==='444'}).reduce(function(s,e){return s+(Number(e.montant)||0)},0);
-  var tvaDue=tvaC-tvaD;
-  var c=document.getElementById('module-content');
-  c.innerHTML='<div class="cards">'+
-    '<div class="card" data-accent="blue"><h4>TVA collectee</h4><div class="value blue">'+ef(tvaC)+'</div></div>'+
-    '<div class="card" data-accent="orange"><h4>TVA deductible</h4><div class="value orange">'+ef(tvaD)+'</div></div>'+
-    '<div class="card" data-accent="'+(tvaDue>=0?'red':'green')+'"><h4>TVA due</h4><div class="value '+(tvaDue>=0?'red':'green')+'">'+ef(Math.abs(tvaDue))+'</div></div></div>'+
-    '<div class="module-toolbar"><button class="btn btn-sm btn-primary" onclick="creerDeclarationTVA()">Creer declaration TVA</button></div>'+
-    '<h3 class="section-title">Simulation TVA 18%</h3>'+
-    '<div class="table-wrapper"><table><thead><tr><th>Type</th><th>Base HT</th><th>TVA 18%</th></tr></thead><tbody>'+
-    '<tr><td>Ventes</td><td>'+ef(es.filter(function(e){return e.compteCredit&&e.compteCredit.charAt(0)==='7'}).reduce(function(s,e){return s+(Number(e.montant)||0)},0))+'</td><td>'+ef(es.filter(function(e){return e.compteCredit&&e.compteCredit.charAt(0)==='7'}).reduce(function(s,e){return s+(Number(e.montant)||0)},0)*0.18)+'</td></tr>'+
-    '<tr><td>Achats</td><td>'+ef(es.filter(function(e){return e.compteDebit&&e.compteDebit.charAt(0)==='6'}).reduce(function(s,e){return s+(Number(e.montant)||0)},0))+'</td><td>'+ef(es.filter(function(e){return e.compteDebit&&e.compteDebit.charAt(0)==='6'}).reduce(function(s,e){return s+(Number(e.montant)||0)},0)*0.18)+'</td></tr>'+
-    '</tbody></table></div></div>'
-}};
-function creerDeclarationTVA(){
-  var es=DB.all('journal');
-  var tvaC=es.filter(function(e){return e.compteCredit==='443'}).reduce(function(s,e){return s+(Number(e.montant)||0)},0);
-  var tvaD=es.filter(function(e){return e.compteDebit==='444'}).reduce(function(s,e){return s+(Number(e.montant)||0)},0);
-  DB.add('tva_declarations',{periode:new Date().toISOString().slice(0,7),tvaCollectee:tvaC,tvaDeductible:tvaD,tvaDue:tvaC-tvaD,statut:'preparatoire',dateDeclaration:today()});
-  showToast('Declaration TVA creee: '+ef(tvaC-tvaD));MODULES.tva.render()
-}
-
-// ============================================================
-// MODULE: AMORTISSEMENTS
-// ============================================================
-MODULES.amortissements={title:'Amortissements',headerActions:function(){return fullToolbar()},
-render:function(){
-  var immos=DB.all('immobilisations');
-  var amortis=DB.all('amortissements');
-  var totalAmort=amortis.reduce(function(s,a){return s+(Number(a.montant)||0)},0);
-  var totalImmo=immos.reduce(function(s,i){return s+(Number(i.valeurAchat)||0)},0);
-  var c=document.getElementById('module-content');
-  c.innerHTML='<div class="cards">'+
-    '<div class="card" data-accent="blue"><h4>Immobilisations</h4><div class="value blue">'+ef(totalImmo)+'</div></div>'+
-    '<div class="card" data-accent="orange"><h4>Amortissements</h4><div class="value orange">'+ef(totalAmort)+'</div></div>'+
-    '<div class="card" data-accent="green"><h4>VNC</h4><div class="value green">'+ef(totalImmo-totalAmort)+'</div></div></div>'+
-    '<h3 class="section-title">Immobilisations</h3>'+
-    '<div class="table-wrapper"><table><thead><tr><th>Designation</th><th>Acquisition</th><th>Valeur</th><th>Duree</th><th>Taux</th><th>Actions</th></tr></thead><tbody id="immo-tbody"></tbody></table></div>';
-  var tbody=document.getElementById('immo-tbody');
-  if(!immos.length){tbody.innerHTML='<tr><td colspan="6" class="empty-state"><span class="icon">&#128252;</span>Aucune immobilisation</td></tr>';return}
-  immos.forEach(function(i){
-    var tx=i.dureeVie?(100/i.dureeVie).toFixed(1):'-';
-    var tr=document.createElement('tr');
-    tr.innerHTML='<td><strong>'+esc(i.designation)+'</strong></td><td>'+formatDate(i.dateAcquisition)+'</td><td>'+ef(i.valeurAchat)+'</td><td>'+esc(i.dureeVie||'-')+' ans</td><td>'+tx+'%</td>'+
-      '<td class="actions-cell"><button class="btn btn-sm btn-primary" onclick="editImmo(\''+i.id+'\')">Modifier</button>'+
-      '<button class="btn btn-sm btn-success" onclick="calculerAmortissement(\''+i.id+'\')">Amortir</button>'+
-      '<button class="btn btn-sm btn-danger" onclick="deleteImmo(\''+i.id+'\')">Suppr.</button></td>';
-    tbody.appendChild(tr)
-  })
-}};
-
-function immoForm(item){
-  return '<div class="form-group"><label>Designation *</label><input type="text" id="f-des" value="'+esc(item?.designation||'')+'"></div>'+
-    '<div class="form-row"><div class="form-group"><label>Date acquisition</label><input type="date" id="f-da" value="'+(item?.dateAcquisition||today())+'"></div>'+
-    '<div class="form-group"><label>Valeur (FCFA) *</label><input type="number" step="0.01" id="f-val" value="'+(item?.valeurAchat||0)+'"></div></div>'+
-    '<div class="form-row"><div class="form-group"><label>Duree de vie (ans)</label><input type="number" id="f-dur" value="'+(item?.dureeVie||5)+'" min="1"></div>'+
-    '<div class="form-group"><label>Compte comptable</label><input type="text" id="f-cpt" value="'+esc(item?.compteComptable||'24')+'"></div></div>'+
-    '<div class="form-group"><label>Notes</label><textarea id="f-notes" rows="2">'+esc(item?.notes||'')+'</textarea></div>';
-}
-function immoSave(){return{designation:document.getElementById('f-des').value,dateAcquisition:document.getElementById('f-da').value,valeurAchat:parseFloat(document.getElementById('f-val').value)||0,dureeVie:parseInt(document.getElementById('f-dur').value)||5,compteComptable:document.getElementById('f-cpt').value,notes:document.getElementById('f-notes').value}}
-function openAddImmo(){currentModule='amortissements';currentEditId=null;openModal('Ajouter immobilisation',immoForm())}
-function editImmo(id){currentModule='amortissements';currentEditId=id;var item=DB.get('immobilisations',id);if(item)openModal('Modifier immobilisation',immoForm(item))}
-function deleteImmo(id){if(!confirm('Supprimer ?'))return;DB.remove('immobilisations',id);showToast('Supprimee');MODULES.amortissements.render()}
-function calculerAmortissement(id){
-  var i=DB.get('immobilisations',id);if(!i)return;
-  var v=Number(i.valeurAchat)||0;var d=parseInt(i.dureeVie)||5;
-  if(d<=0||v<=0){showToast('Valeur/duree invalide','error');return}
-  var annuel=v/d;
-  DB.add('amortissements',{immobilisationId:id,designation:i.designation,montant:annuel,date:today(),notes:'Amortissement lineaire '+i.designation});
-  Compta.addEcriture({date:today(),libelle:'Dotation amortissement - '+i.designation,compteDebit:'67',compteCredit:'28',montant:annuel,type:'automatique',categorie:'amortissement',notes:'Amortissement lineaire '+d+' ans'});
-  showToast('Amortissement '+ef(annuel)+' comptabilise');MODULES.amortissements.render()
-}
-ADD_HANDLERS.amortissements=openAddImmo;SAVE_HANDLERS.amortissements=immoSave;
-
-// ============================================================
-// MODULE: MOUVEMENTS STOCK
-// ============================================================
-MODULES.mouvements={title:'Mouvements stock',headerActions:function(){return fullToolbar()},
-render:function(){
-  var mvts=DB.all('mouvements');
-  var c=document.getElementById('module-content');
-  c.innerHTML='<div class="search-bar"><input type="text" id="search-mvt" placeholder="Rechercher..." oninput="filterTable(\'search-mvt\',\'mvt-tbody\')"></div>'+
-    '<div class="table-wrapper"><table><thead><tr><th>Date</th><th>Article</th><th>Ref.</th><th>Type</th><th>Qte</th><th>Emplacement</th><th>Compta</th><th>Actions</th></tr></thead><tbody id="mvt-tbody"></tbody></table></div>';
-  var tbody=document.getElementById('mvt-tbody');
-  if(!mvts.length){tbody.innerHTML='<tr><td colspan="8" class="empty-state"><span class="icon">&#128666;</span>Aucun mouvement</td></tr>';return}
-  mvts.forEach(function(m){
-    var tr=document.createElement('tr');
-    var tl=m.type==='entree'?'<span class="badge badge-success">Entree</span>':'<span class="badge badge-danger">Sortie</span>';
-    var cp=m._comptabilise?'<span class="badge badge-success">Oui</span>':'<span class="badge badge-warning">Non</span>';
-    tr.innerHTML='<td>'+formatDate(m.date)+'</td><td><strong>'+esc(m.articleNom)+'</strong></td><td>'+esc(m.articleReference||'-')+'</td><td>'+tl+'</td><td>'+(m.quantite||0)+'</td><td>'+esc(m.emplacement||'-')+'</td><td>'+cp+'</td>'+
-      '<td class="actions-cell"><button class="btn btn-sm btn-primary" onclick="editMvt(\''+m.id+'\')">Modifier</button>'+
-      '<button class="btn btn-sm btn-danger" onclick="deleteMvt(\''+m.id+'\')">Suppr.</button></td>';
-    tbody.appendChild(tr)
-  })
-}};
-
-function mvtForm(item){
-  var isSortie=item&&item.type==='sortie';
-  return'<div class="form-row"><div class="form-group"><label>Article *</label><input type="text" id="f-art" value="'+esc(item?.articleNom||'')+'"></div>'+
-    '<div class="form-group"><label>Reference</label><input type="text" id="f-ref" value="'+esc(item?.articleReference||'')+'"></div></div>'+
-    '<div class="form-row"><div class="form-group"><label>Type *</label><select id="f-type" onchange="togglePrix()"><option value="entree"'+(item?.type==='entree'||!item?.type?' selected':'')+'>Entree</option><option value="sortie"'+(item?.type==='sortie'?' selected':'')+'>Sortie</option></select></div>'+
-    '<div class="form-group"><label>Quantite *</label><input type="number" id="f-qte" value="'+(item?.quantite||1)+'" min="1"></div></div>'+
-    '<div class="form-row"><div class="form-group"><label>Emplacement</label><input type="text" id="f-emp" value="'+esc(item?.emplacement||'')+'"></div>'+
-    '<div class="form-group"><label>Date</label><input type="date" id="f-date" value="'+(item?.date||today())+'"></div></div>'+
-    '<div class="form-group"><label>Prix achat unitaire (FCFA)</label><input type="number" step="0.01" id="f-pa" value="'+(item?.prixAchat||0)+'"></div>'+
-    '<div class="form-group" id="pv-group" style="display:'+(isSortie?'block':'none')+'"><label>Prix vente unitaire (FCFA)</label><input type="number" step="0.01" id="f-pv" value="'+(item?.prixVente||0)+'"></div>'+
-    '<div class="form-group"><label>Fournisseur / Destinataire</label><input type="text" id="f-four" value="'+esc(item?.fournisseur||'')+'"></div>'+
-    '<div class="form-group"><label>Notes</label><textarea id="f-notes" rows="2">'+esc(item?.notes||'')+'</textarea></div>';
-}
-function togglePrix(){document.getElementById('pv-group').style.display=document.getElementById('f-type').value==='sortie'?'block':'none'}
-function mvtSave(){
-  var isSortie=document.getElementById('f-type').value==='sortie';
-  var d={articleNom:document.getElementById('f-art').value,articleReference:document.getElementById('f-ref').value,type:document.getElementById('f-type').value,quantite:parseInt(document.getElementById('f-qte').value)||1,prixAchat:parseFloat(document.getElementById('f-pa').value)||0,prixVente:isSortie?parseFloat(document.getElementById('f-pv').value)||0:0,emplacement:document.getElementById('f-emp').value,date:document.getElementById('f-date').value,fournisseur:document.getElementById('f-four').value,notes:document.getElementById('f-notes').value};
-  if(!d.articleNom){showToast('Nom article requis','error');return false}
-  return d
-}
-function openAddMvt(){currentModule='mouvements';currentEditId=null;openModal('Ajouter mouvement',mvtForm())}
-function editMvt(id){currentModule='mouvements';currentEditId=id;var item=DB.get('mouvements',id);if(item)openModal('Modifier mouvement',mvtForm(item))}
-function deleteMvt(id){if(!confirm('Supprimer ?'))return;DB.remove('mouvements',id);showToast('Supprime');MODULES.mouvements.render();updateAlertBadge()}
-var _origMvtSave=mvtSave;
-mvtSave=function(){
-  var d=_origMvtSave();
-  if(d){
-    setTimeout(function(){
-      var mvts=DB.all('mouvements');
-      var last=mvts[mvts.length-1];
-      if(last){Regles.executer('mouvement_stock',last);updateAlertBadge()}
-    },50)
-  }
-  return d
+    var c = '<div class="cards">' +
+      '<div class="card" data-accent="green"><h4>Ventes</h4><div class="value green">' + ef(totalVentes) + '</div></div>' +
+      '<div class="card" data-accent="blue"><h4>Achats</h4><div class="value blue">' + ef(totalAchats) + '</div></div>' +
+      '<div class="card" data-accent="orange"><h4>Charges</h4><div class="value orange">' + ef(totalCharges) + '</div></div>' +
+      '<div class="card" data-accent="purple"><h4>Stock (qte)</h4><div class="value purple">' + stockQte + '</div></div>' +
+      '<div class="card" data-accent="red"><h4>Fournisseurs</h4><div class="value red">' + fours.length + '</div></div>' +
+      '<div class="card" data-accent="green"><h4>&Eacute;critures</h4><div class="value green">' + es.length + '</div></div>' +
+      '</div>';
+    c += getQuickActions();
+    c += '<div class="table-wrapper"><div class="table-scroll"><table><thead><tr><th>Date</th><th>Libell&eacute;</th><th>D&eacute;bit</th><th>Cr&eacute;dit</th><th>Montant</th></tr></thead><tbody>';
+    var last = es.slice(-8).reverse();
+    if (last.length === 0) c += '<tr><td colspan="5"><div class="empty-state"><span class="icon">&#128200;</span>Aucune &eacute;criture</div></td></tr>';
+    else last.forEach(function(e) {
+      c += '<tr><td>' + formatDate(e.date) + '</td><td>' + esc(e.libelle) + '</td><td>' + esc(e.compteDebit) + '</td><td>' + esc(e.compteCredit) + '</td><td>' + ef(e.montant) + '</td></tr>';
+    });
+    c += '</tbody></table></div></div>';
+    document.getElementById('module-content').innerHTML = c;
+  },
+  headerActions: function() { return helpBtn(); }
 };
-ADD_HANDLERS.mouvements=openAddMvt;SAVE_HANDLERS.mouvements=mvtSave;
 
-// ============================================================
-// MODULE: ETAT DES STOCKS
-// ============================================================
-MODULES['etat-stock']={title:'Etat des stocks',headerActions:function(){return readonlyToolbar()},
-render:function(){
-  var mvts=DB.all('mouvements');
-  var sm={};
-  mvts.forEach(function(m){
-    var k=m.articleNom+'|'+(m.articleReference||'');
-    if(!sm[k])sm[k]={an:m.articleNom,ar:m.articleReference||'',qte:0,emps:[],tAch:0,nbE:0};
-    sm[k].qte+=m.type==='entree'?m.quantite:-m.quantite;
-    if(m.emplacement&&sm[k].emps.indexOf(m.emplacement)===-1)sm[k].emps.push(m.emplacement);
-    if(m.type==='entree'&&m.prixAchat){sm[k].tAch+=m.prixAchat*m.quantite;sm[k].nbE+=m.quantite}
+function renderJournal() {
+  var es = DB.all('journal');
+  var c = '<div class="module-toolbar">' + fullToolbar() + '</div>';
+  c += '<div class="search-bar"><input type="text" id="journal-search" placeholder="Filtrer &eacute;critures..." oninput="filterTable(\'journal-search\',\'journal-table\')"></div>';
+  c += '<div class="table-wrapper"><div class="table-scroll"><table id="journal-table"><thead><tr><th>Date</th><th>Libell&eacute;</th><th>N&deg; compte D&eacute;bit</th><th>N&deg; compte Cr&eacute;dit</th><th>Montant</th><th>Type</th><th>Validation</th><th>Actions</th></tr></thead><tbody>';
+  if (es.length === 0) c += '<tr><td colspan="8"><div class="empty-state"><span class="icon">&#128221;</span>Aucune &eacute;criture<br><small>Cliquez sur + Ajouter pour cr&eacute;er une &eacute;criture</small></div></td></tr>';
+  else es.slice().reverse().forEach(function(e) {
+    c += '<tr><td>' + formatDate(e.date) + '</td><td>' + esc(e.libelle) + '</td><td>' + esc(e.compteDebit) + '</td><td>' + esc(e.compteCredit) + '</td><td>' + ef(e.montant) + '</td>' +
+      '<td>' + (e.type === 'automatique' ? '<span class="badge badge-purple">Auto</span>' : '<span class="badge badge-info">Manuelle</span>') + '</td>' +
+      '<td>' + (e.validation === 'valide' ? '<span class="badge badge-success">Valid&eacute;</span>' : '<span class="badge badge-warning">Provisoire</span>') + '</td>' +
+      '<td class="actions-cell">' +
+      '<button class="btn btn-sm btn-ghost" onclick="editJournal(\'' + e.id + '\')">&#9998;</button>' +
+      '<button class="btn btn-sm btn-danger" onclick="deleteJournal(\'' + e.id + '\')">&#10005;</button>' +
+      (e.validation !== 'valide' ? '<button class="btn btn-sm btn-success" onclick="validerEcriture(\'' + e.id + '\')">&#10003;</button>' : '') +
+      '</td></tr>';
   });
-  var sts=Object.values(sm).map(function(s){s.paMoy=s.nbE>0?s.tAch/s.nbE:0;s.vStock=s.qte*s.paMoy;return s});
-  var vt=sts.reduce(function(s,i){return s+(i.qte>0?i.vStock:0)},0);
-  var c=document.getElementById('module-content');
-  c.innerHTML='<div class="cards">'+
-    '<div class="card" data-accent="blue"><h4>Articles en stock</h4><div class="value blue">'+sts.filter(function(s){return s.qte>0}).length+'</div></div>'+
-    '<div class="card" data-accent="green"><h4>Valeur stock</h4><div class="value green">'+ef(vt)+'</div></div>'+
-    '<div class="card" data-accent="orange"><h4>Total unites</h4><div class="value orange">'+sts.reduce(function(s,i){return s+(i.qte>0?i.qte:0)},0)+'</div></div></div>'+
-    '<div class="search-bar"><input type="text" id="search-etat" placeholder="Rechercher..." oninput="filterTable(\'search-etat\',\'etat-tbody\')"></div>'+
-    '<div class="table-wrapper"><table><thead><tr><th>Article</th><th>Ref.</th><th>Stock</th><th>PA moyen</th><th>Valeur</th><th>Emplacements</th></tr></thead><tbody id="etat-tbody"></tbody></table></div>';
-  var tbody=document.getElementById('etat-tbody');
-  if(!sts.length){tbody.innerHTML='<tr><td colspan="6" class="empty-state"><span class="icon">&#128202;</span>Stock vide</td></tr>';return}
-  sts.forEach(function(s){
-    var col=s.qte<=0?'red':s.qte<10?'orange':'green';
-    var tr=document.createElement('tr');
-    tr.innerHTML='<td><strong>'+esc(s.an)+'</strong></td><td>'+esc(s.ar||'-')+'</td><td style="color:var(--'+col+');font-weight:700">'+s.qte+'</td><td>'+(s.paMoy?ef(s.paMoy):'-')+'</td><td style="font-weight:600">'+ef(s.vStock)+'</td><td>'+esc(s.emps.join(', ')||'-')+'</td>';
-    tbody.appendChild(tr)
-  });
-  updateAlertBadge()
-}};
-
-// ============================================================
-// MODULE: FOURNISSEURS
-// ============================================================
-MODULES.fournisseurs={title:'Fournisseurs',headerActions:function(){return fullToolbar()},
-render:function(){
-  var fs=DB.all('fournisseurs');
-  var c=document.getElementById('module-content');
-  c.innerHTML='<div class="search-bar"><input type="text" id="search-four" placeholder="Rechercher..." oninput="filterTable(\'search-four\',\'four-tbody\')"></div>'+
-    '<div class="table-wrapper"><table><thead><tr><th>Nom</th><th>Contact</th><th>Email</th><th>Telephone</th><th>Solde</th><th>Actions</th></tr></thead><tbody id="four-tbody"></tbody></table></div>';
-  var tbody=document.getElementById('four-tbody');
-  if(!fs.length){tbody.innerHTML='<tr><td colspan="6" class="empty-state"><span class="icon">&#127970;</span>Aucun fournisseur</td></tr>';return}
-  fs.forEach(function(f){
-    var solde=Compta.getSolde('401');
-    var tr=document.createElement('tr');
-    tr.innerHTML='<td><strong>'+esc(f.nom)+'</strong></td><td>'+esc(f.contact||'-')+'</td><td>'+esc(f.email||'-')+'</td><td>'+esc(f.telephone||'-')+'</td><td style="font-weight:600">'+ef(solde)+'</td>'+
-      '<td class="actions-cell"><button class="btn btn-sm btn-primary" onclick="editFour(\''+f.id+'\')">Modifier</button><button class="btn btn-sm btn-danger" onclick="deleteFour(\''+f.id+'\')">Suppr.</button></td>';
-    tbody.appendChild(tr)
-  })
-}};
-function fourForm(item){
-  return'<div class="form-group"><label>Nom *</label><input type="text" id="f-nom" value="'+esc(item?.nom||'')+'"></div>'+
-    '<div class="form-group"><label>Contact</label><input type="text" id="f-contact" value="'+esc(item?.contact||'')+'"></div>'+
-    '<div class="form-row"><div class="form-group"><label>Email</label><input type="email" id="f-email" value="'+esc(item?.email||'')+'"></div>'+
-    '<div class="form-group"><label>Telephone</label><input type="text" id="f-tel" value="'+esc(item?.telephone||'')+'"></div></div>'+
-    '<div class="form-group"><label>Adresse</label><textarea id="f-addr" rows="2">'+esc(item?.adresse||'')+'</textarea></div>';
-}
-function fourSave(){return{nom:document.getElementById('f-nom').value,contact:document.getElementById('f-contact').value,email:document.getElementById('f-email').value,telephone:document.getElementById('f-tel').value,adresse:document.getElementById('f-addr').value}}
-function openAddFour(){currentModule='fournisseurs';currentEditId=null;openModal('Ajouter fournisseur',fourForm())}
-function editFour(id){currentModule='fournisseurs';currentEditId=id;var item=DB.get('fournisseurs',id);if(item)openModal('Modifier fournisseur',fourForm(item))}
-function deleteFour(id){if(!confirm('Supprimer ?'))return;DB.remove('fournisseurs',id);showToast('Supprime');MODULES.fournisseurs.render()}
-ADD_HANDLERS.fournisseurs=openAddFour;SAVE_HANDLERS.fournisseurs=fourSave;
-
-// ============================================================
-// MODULE: ALERTES STOCK
-// ============================================================
-MODULES.alertes={title:'Alertes stock',headerActions:function(){return readonlyToolbar()},
-render:function(){
-  var mvts=DB.all('mouvements');
-  var sm={};
-  mvts.forEach(function(m){
-    var k=m.articleNom+'|'+(m.articleReference||'');
-    if(!sm[k])sm[k]={an:m.articleNom,ar:m.articleReference||'',qte:0,emps:[]};
-    sm[k].qte+=m.type==='entree'?m.quantite:-m.quantite;
-    if(m.emplacement&&sm[k].emps.indexOf(m.emplacement)===-1)sm[k].emps.push(m.emplacement)
-  });
-  var sts=Object.values(sm);
-  var ru=sts.filter(function(s){return s.qte<=0});
-  var lo=sts.filter(function(s){return s.qte>0&&s.qte<=5});
-  var ok=sts.filter(function(s){return s.qte>5});
-  var c=document.getElementById('module-content');
-  c.innerHTML='<div class="cards"><div class="card" data-accent="red"><h4>Rupture</h4><div class="value red">'+ru.length+'</div></div>'+
-    '<div class="card" data-accent="orange"><h4>Stock faible</h4><div class="value orange">'+lo.length+'</div></div>'+
-    '<div class="card" data-accent="green"><h4>Stock OK</h4><div class="value green">'+ok.length+'</div></div></div>'+
-    '<h3 class="section-title">Articles en alerte</h3><div id="alertes-list"></div>';
-  var al=document.getElementById('alertes-list');
-  var items=[].concat(ru,lo);
-  if(!items.length){al.innerHTML='<div class="alert-card ok" style="display:flex;align-items:center;gap:16px;padding:20px;background:var(--success-light);border-radius:var(--radius);margin-bottom:10px"><div style="font-size:1.5rem">&#9989;</div><div><h4 style="font-weight:600">Tous les articles ont un stock suffisant</h4></div></div>'}
-  else{items.forEach(function(s){
-    var ir=s.qte<=0;
-    var d=document.createElement('div');
-    d.style.cssText='display:flex;align-items:center;gap:16px;padding:20px;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:10px;border-left:4px solid '+(ir?'var(--danger)':'var(--warning)');
-    d.innerHTML='<div style="font-size:1.5rem">'+(ir?'&#128683;':'&#9888;')+'</div><div style="flex:1"><h4 style="font-weight:600">'+esc(s.an)+'</h4><p style="font-size:.82rem;color:var(--text-secondary)">Ref: '+(esc(s.ar)||'-')+'</p></div><div style="font-size:1.2rem;font-weight:700;color:'+(ir?'var(--danger)':'var(--warning)')+'">'+s.qte+'</div>';
-    al.appendChild(d)
-  })}
-  updateAlertBadge()
-}};
-
-function updateAlertBadge(){
-  var mvts=DB.all('mouvements');
-  var sm={};
-  mvts.forEach(function(m){
-    var k=m.articleNom+'|'+(m.articleReference||'');
-    if(!sm[k])sm[k]={qte:0};sm[k].qte+=m.type==='entree'?m.quantite:-m.quantite
-  });
-  var count=Object.values(sm).filter(function(s){return s.qte<=5}).length;
-  var b=document.getElementById('alert-badge');
-  if(b){b.textContent=count;b.className='sidebar-badge'+(count===0?' zero':'')}
+  c += '</tbody></table></div></div>';
+  document.getElementById('module-content').innerHTML = c;
 }
 
-// ============================================================
-// FIRST-TIME ONBOARDING
-// ============================================================
-function showFirstTimeHelp(){
-  if(localStorage.getItem('compta_onboarded'))return;
-  localStorage.setItem('compta_onboarded','1');
-  setTimeout(function(){
-    openModal('Bienvenue sur ComptaAuto !','<div style="line-height:1.8">'+
-      '<p><strong>ComptaAuto</strong> est une application de gestion comptable et de stocks avec automatisation int&eacute;gr&eacute;e.</p>'+
-      '<h4 style="margin:12px 0 6px">Pour commencer :</h4>'+
-      '<ol>'+
-      '<li>Ajoutez des <strong>mouvements de stock</strong> (entr&eacute;es/sorties) dans le menu Stocks</li>'+
-      '<li>Les <strong>r&egrave;gles de comptabilisation</strong> cr&eacute;ent automatiquement les &eacute;critures comptables</li>'+
-      '<li>Consultez le <strong>Journal</strong> pour voir les &eacute;critures g&eacute;n&eacute;r&eacute;es</li>'+
-      '<li>Utilisez la <strong>Balance</strong>, le <strong>Grand livre</strong> et le <strong>Bilan</strong> pour analyser</li>'+
-      '<li>G&eacute;rez la <strong>TVA</strong> et les <strong>Amortissements</strong> dans les modules d&eacute;di&eacute;s</li>'+
-      '</ol>'+
-      '<p style="margin-top:12px;color:var(--text-light)">Cliquez sur <strong>Aide (?)</strong> dans chaque module pour des conseils d&eacute;taill&eacute;s.</p>'+
-      '<p style="margin-top:8px"><em>Identifiants: admin / admin123</em></p></div>');
-  },600);
+MODULES['journal'] = {
+  title: 'Journal comptable',
+  render: renderJournal,
+  headerActions: function() { return addBtn() + helpBtn(); }
+};
+
+ADD_HANDLERS['journal'] = function() {
+  currentEditId = null;
+  var plans = DB.all('plan_comptable');
+  var opts = plans.map(function(p) { return '<option value="' + esc(p.numero) + '">' + esc(p.numero) + ' - ' + esc(p.intitule) + '</option>'; }).join('');
+  openModal('Nouvelle &eacute;criture',
+    '<div class="form-group"><label>Date</label><input type="date" id="f-date" value="' + today() + '"></div>' +
+    '<div class="form-group"><label>Libell&eacute;</label><input type="text" id="f-libelle" placeholder="Libell&eacute; de l\'&eacute;criture"></div>' +
+    '<div class="form-row"><div class="form-group"><label>Compte D&eacute;bit</label><select id="f-debit">' + opts + '</select></div>' +
+    '<div class="form-group"><label>Compte Cr&eacute;dit</label><select id="f-credit">' + opts + '</select></div></div>' +
+    '<div class="form-group"><label>Montant (FCFA)</label><input type="number" id="f-montant" placeholder="0"></div>');
+};
+
+SAVE_HANDLERS['journal'] = function() {
+  var date = document.getElementById('f-date').value;
+  var libelle = document.getElementById('f-libelle').value;
+  var debit = document.getElementById('f-debit').value;
+  var credit = document.getElementById('f-credit').value;
+  var montant = Number(document.getElementById('f-montant').value) || 0;
+  if (!date || !libelle || !debit || !credit || montant <= 0) { showToast('Veuillez remplir tous les champs', 'error'); return null; }
+  return { date: date, libelle: libelle, compteDebit: debit, compteCredit: credit, montant: montant, type: 'manuelle', validation: 'provisoire', exercice: DB.getExerciceCourant() };
+};
+
+function editJournal(id) {
+  var e = DB.get('journal', id);
+  if (!e) return;
+  currentEditId = id;
+  var plans = DB.all('plan_comptable');
+  var opts = plans.map(function(p) { return '<option value="' + esc(p.numero) + '" ' + (p.numero === e.compteDebit ? 'selected' : '') + '>' + esc(p.numero) + ' - ' + esc(p.intitule) + '</option>'; }).join('');
+  var opts2 = plans.map(function(p) { return '<option value="' + esc(p.numero) + '" ' + (p.numero === e.compteCredit ? 'selected' : '') + '>' + esc(p.numero) + ' - ' + esc(p.intitule) + '</option>'; }).join('');
+  openModal('Modifier &eacute;criture',
+    '<div class="form-group"><label>Date</label><input type="date" id="f-date" value="' + esc(e.date) + '"></div>' +
+    '<div class="form-group"><label>Libell&eacute;</label><input type="text" id="f-libelle" value="' + esc(e.libelle) + '"></div>' +
+    '<div class="form-row"><div class="form-group"><label>Compte D&eacute;bit</label><select id="f-debit">' + opts + '</select></div>' +
+    '<div class="form-group"><label>Compte Cr&eacute;dit</label><select id="f-credit">' + opts2 + '</select></div></div>' +
+    '<div class="form-group"><label>Montant (FCFA)</label><input type="number" id="f-montant" value="' + (e.montant || 0) + '"></div>');
 }
 
-// ============================================================
-// DEMO DATA
-// ============================================================
-function chargerDonneesDemo(){
-  if(DB.all('mouvements').length>0||DB.all('journal').length>0){
-    if(!confirm('Des donn&eacute;es existent d&eacute;j&agrave;. Les remplacer ?'))return;
+function deleteJournal(id) {
+  if (!confirm('Supprimer cette &eacute;criture ?')) return;
+  DB.remove('journal', id);
+  showToast('&Eacute;criture supprim&eacute;e');
+  renderJournal();
+}
+
+function validerEcriture(id) {
+  DB.update('journal', id, { validation: 'valide' });
+  showToast('&Eacute;criture valid&eacute;e');
+  renderJournal();
+}
+
+function renderPlanComptable() {
+  var plans = DB.all('plan_comptable');
+  var c = '<div class="module-toolbar">' + fullToolbar() + '</div>';
+  c += '<div class="search-bar"><input type="text" id="pc-search" placeholder="Rechercher un compte..." oninput="filterTable(\'pc-search\',\'pc-table\')"></div>';
+  c += '<div class="table-wrapper"><div class="table-scroll"><table id="pc-table"><thead><tr><th>N&deg;</th><th>Intitul&eacute;</th><th>Classe</th><th>Type</th><th>Solde</th><th>Actions</th></tr></thead><tbody>';
+  if (plans.length === 0) c += '<tr><td colspan="6"><div class="empty-state"><span class="icon">&#128203;</span>Aucun compte</div></td></tr>';
+  else plans.forEach(function(p) {
+    var solde = Compta.getSolde(p.numero);
+    var nature = Compta.getSoldeNature(p.numero);
+    c += '<tr><td><strong>' + esc(p.numero) + '</strong></td><td>' + esc(p.intitule) + '</td><td>' + esc(p.classe) + '</td><td>' + esc(p.type) + '</td>' +
+      '<td style="color:' + (solde >= 0 ? 'var(--success)' : 'var(--danger)') + '">' + ef(solde) + '</td>' +
+      '<td class="actions-cell"><button class="btn btn-sm btn-ghost" onclick="editPlan(\'' + p.id + '\')">&#9998;</button>' +
+      '<button class="btn btn-sm btn-danger" onclick="deletePlan(\'' + p.id + '\')">&#10005;</button></td></tr>';
+  });
+  c += '</tbody></table></div></div>';
+  document.getElementById('module-content').innerHTML = c;
+}
+
+MODULES['plan-comptable'] = {
+  title: 'Plan comptable',
+  render: renderPlanComptable,
+  headerActions: function() { return addBtn() + helpBtn(); }
+};
+
+ADD_HANDLERS['plan-comptable'] = function() {
+  currentEditId = null;
+  openModal('Nouveau compte',
+    '<div class="form-group"><label>Num&eacute;ro</label><input type="text" id="f-numero" placeholder="Ex: 101"></div>' +
+    '<div class="form-group"><label>Intitul&eacute;</label><input type="text" id="f-intitule" placeholder="Nom du compte"></div>' +
+    '<div class="form-row"><div class="form-group"><label>Classe</label><select id="f-classe"><option value="1">1 - Capitaux</option><option value="2">2 - Immobilisations</option><option value="3">3 - Stocks</option><option value="4">4 - Tiers</option><option value="5">5 - Tr&eacute;sorerie</option><option value="6">6 - Charges</option><option value="7">7 - Produits</option></select></div>' +
+    '<div class="form-group"><label>Type</label><select id="f-type"><option value="actif">Actif</option><option value="passif">Passif</option><option value="charge">Charge</option><option value="produit">Produit</option></select></div></div>');
+};
+
+SAVE_HANDLERS['plan-comptable'] = function() {
+  var numero = document.getElementById('f-numero').value;
+  var intitule = document.getElementById('f-intitule').value;
+  if (!numero || !intitule) { showToast('Num&eacute;ro et intitul&eacute; requis', 'error'); return null; }
+  return { numero: numero, intitule: intitule, classe: document.getElementById('f-classe').value, type: document.getElementById('f-type').value };
+};
+
+function editPlan(id) {
+  var p = DB.get('plan_comptable', id);
+  if (!p) return;
+  currentEditId = id;
+  openModal('Modifier compte',
+    '<div class="form-group"><label>Num&eacute;ro</label><input type="text" id="f-numero" value="' + esc(p.numero) + '"></div>' +
+    '<div class="form-group"><label>Intitul&eacute;</label><input type="text" id="f-intitule" value="' + esc(p.intitule) + '"></div>' +
+    '<div class="form-row"><div class="form-group"><label>Classe</label><select id="f-classe"><option value="1" ' + (p.classe === '1' ? 'selected' : '') + '>1</option><option value="2" ' + (p.classe === '2' ? 'selected' : '') + '>2</option><option value="3" ' + (p.classe === '3' ? 'selected' : '') + '>3</option><option value="4" ' + (p.classe === '4' ? 'selected' : '') + '>4</option><option value="5" ' + (p.classe === '5' ? 'selected' : '') + '>5</option><option value="6" ' + (p.classe === '6' ? 'selected' : '') + '>6</option><option value="7" ' + (p.classe === '7' ? 'selected' : '') + '>7</option></select></div>' +
+    '<div class="form-group"><label>Type</label><select id="f-type"><option value="actif" ' + (p.type === 'actif' ? 'selected' : '') + '>Actif</option><option value="passif" ' + (p.type === 'passif' ? 'selected' : '') + '>Passif</option><option value="charge" ' + (p.type === 'charge' ? 'selected' : '') + '>Charge</option><option value="produit" ' + (p.type === 'produit' ? 'selected' : '') + '>Produit</option></select></div></div>');
+}
+
+function deletePlan(id) {
+  if (!confirm('Supprimer ce compte ?')) return;
+  DB.remove('plan_comptable', id);
+  showToast('Compte supprim&eacute;');
+  renderPlanComptable();
+}
+
+function renderBalance() {
+  var plans = DB.all('plan_comptable');
+  var es = DB.all('journal');
+  var rows = [];
+  plans.forEach(function(p) {
+    var debit = 0, credit = 0;
+    es.forEach(function(e) {
+      if (e.compteDebit === p.numero) debit += Number(e.montant) || 0;
+      if (e.compteCredit === p.numero) credit += Number(e.montant) || 0;
+    });
+    if (debit !== 0 || credit !== 0) rows.push({ numero: p.numero, intitule: p.intitule, debit: debit, credit: credit });
+  });
+  var totalDebit = 0, totalCredit = 0;
+  rows.forEach(function(r) { totalDebit += r.debit; totalCredit += r.credit; });
+  var c = '<div class="module-toolbar">' + readonlyToolbar() + '</div>';
+  c += '<div class="table-wrapper"><div class="table-scroll"><table><thead><tr><th>N&deg;</th><th>Compte</th><th>Total D&eacute;bit</th><th>Total Cr&eacute;dit</th><th>Solde</th></tr></thead><tbody>';
+  if (rows.length === 0) c += '<tr><td colspan="5"><div class="empty-state"><span class="icon">&#9878;</span>Aucun mouvement</div></td></tr>';
+  else {
+    rows.forEach(function(r) {
+      var solde = r.debit - r.credit;
+      c += '<tr><td>' + esc(r.numero) + '</td><td>' + esc(r.intitule) + '</td><td>' + ef(r.debit) + '</td><td>' + ef(r.credit) + '</td><td style="color:' + (solde >= 0 ? 'var(--success)' : 'var(--danger)') + '">' + ef(Math.abs(solde)) + ' ' + (solde >= 0 ? 'D&eacute;b.' : 'Cr&eacute;d.') + '</td></tr>';
+    });
+    c += '<tr style="font-weight:700;background:var(--secondary-light)"><td colspan="2">TOTAUX</td><td>' + ef(totalDebit) + '</td><td>' + ef(totalCredit) + '</td><td>' + (totalDebit === totalCredit ? '<span style="color:var(--success)">&#10003; Equilibr&eacute;</span>' : '<span style="color:var(--danger)">&#10007; D&eacute;s&eacute;quilibr&eacute;</span>') + '</td></tr>';
   }
-  // Clear existing
-  DB.clear('mouvements');DB.clear('journal');DB.clear('fournisseurs');DB.clear('immobilisations');DB.clear('amortissements');
-  // Fournisseurs
-  DB.add('fournisseurs',{nom:'Fournitures Tech SARL',contact:'M. Diallo',email:'diallo@fournitech.sn',telephone:'77 123 45 67',adresse:'Dakar, Senegal'});
-  DB.add('fournisseurs',{nom:'Materiel Pro SA',contact:'Mme Diop',email:'contact@materielpro.sn',telephone:'78 234 56 78',adresse:'Thi&egrave;s, Senegal'});
-  DB.add('fournisseurs',{nom:'Stock Express',contact:'M. Ndiaye',email:'info@stockexpress.sn',telephone:'76 345 67 89',adresse:'Saint-Louis, Senegal'});
-  // Mouvements stock
-  DB.add('mouvements',{articleNom:'Carton A4 5000',articleReference:'A4-5000',type:'entree',quantite:50,prixAchat:3500,emplacement:'Rayon A1',date:getDateAgo(30),fournisseur:'Fournitures Tech SARL',_comptabilise:true});
-  DB.add('mouvements',{articleNom:'Stylo bleu boite 50',articleReference:'STY-B50',type:'entree',quantite:100,prixAchat:1200,emplacement:'Rayon B2',date:getDateAgo(28),fournisseur:'Fournitures Tech SARL',_comptabilise:true});
-  DB.add('mouvements',{articleNom:'Classeur dossier',articleReference:'CLS-001',type:'entree',quantite:30,prixAchat:2500,emplacement:'Rayon A2',date:getDateAgo(25),fournisseur:'Materiel Pro SA',_comptabilise:true});
-  DB.add('mouvements',{articleNom:'Imprimante laser',articleReference:'IMP-L200',type:'entree',quantite:5,prixAchat:125000,emplacement:'Reserve 1',date:getDateAgo(20),fournisseur:'Materiel Pro SA',_comptabilise:true});
-  DB.add('mouvements',{articleNom:'Carton A4 5000',articleReference:'A4-5000',type:'sortie',quantite:10,prixAchat:3500,prixVente:5500,emplacement:'Rayon A1',date:getDateAgo(15),fournisseur:'Client Divers'});
-  DB.add('mouvements',{articleNom:'Stylo bleu boite 50',articleReference:'STY-B50',type:'sortie',quantite:25,prixAchat:1200,prixVente:2000,emplacement:'Rayon B2',date:getDateAgo(12),fournisseur:'Client Divers'});
-  DB.add('mouvements',{articleNom:'Classeur dossier',articleReference:'CLS-001',type:'sortie',quantite:8,prixAchat:2500,prixVente:4000,emplacement:'Rayon A2',date:getDateAgo(10),fournisseur:'Client Divers'});
-  // Ecritures comptables
-  Compta.addEcriture({date:getDateAgo(30),libelle:'Achat fournitures bureau',compteDebit:'601',compteCredit:'401',montant:475000,type:'manuelle',categorie:'achat',validation:'validee'});
-  Compta.addEcriture({date:getDateAgo(28),libelle:'Vente fournitures clients',compteDebit:'411',compteCredit:'701',montant:225000,type:'manuelle',categorie:'vente',validation:'validee'});
-  Compta.addEcriture({date:getDateAgo(25),libelle:'Loyer local mensuel',compteDebit:'612',compteCredit:'501',montant:350000,type:'manuelle',categorie:'frais',validation:'validee'});
-  Compta.addEcriture({date:getDateAgo(20),libelle:'Achat imprimante laser',compteDebit:'24',compteCredit:'401',montant:625000,type:'manuelle',categorie:'investissement',validation:'validee'});
-  Compta.addEcriture({date:getDateAgo(15),libelle:'Vente carton A4 clients',compteDebit:'411',compteCredit:'701',montant:55000,type:'automatique',categorie:'vente',validation:'validee'});
-  Compta.addEcriture({date:getDateAgo(15),libelle:'Sortie stock Carton A4',compteDebit:'603',compteCredit:'37',montant:35000,type:'automatique',categorie:'stock',validation:'validee'});
-  Compta.addEcriture({date:getDateAgo(12),libelle:'Vente stylos clients',compteDebit:'411',compteCredit:'701',montant:50000,type:'automatique',categorie:'vente',validation:'validee'});
-  Compta.addEcriture({date:getDateAgo(12),libelle:'Sortie stock stylos',compteDebit:'603',compteCredit:'37',montant:30000,type:'automatique',categorie:'stock',validation:'validee'});
-  Compta.addEcriture({date:getDateAgo(10),libelle:'Salaire employ&eacute;s',compteDebit:'64',compteCredit:'502',montant:1200000,type:'manuelle',categorie:'salaire',validation:'validee'});
-  Compta.addEcriture({date:getDateAgo(5),libelle:'Facture electricit&eacute;',compteDebit:'62',compteCredit:'401',montant:85000,type:'manuelle',categorie:'frais',validation:'provisoire'});
-  // Immobilisation
-  DB.add('immobilisations',{designation:'Imprimante laser HP',dateAcquisition:getDateAgo(20),valeurAchat:625000,dureeVie:5,compteComptable:'24',notes:'Imprimante bureau principal'});
-  showToast('Donn&eacute;es de d&eacute;mo charg&eacute;es avec succ&egrave;s');
-  if(sessionStorage.getItem('compta_auth')){navigateTo(currentActiveModule||'dashboard');updateAlertBadge()}
+  c += '</tbody></table></div></div>';
+  document.getElementById('module-content').innerHTML = c;
 }
-function getDateAgo(days){var d=new Date();d.setDate(d.getDate()-days);return d.toISOString().split('T')[0]}
 
-// ============================================================
-// AUTH & BOOT
-// ============================================================
-function login(){
-  var u=document.getElementById('login-username').value;
-  var p=document.getElementById('login-password').value;
-  var err=document.getElementById('login-error');
-  if(err)err.style.display='none';
-  if(u==='admin'&&p==='admin123'){
-    sessionStorage.setItem('compta_auth','1');
+MODULES['balance'] = {
+  title: 'Balance g&eacute;n&eacute;rale',
+  render: renderBalance,
+  headerActions: function() { return helpBtn(); }
+};
+
+function renderGrandLivre() {
+  var es = DB.all('journal');
+  var plans = DB.all('plan_comptable');
+  var grouped = {};
+  es.forEach(function(e) {
+    var key = e.compteDebit;
+    if (!grouped[key]) grouped[key] = [];
+    grouped[key].push({ date: e.date, libelle: e.libelle, montant: Number(e.montant) || 0, sens: 'D&eacute;bit', compte: e.compteDebit, ref: e.id });
+    var key2 = e.compteCredit;
+    if (!grouped[key2]) grouped[key2] = [];
+    grouped[key2].push({ date: e.date, libelle: e.libelle, montant: Number(e.montant) || 0, sens: 'Cr&eacute;dit', compte: e.compteCredit, ref: e.id });
+  });
+  var c = '<div class="module-toolbar">' + readonlyToolbar() + '</div>';
+  c += '<div class="search-bar"><input type="text" id="gl-search" placeholder="Filtrer par compte..." oninput="filterTable(\'gl-search\',\'gl-table\')"></div>';
+  c += '<div class="table-wrapper"><div class="table-scroll"><table id="gl-table"><thead><tr><th>Compte</th><th>Date</th><th>Libell&eacute;</th><th>D&eacute;bit</th><th>Cr&eacute;dit</th><th>Solde cumul&eacute;</th></tr></thead><tbody>';
+  var sorted = Object.keys(grouped).sort();
+  if (sorted.length === 0) c += '<tr><td colspan="6"><div class="empty-state"><span class="icon">&#128214;</span>Aucune &eacute;criture</div></td></tr>';
+  else sorted.forEach(function(num) {
+    var p = plans.find(function(p) { return p.numero === num; });
+    var rows = grouped[num].sort(function(a, b) { return a.date < b.date ? -1 : 1; });
+    var running = 0;
+    rows.forEach(function(r) {
+      if (r.sens === 'D&eacute;bit') running += r.montant;
+      else running -= r.montant;
+      c += '<tr><td><strong>' + esc(num) + '</strong> ' + esc(p ? p.intitule : '') + '</td><td>' + formatDate(r.date) + '</td><td>' + esc(r.libelle) + '</td>' +
+        (r.sens === 'D&eacute;bit' ? '<td>' + ef(r.montant) + '</td><td>-</td>' : '<td>-</td><td>' + ef(r.montant) + '</td>') +
+        '<td style="color:' + (running > 0 ? 'var(--success)' : running < 0 ? 'var(--danger)' : '') + '">' + ef(Math.abs(running)) + ' ' + (running >= 0 ? 'D&eacute;b.' : 'Cr&eacute;d.') + '</td></tr>';
+    });
+  });
+  c += '</tbody></table></div></div>';
+  document.getElementById('module-content').innerHTML = c;
+}
+
+MODULES['grand-livre'] = {
+  title: 'Grand livre',
+  render: renderGrandLivre,
+  headerActions: function() { return helpBtn(); }
+};
+
+function renderComptesResultat() {
+  var es = DB.all('journal');
+  var charges = 0, produits = 0;
+  var detailCharges = {}, detailProduits = {};
+  es.forEach(function(e) {
+    var m = Number(e.montant) || 0;
+    if ((e.compteDebit || '').startsWith('6')) { charges += m; detailCharges[e.compteDebit] = (detailCharges[e.compteDebit] || 0) + m; }
+    if ((e.compteCredit || '').startsWith('7')) { produits += m; detailProduits[e.compteCredit] = (detailProduits[e.compteCredit] || 0) + m; }
+  });
+  var resultat = produits - charges;
+  var plans = DB.all('plan_comptable');
+  function detailRows(detail) {
+    var html = '';
+    Object.keys(detail).sort().forEach(function(k) {
+      var p = plans.find(function(p) { return p.numero === k; });
+      html += '<tr><td>' + esc(k) + '</td><td>' + esc(p ? p.intitule : '') + '</td><td>' + ef(detail[k]) + '</td></tr>';
+    });
+    return html;
+  }
+  var c = '<div class="module-toolbar">' + readonlyToolbar() + '</div>';
+  c += '<div class="cards"><div class="card" data-accent="green"><h4>Produits</h4><div class="value green">' + ef(produits) + '</div></div>' +
+    '<div class="card" data-accent="red"><h4>Charges</h4><div class="value red">' + ef(charges) + '</div></div>' +
+    '<div class="card" data-accent="' + (resultat >= 0 ? 'green' : 'red') + '"><h4>R&eacute;sultat</h4><div class="value ' + (resultat >= 0 ? 'green' : 'red') + '">' + ef(Math.abs(resultat)) + '<br><small>' + (resultat >= 0 ? 'B&eacute;n&eacute;fice' : 'Perte') + '</small></div></div></div>';
+  c += '<div class="section-title">Produits (Comptes classe 7)</div><div class="table-wrapper"><div class="table-scroll"><table><thead><tr><th>N&deg;</th><th>Compte</th><th>Montant</th></tr></thead><tbody>' + detailRows(detailProduits) + '</tbody></table></div></div>';
+  c += '<div class="section-title">Charges (Comptes classe 6)</div><div class="table-wrapper"><div class="table-scroll"><table><thead><tr><th>N&deg;</th><th>Compte</th><th>Montant</th></tr></thead><tbody>' + detailRows(detailCharges) + '</tbody></table></div></div>';
+  document.getElementById('module-content').innerHTML = c;
+}
+
+MODULES['comptes-resultat'] = {
+  title: 'Comptes de r&eacute;sultat',
+  render: renderComptesResultat,
+  headerActions: function() { return helpBtn(); }
+};
+
+function renderBilan() {
+  var es = DB.all('journal');
+  var plans = DB.all('plan_comptable');
+  function getSolde(numero) {
+    var debit = 0, credit = 0;
+    es.forEach(function(e) {
+      if (e.compteDebit === numero) debit += Number(e.montant) || 0;
+      if (e.compteCredit === numero) credit += Number(e.montant) || 0;
+    });
+    var c = plans.find(function(c) { return c.numero === numero; });
+    return (c && (c.type === 'actif' || c.type === 'charge')) ? debit - credit : credit - debit;
+  }
+  function getGroup(types) {
+    return plans.filter(function(p) { return types.indexOf(p.type) !== -1; }).filter(function(p) { return getSolde(p.numero) !== 0; });
+  }
+  var actifs = getGroup(['actif']);
+  var passifs = getGroup(['passif']);
+  var totalActif = 0, totalPassif = 0;
+  actifs.forEach(function(a) { totalActif += getSolde(a.numero); });
+  passifs.forEach(function(p) { totalPassif += getSolde(p.numero); });
+  function tableRows(list, side) {
+    var html = '';
+    list.forEach(function(item) {
+      var solde = getSolde(item.numero);
+      html += '<tr><td>' + esc(item.numero) + '</td><td>' + esc(item.intitule) + '</td><td>' + ef(solde) + '</td></tr>';
+    });
+    return html;
+  }
+  var c = '<div class="module-toolbar">' + readonlyToolbar() + '</div>';
+  c += '<div class="section-title">Actif</div><div class="table-wrapper"><div class="table-scroll"><table><thead><tr><th>N&deg;</th><th>Compte</th><th>Montant</th></tr></thead><tbody>' + tableRows(actifs, 'actif') + '</tbody></table></div></div>';
+  c += '<div class="section-title">Passif</div><div class="table-wrapper"><div class="table-scroll"><table><thead><tr><th>N&deg;</th><th>Compte</th><th>Montant</th></tr></thead><tbody>' + tableRows(passifs, 'passif') + '</tbody></table></div></div>';
+  c += '<div class="cards"><div class="card" data-accent="blue"><h4>Total Actif</h4><div class="value blue">' + ef(totalActif) + '</div></div>' +
+    '<div class="card" data-accent="purple"><h4>Total Passif</h4><div class="value purple">' + ef(totalPassif) + '</div></div>' +
+    '<div class="card" data-accent="' + (Math.abs(totalActif - totalPassif) < 1 ? 'green' : 'red') + '"><h4>' + (Math.abs(totalActif - totalPassif) < 1 ? '&#10003; Equilibr&eacute;' : '&#10007; D&eacute;s&eacute;quilibr&eacute;') + '</h4><div class="value ' + (Math.abs(totalActif - totalPassif) < 1 ? 'green' : 'red') + '">' + ef(Math.abs(totalActif - totalPassif)) + '</div></div></div>';
+  document.getElementById('module-content').innerHTML = c;
+}
+
+MODULES['bilan'] = {
+  title: 'Bilan comptable',
+  render: renderBilan,
+  headerActions: function() { return helpBtn(); }
+};
+
+function renderRegles() {
+  var regles = DB.all('regles_comptabilisation');
+  var c = '<div class="module-toolbar">' + fullToolbar() + '</div>';
+  c += '<div class="cards">';
+  var actives = regles.filter(function(r) { return r.actif !== false; }).length;
+  c += '<div class="card" data-accent="green"><h4>R&egrave;gles actives</h4><div class="value green">' + actives + ' / ' + regles.length + '</div></div></div>';
+  c += '<div class="table-wrapper"><div class="table-scroll"><table><thead><tr><th>Libell&eacute;</th><th>D&eacute;bit</th><th>Cr&eacute;dit</th><th>Mode calcul</th><th>Actif</th><th>Actions</th></tr></thead><tbody>';
+  if (regles.length === 0) c += '<tr><td colspan="6"><div class="empty-state"><span class="icon">&#9881;</span>Aucune r&egrave;gle</div></td></tr>';
+  else regles.forEach(function(r) {
+    c += '<tr><td>' + esc(r.libelle) + '</td><td>' + esc(r.compteDebit) + '</td><td>' + esc(r.compteCredit) + '</td><td>' + esc(r.modeCalcul) + '</td>' +
+      '<td>' + (r.actif !== false ? '<span class="badge badge-success">Oui</span>' : '<span class="badge badge-secondary">Non</span>') + '</td>' +
+      '<td class="actions-cell"><button class="btn btn-sm btn-ghost" onclick="editRegle(\'' + r.id + '\')">&#9998;</button>' +
+      '<button class="btn btn-sm btn-danger" onclick="deleteRegle(\'' + r.id + '\')">&#10005;</button>' +
+      '<button class="btn btn-sm ' + (r.actif !== false ? 'btn-ghost' : 'btn-success') + '" onclick="toggleRegle(\'' + r.id + '\')">' + (r.actif !== false ? 'D&eacute;sact.' : 'Activer') + '</button></td></tr>';
+  });
+  c += '</tbody></table></div></div>';
+  document.getElementById('module-content').innerHTML = c;
+}
+
+MODULES['regles'] = {
+  title: 'R&egrave;gles de comptabilisation',
+  render: renderRegles,
+  headerActions: function() { return addBtn() + helpBtn(); }
+};
+
+ADD_HANDLERS['regles'] = function() {
+  currentEditId = null;
+  openModal('Nouvelle r&egrave;gle',
+    '<div class="form-group"><label>Libell&eacute;</label><input type="text" id="f-libelle" placeholder="Ex: Achat stock"></div>' +
+    '<div class="form-group"><label>D&eacute;clencheur</label><select id="f-declencheur"><option value="mouvement_stock">Mouvement de stock</option></select></div>' +
+    '<div class="form-row"><div class="form-group"><label>Compte D&eacute;bit</label><input type="text" id="f-debit" placeholder="Ex: 37"></div>' +
+    '<div class="form-group"><label>Compte Cr&eacute;dit</label><input type="text" id="f-credit" placeholder="Ex: 401"></div></div>' +
+    '<div class="form-group"><label>Mode de calcul</label><select id="f-mode" onchange="document.getElementById(\'calc-options\').style.display=this.value===\'fixe\'?\'block\':\'none\'">' +
+    '<option value="quantite_x_prix">Quantit&eacute; x Prix</option><option value="fixe">Montant fixe</option><option value="champ_montant">Champ montant</option><option value="pourcentage">Pourcentage</option></select></div>' +
+    '<div id="calc-options" style="display:none"><div class="form-group"><label>Montant fixe</label><input type="number" id="f-montantFixe" value="0"></div></div>' +
+    '<div class="form-group"><label>Libell&eacute; mod&egrave;le</label><input type="text" id="f-libelleModele" placeholder="Ex: Achat {nom} - {montant} FCFA"></div>' +
+    '<div class="form-group"><label>Cat&eacute;gorie</label><select id="f-categorie"><option value="achat">Achat</option><option value="vente">Vente</option><option value="stock">Stock</option></select></div>');
+};
+
+SAVE_HANDLERS['regles'] = function() {
+  return {
+    libelle: document.getElementById('f-libelle').value,
+    declencheur: document.getElementById('f-declencheur').value,
+    compteDebit: document.getElementById('f-debit').value,
+    compteCredit: document.getElementById('f-credit').value,
+    modeCalcul: document.getElementById('f-mode').value,
+    montantFixe: Number(document.getElementById('f-montantFixe').value) || 0,
+    libelleModele: document.getElementById('f-libelleModele').value || 'Ecriture auto',
+    categorie: document.getElementById('f-categorie').value,
+    actif: true,
+    notes: ''
+  };
+};
+
+function editRegle(id) {
+  var r = DB.get('regles_comptabilisation', id);
+  if (!r) return;
+  currentEditId = id;
+  openModal('Modifier r&egrave;gle',
+    '<div class="form-group"><label>Libell&eacute;</label><input type="text" id="f-libelle" value="' + esc(r.libelle) + '"></div>' +
+    '<div class="form-group"><label>D&eacute;clencheur</label><select id="f-declencheur"><option value="mouvement_stock" ' + (r.declencheur === 'mouvement_stock' ? 'selected' : '') + '>Mouvement de stock</option></select></div>' +
+    '<div class="form-row"><div class="form-group"><label>Compte D&eacute;bit</label><input type="text" id="f-debit" value="' + esc(r.compteDebit) + '"></div>' +
+    '<div class="form-group"><label>Compte Cr&eacute;dit</label><input type="text" id="f-credit" value="' + esc(r.compteCredit) + '"></div></div>' +
+    '<div class="form-group"><label>Mode de calcul</label><select id="f-mode"><option value="quantite_x_prix" ' + (r.modeCalcul === 'quantite_x_prix' ? 'selected' : '') + '>Quantit&eacute; x Prix</option><option value="fixe" ' + (r.modeCalcul === 'fixe' ? 'selected' : '') + '>Montant fixe</option><option value="champ_montant" ' + (r.modeCalcul === 'champ_montant' ? 'selected' : '') + '>Champ montant</option><option value="pourcentage" ' + (r.modeCalcul === 'pourcentage' ? 'selected' : '') + '>Pourcentage</option></select></div>' +
+    '<div class="form-group"><label>Libell&eacute; mod&egrave;le</label><input type="text" id="f-libelleModele" value="' + esc(r.libelleModele || '') + '"></div>' +
+    '<div class="form-group"><label>Cat&eacute;gorie</label><select id="f-categorie"><option value="achat" ' + (r.categorie === 'achat' ? 'selected' : '') + '>Achat</option><option value="vente" ' + (r.categorie === 'vente' ? 'selected' : '') + '>Vente</option><option value="stock" ' + (r.categorie === 'stock' ? 'selected' : '') + '>Stock</option></select></div>');
+}
+
+function deleteRegle(id) {
+  if (!confirm('Supprimer cette r&egrave;gle ?')) return;
+  DB.remove('regles_comptabilisation', id);
+  showToast('R&egrave;gle supprim&eacute;e');
+  renderRegles();
+}
+
+function toggleRegle(id) {
+  var r = DB.get('regles_comptabilisation', id);
+  if (!r) return;
+  DB.update('regles_comptabilisation', id, { actif: r.actif !== false ? false : true });
+  showToast(r.actif !== false ? 'R&egrave;gle d&eacute;sactiv&eacute;e' : 'R&egrave;gle activ&eacute;e');
+  renderRegles();
+}
+
+function renderEcrituresAuto() {
+  var es = DB.all('journal').filter(function(e) { return e.type === 'automatique'; });
+  var mvts = DB.all('mouvements');
+  var nonCompta = mvts.filter(function(m) { return !m.comptabilise; });
+  var c = '<div class="module-toolbar">' + readonlyToolbar() + '</div>';
+  c += '<div style="margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap">' +
+    '<button class="btn btn-success" onclick="genererEcrituresStock()">G&eacute;n&eacute;rer &eacute;critures stocks</button>' +
+    '<button class="btn btn-purple" onclick="appliquerRegles()">Appliquer r&egrave;gles</button>' +
+    '</div>';
+  c += '<div class="cards"><div class="card" data-accent="purple"><h4>&Eacute;critures auto</h4><div class="value purple">' + es.length + '</div></div>' +
+    '<div class="card" data-accent="orange"><h4>Mouvements non comptabilis&eacute;s</h4><div class="value orange">' + nonCompta.length + '</div></div></div>';
+  c += '<div class="table-wrapper"><div class="table-scroll"><table><thead><tr><th>Date</th><th>Libell&eacute;</th><th>D&eacute;bit</th><th>Cr&eacute;dit</th><th>Montant</th></tr></thead><tbody>';
+  if (es.length === 0) c += '<tr><td colspan="5"><div class="empty-state"><span class="icon">&#9889;</span>Aucune &eacute;criture automatique</div></td></tr>';
+  else es.slice().reverse().forEach(function(e) {
+    c += '<tr><td>' + formatDate(e.date) + '</td><td>' + esc(e.libelle) + '</td><td>' + esc(e.compteDebit) + '</td><td>' + esc(e.compteCredit) + '</td><td>' + ef(e.montant) + '</td></tr>';
+  });
+  c += '</tbody></table></div></div>';
+  document.getElementById('module-content').innerHTML = c;
+}
+
+MODULES['ecritures-auto'] = {
+  title: '&Eacute;critures automatiques',
+  render: renderEcrituresAuto,
+  headerActions: function() { return helpBtn(); }
+};
+
+function genererEcrituresStock() {
+  var mvts = DB.all('mouvements').filter(function(m) { return !m.comptabilise; });
+  if (mvts.length === 0) { showToast('Tous les mouvements sont d&eacute;j&agrave; comptabilis&eacute;s', 'info'); return; }
+  var count = 0;
+  mvts.forEach(function(m) {
+    var montant = (Number(m.quantite) || 0) * (Number(m.prixAchat) || 0);
+    if (montant <= 0) return;
+    if (m.type === 'entree') {
+      Compta.addEcriture({ date: m.date, libelle: 'Achat stock ' + esc(m.articleNom) + ' - ' + ef(montant), compteDebit: '37', compteCredit: '401', montant: montant, type: 'automatique', categorie: 'achat', reference: m.id || '', notes: 'G&eacute;n&eacute;r&eacute; depuis mouvement stock' });
+    } else {
+      Compta.addEcriture({ date: m.date, libelle: 'Vente stock ' + esc(m.articleNom) + ' - ' + ef(montant), compteDebit: '411', compteCredit: '701', montant: montant, type: 'automatique', categorie: 'vente', reference: m.id || '', notes: 'G&eacute;n&eacute;r&eacute; depuis mouvement stock' });
+      var montantAchat = (Number(m.quantite) || 0) * (Number(m.prixAchat) || 0);
+      if (montantAchat > 0) Compta.addEcriture({ date: m.date, libelle: 'Sortie stock ' + esc(m.articleNom) + ' - qte ' + m.quantite, compteDebit: '603', compteCredit: '37', montant: montantAchat, type: 'automatique', categorie: 'stock', reference: m.id || '', notes: 'Variation de stock' });
+    }
+    DB.update('mouvements', m.id, { comptabilise: true });
+    count++;
+  });
+  showToast(count + ' &eacute;criture(s) g&eacute;n&eacute;r&eacute;e(s)');
+  renderEcrituresAuto();
+}
+
+function appliquerRegles() {
+  var mvts = DB.all('mouvements').filter(function(m) { return !m.comptabilise; });
+  if (mvts.length === 0) { showToast('Tous les mouvements sont d&eacute;j&agrave; trait&eacute;s', 'info'); return; }
+  var total = 0;
+  mvts.forEach(function(m) {
+    var created = Regles.executer('mouvement_stock', m);
+    if (created.length > 0) { DB.update('mouvements', m.id, { comptabilise: true }); total += created.length; }
+  });
+  showToast(total + ' &eacute;criture(s) cr&eacute;&eacute;e(s) via r&egrave;gles');
+  renderEcrituresAuto();
+}
+
+function renderTVA() {
+  var es = DB.all('journal');
+  var tvaCollectee = 0, tvaDeductible = 0;
+  es.forEach(function(e) {
+    var m = Number(e.montant) || 0;
+    if (e.compteCredit === '443') tvaCollectee += m;
+    if (e.compteDebit === '444') tvaDeductible += m;
+  });
+  var tvaDue = tvaCollectee - tvaDeductible;
+  var ventes = 0;
+  es.forEach(function(e) { if (e.compteCredit === '701' || e.compteCredit === '702' || e.compteCredit === '703') ventes += Number(e.montant) || 0; });
+  var simuTVA = ventes * 0.18;
+  var c = '<div class="module-toolbar">' + readonlyToolbar() + '</div>';
+  c += '<div class="cards">' +
+    '<div class="card" data-accent="green"><h4>TVA Collect&eacute;e (443)</h4><div class="value green">' + ef(tvaCollectee) + '</div></div>' +
+    '<div class="card" data-accent="blue"><h4>TVA D&eacute;ductible (444)</h4><div class="value blue">' + ef(tvaDeductible) + '</div></div>' +
+    '<div class="card" data-accent="' + (tvaDue >= 0 ? 'orange' : 'green') + '"><h4>TVA Due</h4><div class="value ' + (tvaDue >= 0 ? 'orange' : 'green') + '">' + ef(Math.abs(tvaDue)) + '<br><small>' + (tvaDue >= 0 ? '&Agrave; payer' : 'Cr&eacute;dit') + '</small></div></div>' +
+    '</div>';
+  c += '<div class="section-title">Simulation TVA 18%</div>';
+  c += '<div class="cards"><div class="card" data-accent="purple"><h4>Ventes imposables</h4><div class="value purple">' + ef(ventes) + '</div></div>' +
+    '<div class="card" data-accent="orange"><h4>TVA 18% estim&eacute;e</h4><div class="value orange">' + ef(simuTVA) + '</div></div></div>';
+  document.getElementById('module-content').innerHTML = c;
+}
+
+MODULES['tva'] = {
+  title: 'TVA / Taxes',
+  render: renderTVA,
+  headerActions: function() { return helpBtn(); }
+};
+
+function renderAmortissements() {
+  var immos = DB.all('immobilisations');
+  var amortissements = DB.all('amortissements');
+  var c = '<div class="module-toolbar">' + fullToolbar() + '</div>';
+  c += '<div class="cards"><div class="card" data-accent="purple"><h4>Immobilisations</h4><div class="value purple">' + immos.length + '</div></div>' +
+    '<div class="card" data-accent="blue"><h4>Amortissements comptabilis&eacute;s</h4><div class="value blue">' + amortissements.length + '</div></div></div>';
+  c += '<div class="table-wrapper"><div class="table-scroll"><table><thead><tr><th>D&eacute;signation</th><th>Valeur</th><th>Dur&eacute;e (ans)</th><th>Amort. annuel</th><th>Actions</th></tr></thead><tbody>';
+  if (immos.length === 0) c += '<tr><td colspan="5"><div class="empty-state"><span class="icon">&#128252;</span>Aucune immobilisation</div></td></tr>';
+  else immos.forEach(function(im) {
+    var duree = Number(im.duree) || 5;
+    var annuel = (Number(im.valeur) || 0) / duree;
+    c += '<tr><td>' + esc(im.designation) + '</td><td>' + ef(im.valeur) + '</td><td>' + duree + '</td><td>' + ef(annuel) + '</td>' +
+      '<td class="actions-cell"><button class="btn btn-sm btn-success" onclick="amortir(\'' + im.id + '\')">Amortir</button>' +
+      '<button class="btn btn-sm btn-danger" onclick="deleteImmo(\'' + im.id + '\')">&#10005;</button></td></tr>';
+  });
+  c += '</tbody></table></div></div>';
+  document.getElementById('module-content').innerHTML = c;
+}
+
+MODULES['amortissements'] = {
+  title: 'Amortissements',
+  render: renderAmortissements,
+  headerActions: function() { return addBtn() + helpBtn(); }
+};
+
+ADD_HANDLERS['amortissements'] = function() {
+  currentEditId = null;
+  openModal('Nouvelle immobilisation',
+    '<div class="form-group"><label>D&eacute;signation</label><input type="text" id="f-designation" placeholder="Ex: V&eacute;hicule"></div>' +
+    '<div class="form-row"><div class="form-group"><label>Valeur d\'acquisition (FCFA)</label><input type="number" id="f-valeur" placeholder="0"></div>' +
+    '<div class="form-group"><label>Dur&eacute;e de vie (ans)</label><input type="number" id="f-duree" value="5" placeholder="5"></div></div>');
+};
+
+SAVE_HANDLERS['amortissements'] = function() {
+  var designation = document.getElementById('f-designation').value;
+  var valeur = Number(document.getElementById('f-valeur').value) || 0;
+  var duree = Number(document.getElementById('f-duree').value) || 5;
+  if (!designation || valeur <= 0) { showToast('Champs requis', 'error'); return null; }
+  return { designation: designation, valeur: valeur, duree: duree, dateAcquisition: today() };
+};
+
+function amortir(id) {
+  var im = DB.get('immobilisations', id);
+  if (!im) return;
+  if (!confirm('Comptabiliser l\'amortissement annuel de ' + ef((Number(im.valeur) || 0) / (Number(im.duree) || 5)) + ' ?')) return;
+  var duree = Number(im.duree) || 5;
+  var annuel = (Number(im.valeur) || 0) / duree;
+  Compta.addEcriture({ date: today(), libelle: 'Amortissement ' + esc(im.designation) + ' - ann&eacute;e ' + DB.getExerciceCourant(), compteDebit: '67', compteCredit: '28', montant: annuel, type: 'automatique', categorie: 'amortissement', exercice: DB.getExerciceCourant() });
+  DB.add('amortissements', { immobilisationId: id, designation: im.designation, montant: annuel, exercice: DB.getExerciceCourant(), date: today() });
+  showToast('Amortissement comptabilis&eacute;: ' + ef(annuel));
+  renderAmortissements();
+}
+
+function deleteImmo(id) {
+  if (!confirm('Supprimer cette immobilisation ?')) return;
+  DB.remove('immobilisations', id);
+  showToast('Immobilisation supprim&eacute;e');
+  renderAmortissements();
+}
+
+function renderMouvements() {
+  var mvts = DB.all('mouvements');
+  var c = '<div class="module-toolbar">' + fullToolbar() + '</div>';
+  c += '<div class="search-bar"><input type="text" id="mvt-search" placeholder="Filtrer mouvements..." oninput="filterTable(\'mvt-search\',\'mvt-table\')"></div>';
+  c += '<div class="table-wrapper"><div class="table-scroll"><table id="mvt-table"><thead><tr><th>Date</th><th>Article</th><th>R&eacute;f.</th><th>Type</th><th>Qt&eacute;</th><th>Prix Achat</th><th>Prix Vente</th><th>Actions</th></tr></thead><tbody>';
+  if (mvts.length === 0) c += '<tr><td colspan="8"><div class="empty-state"><span class="icon">&#128666;</span>Aucun mouvement<br><small>Cliquez sur + Ajouter pour enregistrer un mouvement</small></div></td></tr>';
+  else mvts.slice().reverse().forEach(function(m) {
+    c += '<tr><td>' + formatDate(m.date) + '</td><td>' + esc(m.articleNom) + '</td><td>' + esc(m.articleReference || '-') + '</td>' +
+      '<td>' + (m.type === 'entree' ? '<span class="badge badge-success">Entr&eacute;e</span>' : '<span class="badge badge-danger">Sortie</span>') + '</td>' +
+      '<td>' + esc(m.quantite) + '</td><td>' + ef(m.prixAchat) + '</td><td>' + ef(m.prixVente) + '</td>' +
+      '<td class="actions-cell"><button class="btn btn-sm btn-ghost" onclick="editMouvement(\'' + m.id + '\')">&#9998;</button>' +
+      '<button class="btn btn-sm btn-danger" onclick="deleteMouvement(\'' + m.id + '\')">&#10005;</button></td></tr>';
+  });
+  c += '</tbody></table></div></div>';
+  document.getElementById('module-content').innerHTML = c;
+}
+
+MODULES['mouvements'] = {
+  title: 'Mouvements de stock',
+  render: renderMouvements,
+  headerActions: function() { return addBtn() + helpBtn(); }
+};
+
+ADD_HANDLERS['mouvements'] = function() {
+  currentEditId = null;
+  openModal('Nouveau mouvement',
+    '<div class="form-group"><label>Date</label><input type="date" id="f-date" value="' + today() + '"></div>' +
+    '<div class="form-group"><label>Nom article</label><input type="text" id="f-article" placeholder="Ex: Carton A4"></div>' +
+    '<div class="form-row"><div class="form-group"><label>R&eacute;f&eacute;rence</label><input type="text" id="f-ref" placeholder="Ex: REF-001"></div>' +
+    '<div class="form-group"><label>Type</label><select id="f-type"><option value="entree">Entr&eacute;e</option><option value="sortie">Sortie</option></select></div></div>' +
+    '<div class="form-row"><div class="form-group"><label>Quantit&eacute;</label><input type="number" id="f-quantite" value="1"></div>' +
+    '<div class="form-group"><label>Prix d\'achat (unitaire)</label><input type="number" id="f-prixAchat" value="0"></div></div>' +
+    '<div class="form-group"><label>Prix de vente (unitaire)</label><input type="number" id="f-prixVente" value="0"></div>');
+};
+
+SAVE_HANDLERS['mouvements'] = function() {
+  var quantite = Number(document.getElementById('f-quantite').value) || 0;
+  if (quantite <= 0) { showToast('Quantit&eacute; doit &ecirc;tre > 0', 'error'); return null; }
+  return {
+    date: document.getElementById('f-date').value,
+    articleNom: document.getElementById('f-article').value,
+    articleReference: document.getElementById('f-ref').value,
+    type: document.getElementById('f-type').value,
+    quantite: quantite,
+    prixAchat: Number(document.getElementById('f-prixAchat').value) || 0,
+    prixVente: Number(document.getElementById('f-prixVente').value) || 0,
+    comptabilise: false
+  };
+};
+
+function editMouvement(id) {
+  var m = DB.get('mouvements', id);
+  if (!m) return;
+  currentEditId = id;
+  openModal('Modifier mouvement',
+    '<div class="form-group"><label>Date</label><input type="date" id="f-date" value="' + esc(m.date) + '"></div>' +
+    '<div class="form-group"><label>Nom article</label><input type="text" id="f-article" value="' + esc(m.articleNom) + '"></div>' +
+    '<div class="form-row"><div class="form-group"><label>R&eacute;f&eacute;rence</label><input type="text" id="f-ref" value="' + esc(m.articleReference || '') + '"></div>' +
+    '<div class="form-group"><label>Type</label><select id="f-type"><option value="entree" ' + (m.type === 'entree' ? 'selected' : '') + '>Entr&eacute;e</option><option value="sortie" ' + (m.type === 'sortie' ? 'selected' : '') + '>Sortie</option></select></div></div>' +
+    '<div class="form-row"><div class="form-group"><label>Quantit&eacute;</label><input type="number" id="f-quantite" value="' + (m.quantite || 0) + '"></div>' +
+    '<div class="form-group"><label>Prix d\'achat</label><input type="number" id="f-prixAchat" value="' + (m.prixAchat || 0) + '"></div></div>' +
+    '<div class="form-group"><label>Prix de vente</label><input type="number" id="f-prixVente" value="' + (m.prixVente || 0) + '"></div>');
+}
+
+function deleteMouvement(id) {
+  if (!confirm('Supprimer ce mouvement ?')) return;
+  DB.remove('mouvements', id);
+  showToast('Mouvement supprim&eacute;');
+  renderMouvements();
+}
+
+function renderEtatStock() {
+  var mvts = DB.all('mouvements');
+  var articles = {};
+  mvts.forEach(function(m) {
+    var key = m.articleNom + '|' + (m.articleReference || '');
+    if (!articles[key]) articles[key] = { nom: m.articleNom, ref: m.articleReference || '', qte: 0, totalAchat: 0 };
+    var q = Number(m.quantite) || 0;
+    if (m.type === 'entree') { articles[key].qte += q; articles[key].totalAchat += q * (Number(m.prixAchat) || 0); }
+    else { articles[key].qte -= q; articles[key].totalAchat -= q * (Number(m.prixAchat) || 0); }
+  });
+  var c = '<div class="module-toolbar">' + readonlyToolbar() + '</div>';
+  c += '<div class="cards">';
+  var totalArticles = Object.keys(articles).length;
+  var totalQte = 0, totalVal = 0;
+  Object.keys(articles).forEach(function(k) { totalQte += articles[k].qte; totalVal += articles[k].totalAchat; });
+  c += '<div class="card" data-accent="blue"><h4>Articles</h4><div class="value blue">' + totalArticles + '</div></div>' +
+    '<div class="card" data-accent="green"><h4>Quantit&eacute; totale</h4><div class="value green">' + totalQte + '</div></div>' +
+    '<div class="card" data-accent="purple"><h4>Valeur du stock</h4><div class="value purple">' + ef(totalVal) + '</div></div></div>';
+  c += '<div class="table-wrapper"><div class="table-scroll"><table><thead><tr><th>Article</th><th>R&eacute;f&eacute;rence</th><th>Quantit&eacute;</th><th>Valeur</th></tr></thead><tbody>';
+  if (Object.keys(articles).length === 0) c += '<tr><td colspan="4"><div class="empty-state"><span class="icon">&#128202;</span>Aucun stock</div></td></tr>';
+  else Object.keys(articles).sort().forEach(function(k) {
+    var a = articles[k];
+    c += '<tr><td>' + esc(a.nom) + '</td><td>' + esc(a.ref) + '</td>' +
+      '<td style="color:' + (a.qte <= 0 ? 'var(--danger)' : 'var(--success)') + ';font-weight:600">' + a.qte + '</td>' +
+      '<td>' + ef(a.totalAchat) + '</td></tr>';
+  });
+  c += '</tbody></table></div></div>';
+  document.getElementById('module-content').innerHTML = c;
+}
+
+MODULES['etat-stock'] = {
+  title: '&Eacute;tat des stocks',
+  render: renderEtatStock,
+  headerActions: function() { return helpBtn(); }
+};
+
+function renderFournisseurs() {
+  var fours = DB.all('fournisseurs');
+  var c = '<div class="module-toolbar">' + fullToolbar() + '</div>';
+  c += '<div class="search-bar"><input type="text" id="four-search" placeholder="Filtrer fournisseurs..." oninput="filterTable(\'four-search\',\'four-table\')"></div>';
+  c += '<div class="table-wrapper"><div class="table-scroll"><table id="four-table"><thead><tr><th>Nom</th><th>Contact</th><th>Email</th><th>T&eacute;l&eacute;phone</th><th>Solde</th><th>Actions</th></tr></thead><tbody>';
+  if (fours.length === 0) c += '<tr><td colspan="6"><div class="empty-state"><span class="icon">&#127970;</span>Aucun fournisseur</div></td></tr>';
+  else fours.forEach(function(f) {
+    var solde = Compta.getSolde('401');
+    c += '<tr><td><strong>' + esc(f.nom) + '</strong></td><td>' + esc(f.contact || '-') + '</td><td>' + esc(f.email || '-') + '</td><td>' + esc(f.telephone || '-') + '</td>' +
+      '<td style="color:' + (solde > 0 ? 'var(--success)' : 'var(--danger)') + '">' + ef(solde) + '</td>' +
+      '<td class="actions-cell"><button class="btn btn-sm btn-ghost" onclick="editFournisseur(\'' + f.id + '\')">&#9998;</button>' +
+      '<button class="btn btn-sm btn-danger" onclick="deleteFournisseur(\'' + f.id + '\')">&#10005;</button></td></tr>';
+  });
+  c += '</tbody></table></div></div>';
+  document.getElementById('module-content').innerHTML = c;
+}
+
+MODULES['fournisseurs'] = {
+  title: 'Fournisseurs',
+  render: renderFournisseurs,
+  headerActions: function() { return addBtn() + helpBtn(); }
+};
+
+ADD_HANDLERS['fournisseurs'] = function() {
+  currentEditId = null;
+  openModal('Nouveau fournisseur',
+    '<div class="form-group"><label>Nom</label><input type="text" id="f-nom" placeholder="Nom du fournisseur"></div>' +
+    '<div class="form-row"><div class="form-group"><label>Contact</label><input type="text" id="f-contact" placeholder="Personne &agrave; contacter"></div>' +
+    '<div class="form-group"><label>T&eacute;l&eacute;phone</label><input type="text" id="f-tel" placeholder="+228 00000000"></div></div>' +
+    '<div class="form-row"><div class="form-group"><label>Email</label><input type="email" id="f-email" placeholder="email@exemple.com"></div>' +
+    '<div class="form-group"><label>Adresse</label><input type="text" id="f-adresse" placeholder="Adresse"></div></div>');
+};
+
+SAVE_HANDLERS['fournisseurs'] = function() {
+  var nom = document.getElementById('f-nom').value;
+  if (!nom) { showToast('Nom requis', 'error'); return null; }
+  return { nom: nom, contact: document.getElementById('f-contact').value, telephone: document.getElementById('f-tel').value, email: document.getElementById('f-email').value, adresse: document.getElementById('f-adresse').value };
+};
+
+function editFournisseur(id) {
+  var f = DB.get('fournisseurs', id);
+  if (!f) return;
+  currentEditId = id;
+  openModal('Modifier fournisseur',
+    '<div class="form-group"><label>Nom</label><input type="text" id="f-nom" value="' + esc(f.nom) + '"></div>' +
+    '<div class="form-row"><div class="form-group"><label>Contact</label><input type="text" id="f-contact" value="' + esc(f.contact || '') + '"></div>' +
+    '<div class="form-group"><label>T&eacute;l&eacute;phone</label><input type="text" id="f-tel" value="' + esc(f.telephone || '') + '"></div></div>' +
+    '<div class="form-row"><div class="form-group"><label>Email</label><input type="email" id="f-email" value="' + esc(f.email || '') + '"></div>' +
+    '<div class="form-group"><label>Adresse</label><input type="text" id="f-adresse" value="' + esc(f.adresse || '') + '"></div></div>');
+}
+
+function deleteFournisseur(id) {
+  if (!confirm('Supprimer ce fournisseur ?')) return;
+  DB.remove('fournisseurs', id);
+  showToast('Fournisseur supprim&eacute;');
+  renderFournisseurs();
+}
+
+function renderAlertes() {
+  var mvts = DB.all('mouvements');
+  var stock = {};
+  mvts.forEach(function(m) {
+    var key = m.articleNom + '|' + (m.articleReference || '');
+    if (!stock[key]) stock[key] = { nom: m.articleNom, ref: m.articleReference || '', qte: 0 };
+    stock[key].qte += (m.type === 'entree' ? 1 : -1) * (Number(m.quantite) || 0);
+  });
+  var alertes = [];
+  Object.keys(stock).forEach(function(k) {
+    var a = stock[k];
+    if (a.qte <= 5) alertes.push(a);
+  });
+  alertes.sort(function(a, b) { return a.qte - b.qte; });
+  var c = '<div class="module-toolbar">' + helpBtn() + '</div>';
+  c += '<div class="cards">' +
+    '<div class="card" data-accent="red"><h4>Rupture (qte &le; 0)</h4><div class="value red">' + alertes.filter(function(a) { return a.qte <= 0; }).length + '</div></div>' +
+    '<div class="card" data-accent="orange"><h4>Stock faible (1-5)</h4><div class="value orange">' + alertes.filter(function(a) { return a.qte > 0 && a.qte <= 5; }).length + '</div></div></div>';
+  c += '<div class="table-wrapper"><div class="table-scroll"><table><thead><tr><th>Article</th><th>R&eacute;f&eacute;rence</th><th>Quantit&eacute;</th><th>Statut</th></tr></thead><tbody>';
+  if (alertes.length === 0) c += '<tr><td colspan="4"><div class="empty-state"><span class="icon">&#9989;</span>Aucune alerte - Stock suffisant</div></td></tr>';
+  else alertes.forEach(function(a) {
+    var status = a.qte <= 0 ? '<span class="badge badge-danger">Rupture</span>' : '<span class="badge badge-warning">Stock faible</span>';
+    c += '<tr><td>' + esc(a.nom) + '</td><td>' + esc(a.ref) + '</td>' +
+      '<td style="font-weight:700;color:' + (a.qte <= 0 ? 'var(--danger)' : 'var(--warning)') + '">' + a.qte + '</td><td>' + status + '</td></tr>';
+  });
+  c += '</tbody></table></div></div>';
+  document.getElementById('module-content').innerHTML = c;
+}
+
+MODULES['alertes'] = {
+  title: 'Alertes stock',
+  render: renderAlertes,
+  headerActions: function() { return helpBtn(); }
+};
+
+// ===== AUTH =====
+
+function login() {
+  var u = document.getElementById('login-username').value;
+  var p = document.getElementById('login-password').value;
+  if (u === 'admin' && p === 'admin123') {
     document.getElementById('login-overlay').classList.add('hidden');
+    showToast('Connect&eacute; en tant que administrateur');
     navigateTo('dashboard');
-    showFirstTimeHelp()
   } else {
-    if(err){err.textContent='Identifiant ou mot de passe incorrect';err.style.display='block'}
-    showToast('Identifiant ou mot de passe incorrect','error')
+    document.getElementById('login-error').textContent = 'Identifiant ou mot de passe incorrect';
+    document.getElementById('login-error').style.display = 'block';
   }
 }
-function logout(){
-  sessionStorage.removeItem('compta_auth');
-  document.getElementById('login-overlay').classList.remove('hidden')
+function logout() {
+  document.getElementById('login-overlay').classList.remove('hidden');
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
+  document.getElementById('login-error').style.display = 'none';
+  showToast('D&eacute;connect&eacute;');
 }
-document.addEventListener('DOMContentLoaded',function(){
-  if(sessionStorage.getItem('compta_auth'))document.getElementById('login-overlay').classList.add('hidden');
-  else document.getElementById('login-overlay').classList.remove('hidden');
-  navigateTo('dashboard');
-  updateAlertBadge()
+function chargerDonneesDemo() {
+  if (!confirm('Charger les donn&eacute;es de d&eacute;mo ? Les donn&eacute;es existantes seront conserv&eacute;es.')) return;
+  var todayDate = today().split('T')[0];
+  var y = new Date().getFullYear();
+  function addJournal(d, l, db, cr, mt) { Compta.addEcriture({ date: d, libelle: l, compteDebit: db, compteCredit: cr, montant: mt, type: 'manuelle', validation: 'valide', exercice: String(y) }); }
+  function addMvt(d, nom, ref, type, qte, pa, pv) { DB.add('mouvements', { date: d, articleNom: nom, articleReference: ref, type: type, quantite: qte, prixAchat: pa, prixVente: pv, comptabilise: true }); }
+  if (DB.all('journal').length < 3) {
+    addJournal(todayDate, 'Vente marchandises client A', '411', '701', 150000);
+    addJournal(todayDate, 'Achat stock fournisseur B', '37', '401', 85000);
+    addJournal(todayDate, 'Paiement loyer local', '613', '501', 50000);
+    addJournal(todayDate, 'Vente prestation client C', '411', '703', 75000);
+    addJournal(todayDate, 'Achat mat&eacute;riel bureau', '26', '401', 120000);
+    addJournal(todayDate, 'R&egrave;glement client A', '501', '411', 150000);
+  }
+  if (DB.all('mouvements').length < 3) {
+    addMvt(todayDate, 'Carton A4 80g', 'REF001', 'entree', 50, 2500, 4000);
+    addMvt(todayDate, 'Ramette A4 500f', 'REF002', 'entree', 100, 1800, 3200);
+    addMvt(todayDate, 'Classeurs', 'REF003', 'entree', 30, 500, 1200);
+    addMvt(todayDate, 'Carton A4 80g', 'REF001', 'sortie', 10, 2500, 4000);
+    addMvt(todayDate, 'Enveloppes', 'REF004', 'entree', 200, 150, 350);
+  }
+  if (DB.all('fournisseurs').length < 2) {
+    DB.add('fournisseurs', { nom: 'Fourniture Pro SARL', contact: 'M. Komlan', telephone: '90 00 00 01', email: 'contact@fourniturepro.tg', adresse: 'Lom&eacute;' });
+    DB.add('fournisseurs', { nom: 'Papeterie Centrale', contact: 'Mme Afi', telephone: '90 00 00 02', email: 'info@papcentrale.tg', adresse: 'Lom&eacute;' });
+  }
+  showToast('Donn&eacute;es de d&eacute;mo charg&eacute;es');
+  MODULES[currentActiveModule].render();
+  updateAlertBadge();
+}
+
+function updateAlertBadge() {
+  var mvts = DB.all('mouvements');
+  var stock = {};
+  mvts.forEach(function(m) {
+    var key = m.articleNom + '|' + (m.articleReference || '');
+    if (!stock[key]) stock[key] = { qte: 0 };
+    stock[key].qte += (m.type === 'entree' ? 1 : -1) * (Number(m.quantite) || 0);
+  });
+  var count = 0;
+  Object.keys(stock).forEach(function(k) { if (stock[k].qte <= 5) count++; });
+  var badge = document.getElementById('alert-badge');
+  if (badge) {
+    badge.textContent = count;
+    badge.className = 'sidebar-badge' + (count === 0 ? ' zero' : '');
+  }
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+  updateAlertBadge();
 });
 </script>
 </body>
