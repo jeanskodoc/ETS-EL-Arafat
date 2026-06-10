@@ -1,4 +1,209 @@
-<!DOCTYPE html>
+<!DOCTY<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ETS EL Arafat · Accueil</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
+
+        body{
+            min-height:100dvh;display:flex;justify-content:center;align-items:center;padding:16px;
+            position:relative;overflow-x:hidden;
+            background:url('E2.JPG') center/cover no-repeat fixed;
+        }
+        body::before{
+            content:'';position:fixed;inset:0;z-index:0;
+            background:rgba(0,0,0,.55);
+        }
+
+        .card{
+            position:relative;z-index:2;
+            width:100%;max-width:400px;
+            padding:clamp(28px,5vw,40px) clamp(22px,4vw,32px);
+            background:rgba(255,255,255,.045);
+            backdrop-filter:blur(24px) saturate(1.6);
+            -webkit-backdrop-filter:blur(24px) saturate(1.6);
+            border-radius:24px;
+            border:1px solid rgba(255,255,255,.07);
+            box-shadow:0 24px 80px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06);
+            text-align:center;
+        }
+
+        /* staggered entrance */
+        .card>*{
+            animation:reveal .6s cubic-bezier(.22,1,.36,1) both;
+        }
+        .card>*:nth-child(1){animation-delay:.05s}
+        .card>*:nth-child(2){animation-delay:.15s}
+        .card>*:nth-child(3){animation-delay:.25s}
+        .card>*:nth-child(4){animation-delay:.38s}
+        .card>*:nth-child(5){animation-delay:.52s}
+        @keyframes reveal{
+            0%{opacity:0;transform:translateY(16px) scale(.98)}
+            100%{opacity:1;transform:translateY(0) scale(1)}
+        }
+
+        .logo{
+            width:clamp(76px,16vw,96px);height:clamp(76px,16vw,96px);
+            margin:0 auto clamp(18px,3vw,24px);
+            position:relative;display:flex;align-items:center;justify-content:center;
+            border-radius:50%;
+            background:linear-gradient(135deg,#10b981,#047857);
+            box-shadow:0 8px 32px rgba(16,185,129,.4);
+        }
+        .logo::after{
+            content:'';position:absolute;inset:-3px;border-radius:50%;
+            border:1.5px solid rgba(255,255,255,.1);
+        }
+        .logo i{font-size:clamp(1.9rem,5vw,2.6rem);color:#fff;filter:drop-shadow(0 2px 6px rgba(0,0,0,.3))}
+
+        h1{
+            color:#fff;
+            font-size:clamp(1.35rem,5vw,1.7rem);
+            font-weight:800;letter-spacing:-.01em;
+            margin-bottom:4px;
+        }
+        h1 span{color:#34d399}
+
+        p.sub{
+            color:rgba(255,255,255,.45);
+            font-size:clamp(.7rem,2vw,.8rem);
+            font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+            margin-bottom:clamp(26px,5vw,34px);
+        }
+
+        .btns{display:flex;flex-direction:column;gap:14px}
+
+        .btn{
+            display:flex;align-items:center;gap:16px;
+            padding:clamp(14px,3vw,18px) clamp(18px,4vw,22px);
+            border-radius:16px;text-decoration:none;
+            transition:transform .25s cubic-bezier(.22,1,.36,1),box-shadow .3s,background .3s;
+            position:relative;overflow:hidden;
+            cursor:pointer;
+        }
+        .btn:active{transform:scale(.96)}
+        .btn::before{
+            content:'';position:absolute;inset:0;border-radius:inherit;
+            background:linear-gradient(135deg,rgba(255,255,255,.08),transparent 60%);
+            pointer-events:none;opacity:0;
+            transition:opacity .35s;
+        }
+        .btn:hover::before{opacity:1}
+
+        .btn-shop{
+            background:linear-gradient(135deg,#10b981,#047857);
+            color:#fff;
+            box-shadow:0 6px 24px rgba(16,185,129,.3);
+        }
+        .btn-shop:hover{
+            box-shadow:0 10px 40px rgba(16,185,129,.45);
+            transform:translateY(-3px) scale(1.01);
+        }
+
+        .btn-buy{
+            background:rgba(255,255,255,.06);
+            color:#fff;
+            border:1px solid rgba(255,255,255,.1);
+        }
+        .btn-buy:hover{
+            background:rgba(255,255,255,.1);
+            border-color:rgba(255,255,255,.18);
+            transform:translateY(-3px) scale(1.01);
+            box-shadow:0 8px 30px rgba(0,0,0,.25);
+        }
+
+        .btn-icon{
+            width:clamp(46px,10vw,54px);height:clamp(46px,10vw,54px);
+            border-radius:14px;display:flex;align-items:center;justify-content:center;
+            font-size:clamp(1.1rem,3vw,1.4rem);flex-shrink:0;
+        }
+        .btn-shop .btn-icon{background:rgba(255,255,255,.14)}
+        .btn-buy .btn-icon{background:rgba(255,255,255,.07)}
+        .btn-text{flex:1;text-align:left}
+        .btn-text .title{
+            font-size:clamp(.85rem,2.2vw,1rem);font-weight:700;display:block;
+        }
+        .btn-text .desc{
+            font-size:clamp(.63rem,1.6vw,.73rem);opacity:.55;display:block;margin-top:3px;
+        }
+
+        .btn-arrow{
+            font-size:clamp(.95rem,2.5vw,1.15rem);
+            opacity:.35;transition:all .3s;
+        }
+        .btn:hover .btn-arrow{opacity:.9;transform:translateX(5px)}
+
+        /* subtle glow on first btn */
+        .btn-shop::after{
+            content:'';position:absolute;inset:-2px;border-radius:inherit;
+            background:linear-gradient(135deg,#10b981,#f72585);
+            z-index:-1;opacity:0;filter:blur(10px);
+            transition:opacity .4s;
+        }
+        .btn-shop:hover::after{opacity:.5}
+
+        footer{
+            margin-top:clamp(22px,4vw,30px);
+            color:rgba(255,255,255,.2);
+            font-size:clamp(.6rem,1.5vw,.7rem);
+            line-height:1.6;
+        }
+        footer a{color:rgba(250,204,21,.6);text-decoration:none;transition:color .25s}
+        footer a:hover{color:#facc15}
+
+        @media(max-height:520px)and(orientation:landscape){
+            .card{max-width:94%;padding:14px 20px}
+            .logo{width:48px;height:48px;margin-bottom:8px}
+            .logo i{font-size:1.1rem}
+            h1{font-size:.95rem}
+            p.sub{font-size:.6rem;margin-bottom:12px}
+            .btns{flex-direction:row;gap:10px}
+            .btn{padding:10px 14px;border-radius:12px}
+            .btn-icon{width:34px;height:34px;border-radius:10px;font-size:.8rem}
+            footer{margin-top:10px;font-size:.55rem}
+        }
+        @media(prefers-reduced-motion:reduce){
+            body::before{animation:none}
+            .card>*{animation:none;opacity:1;transform:none}
+            .btn,.btn::after,.btn::before,.btn-arrow{transition:none}
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="logo"><img src="E1.JPG" alt="Ranco" style="width:60%;height:60%;object-fit:cover;border-radius:50%;filter:drop-shadow(0 2px 6px rgba(0,0,0,.3))"></div>
+        <h1>ETS-<span>EL Arafat</span></h1>
+        <p class="sub">GESTION · VENTE EN LIGNE · FACTURES</p>
+
+        <div class="btns">
+            <a href="B.html" class="btn btn-shop">
+                <div class="btn-icon"><i class="fas fa-store-alt"></i></div>
+                <div class="btn-text">
+                    <span class="title">BOUTIQUE EL Arafat</span>
+                    <span class="desc">Interface-Vente-physique</span>
+                </div>
+                <span class="btn-arrow"><i class="fas fa-chevron-right"></i></span>
+            </a>
+<a href="compta-auto.html" class="btn btn-buy">
+                <div class="btn-icon"><i class="fas fa-file-invoice"></i></div>
+                <div class="btn-text">
+                    <span class="title">Compatibilité</span>
+                    <span class="desc">Gestion des comptes</span>
+                </div>
+                <span class="btn-arrow"><i class="fas fa-chevron-right"></i></span>
+            </a>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 &middot; <a href="tel:92871605">92 87 16 05</a></p>
+        </footer>
+    </div>
+</body>
+</html>
+PE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
