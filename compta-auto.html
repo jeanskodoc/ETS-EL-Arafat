@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ComptaAuto - Gestion comptable & stocks automatisée</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --primary: #2563eb; --primary-dark: #1d4ed8; --primary-light: #dbeafe;
+  --secondary: #64748b; --secondary-light: #f1f5f9;
+  --success: #16a34a; --success-light: #dcfce7;
+  --warning: #d97706; --warning-light: #fef3c7;
+  --danger: #dc2626; --danger-light: #fee2e2;
+  --info: #0891b2; --info-light: #cffafe;
+  --purple: #8b5cf6; --purple-light: #ede9fe;
+  --bg: #f0f4f8; --surface: #fff; --surface-hover: #f8fafc;
+  --text: #0f172a; --text-secondary: #475569; --text-light: #94a3b8;
+  --border: #e2e8f0; --radius: 12px; --radius-sm: 8px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.06);
+  --sidebar-width: 270px; --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
+  --header-h: 56px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+body { font-family: 'Inter','Segoe UI',system-ui,-apple-system,sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; min-height: 100vh; min-height: 100dvh; }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 98; opacity: 0; transition: opacity var(--transition); -webkit-tap-highlight-color: transparent; }
+.sidebar-overlay.open { display: block; opacity: 1; }
+.app-container { display: flex; min-height: 100vh; min-height: 100dvh; }
+.sidebar { width: var(--sidebar-width); background: linear-gradient(180deg,#0f172a 0%,#1e293b 100%); color: #fff; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; height: 100vh; height: 100dvh; z-index: 99; transition: transform var(--transition); overflow: hidden; }
+.sidebar-header { padding: clamp(12px,3vw,20px) clamp(12px,3vw,20px) clamp(10px,2vw,16px); border-bottom: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; }
+.sidebar-header h1 { font-size: clamp(1.1rem,3.5vw,1.35rem); font-weight: 700; letter-spacing: -.5px; background: linear-gradient(135deg,#60a5fa,#a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.sidebar-header .subtitle { font-size: clamp(.6rem,1.8vw,.7rem); color: rgba(255,255,255,0.4); }
+.sidebar-nav { flex: 1; padding: 8px 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
+.nav-section { padding: clamp(8px,2vw,14px) clamp(12px,3vw,20px) 4px; font-size: clamp(.55rem,1.6vw,.65rem); text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.3); font-weight: 600; }
+.nav-item { display: flex; align-items: center; gap: clamp(6px,2vw,12px); padding: clamp(8px,2vw,10px) clamp(12px,3vw,20px); color: rgba(255,255,255,0.65); text-decoration: none; font-size: clamp(.75rem,2.2vw,.85rem); font-weight: 500; cursor: pointer; border-left: 3px solid transparent; margin: 1px clamp(4px,2vw,8px); border-radius: 8px; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.nav-item:hover { background: rgba(255,255,255,0.08); color: #fff; }
+.nav-item.active { background: rgba(37,99,235,0.2); color: #60a5fa; border-left-color: #60a5fa; }
+.nav-icon { font-size: clamp(.85rem,2.5vw,1rem); flex-shrink: 0; width: clamp(16px,5vw,20px); text-align: center; }
+.sidebar-badge { margin-left: auto; background: var(--danger); color: #fff; font-size: clamp(.55rem,1.6vw,.65rem); font-weight: 700; padding: 1px clamp(5px,1.5vw,7px); border-radius: 10px; min-width: clamp(14px,4vw,18px); text-align: center; flex-shrink: 0; }
+.sidebar-badge.zero { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.4); }
+.main-content { flex: 1; margin-left: var(--sidebar-width); min-height: 100vh; min-height: 100dvh; transition: margin-left var(--transition); }
+.main-header { display: flex; justify-content: space-between; align-items: center; padding: clamp(10px,2vw,20px) clamp(12px,3vw,28px); background: rgba(255,255,255,0.92); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); gap: 8px; min-height: var(--header-h); }
+.main-header h2 { font-size: clamp(1rem,3vw,1.3rem); font-weight: 600; display: flex; align-items: center; gap: clamp(4px,2vw,12px); flex-shrink: 0; min-width: 0; overflow: hidden; }
+.main-header h2 .header-badge { font-size: clamp(.6rem,1.6vw,.7rem); font-weight: 500; color: var(--text-light); background: var(--secondary-light); padding: 2px clamp(6px,1.5vw,10px); border-radius: 20px; flex-shrink: 0; }
+.header-actions { display: flex; gap: clamp(4px,1vw,8px); flex-wrap: wrap; align-items: center; flex-shrink: 1; min-width: 0; justify-content: flex-end; }
+.menu-toggle { display: none; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text); padding: 4px; border-radius: var(--radius-sm); -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.mobile-header { display: none; align-items: center; gap: clamp(6px,2vw,12px); flex-shrink: 0; }
+#mobile-module-title { font-weight: 600; font-size: clamp(.85rem,2.5vw,.95rem); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 50vw; }
+.module-content { padding: clamp(12px,3vw,28px); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 4px; padding: clamp(6px,1.5vw,9px) clamp(10px,3vw,18px); border: none; border-radius: var(--radius-sm); font-size: clamp(.75rem,2.2vw,.85rem); font-weight: 600; cursor: pointer; transition: all var(--transition); white-space: nowrap; -webkit-tap-highlight-color: transparent; touch-action: manipulation; min-height: clamp(32px,8vw,40px); }
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-success { background: var(--success); color: #fff; }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-sm { padding: clamp(4px,1vw,6px) clamp(8px,2vw,12px); font-size: clamp(.68rem,2vw,.78rem); min-height: clamp(26px,7vw,32px); }
+.btn-ghost { background: transparent; color: var(--text-secondary); border: 1.5px solid var(--border); }
+.btn-ghost:hover { background: var(--secondary-light); }
+.btn-outline { background: transparent; color: var(--primary); border: 1.5px solid var(--primary); }
+.btn-outline:hover { background: var(--primary-light); }
+.btn-danger-outline { background: transparent; color: var(--danger); border: 1.5px solid var(--danger); }
+.btn-danger-outline:hover { background: var(--danger-light); }
+.btn-purple { background: var(--purple); color: #fff; }
+.module-toolbar { display: flex; gap: clamp(4px,1vw,8px); margin-bottom: clamp(8px,2vw,14px); flex-wrap: wrap; align-items: center; }
+.module-toolbar .btn { font-size: clamp(.68rem,2vw,.78rem); }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(180px,100%), 1fr)); gap: clamp(8px,2vw,14px); margin-bottom: clamp(16px,4vw,24px); }
+.card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: clamp(12px,3vw,20px); border: 1px solid var(--border); position: relative; overflow: hidden; }
+.card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+.card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.card[data-accent="blue"]::before { background: var(--primary); }
+.card[data-accent="orange"]::before { background: var(--warning); }
+.card[data-accent="green"]::before { background: var(--success); }
+.card[data-accent="red"]::before { background: var(--danger); }
+.card[data-accent="purple"]::before { background: var(--purple); }
+.card h4 { font-size: clamp(.65rem,1.8vw,.72rem); color: var(--text-light); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 4px; font-weight: 600; }
+.card .value { font-size: clamp(1.2rem,4vw,1.7rem); font-weight: 700; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card .value.green { color: var(--success); }
+.card .value.blue { color: var(--primary); }
+.card .value.orange { color: var(--warning); }
+.card .value.red { color: var(--danger); }
+.card .value.purple { color: var(--purple); }
+.table-wrapper { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; }
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { width: 100%; border-collapse: collapse; }
+thead { background: var(--secondary-light); }
+th { padding: clamp(8px,2vw,12px) clamp(8px,2vw,16px); text-align: left; font-size: clamp(.6rem,1.8vw,.7rem); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: var(--text-secondary); border-bottom: 1px solid var(--border); white-space: nowrap; }
+td { padding: clamp(8px,2vw,11px) clamp(8px,2vw,16px); font-size: clamp(.75rem,2.2vw,.85rem); border-bottom: 1px solid var(--border); vertical-align: middle; }
+tbody tr:hover td { background: var(--surface-hover); }
+tbody tr:last-child td { border-bottom: none; }
+.actions-cell { display: flex; gap: clamp(2px,.8vw,4px); flex-wrap: nowrap; }
+.empty-state { text-align: center; padding: clamp(24px,8vw,48px) clamp(12px,4vw,20px); color: var(--text-light); }
+.empty-state .icon { font-size: clamp(1.5rem,6vw,2.5rem); margin-bottom: clamp(6px,2vw,12px); display: block; }
+.badge { display: inline-block; padding: 2px clamp(6px,1.5vw,10px); border-radius: 20px; font-size: clamp(.6rem,1.8vw,.7rem); font-weight: 600; }
+.badge-success { background: var(--success-light); color: #166534; }
+.badge-warning { background: var(--warning-light); color: #92400e; }
+.badge-danger { background: var(--danger-light); color: #991b1b; }
+.badge-info { background: var(--info-light); color: #155e75; }
+.badge-purple { background: var(--purple-light); color: #6d28d9; }
+.badge-secondary { background: var(--secondary-light); color: var(--text-secondary); }
+.modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: clamp(8px,2vw,16px); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+.modal-overlay.hidden { display: none; }
+.modal { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow-lg); width: 100%; max-width: min(580px,calc(100vw - 16px)); max-height: min(90vh,90dvh); overflow-y: auto; -webkit-overflow-scrolling: touch; margin: auto; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; padding: clamp(12px,3vw,18px) clamp(14px,3vw,24px); border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--surface); z-index: 1; }
+.modal-header h3 { font-size: clamp(.9rem,2.8vw,1.05rem); font-weight: 600; }
+.modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-light); width: clamp(28px,7vw,32px); height: clamp(28px,7vw,32px); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
+.modal-close:hover { background: var(--secondary-light); color: var(--text); }
+.modal-body { padding: clamp(12px,3vw,20px) clamp(14px,3vw,24px); }
+.modal-footer { display: flex; justify-content: flex-end; gap: clamp(4px,1.5vw,8px); padding: clamp(10px,2vw,14px) clamp(14px,3vw,24px); border-top: 1px solid var(--border); position: sticky; bottom: 0; background: var(--surface); }
+.form-group { margin-bottom: clamp(8px,2vw,14px); }
+.form-group label { display: block; font-size: clamp(.72rem,2.2vw,.8rem); font-weight: 600; margin-bottom: 3px; }
+.form-group input, .form-group select, .form-group textarea { width: 100%; padding: clamp(7px,1.8vw,9px) clamp(8px,2.5vw,12px); border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: clamp(.8rem,2.4vw,.875rem); font-family: inherit; background: var(--surface); min-height: clamp(36px,9vw,42px); }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+.form-group .help-text { font-size: clamp(.65rem,1.8vw,.72rem); color: var(--text-light); margin-top: 2px; display: block; }
+.form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px,100%), 1fr)); gap: clamp(6px,1.5vw,12px); }
+.form-group input[type="checkbox"] { width: auto; min-height: auto; }
+.form-group .checkbox-label { display: flex; align-items: center; gap: 8px; font-weight: 400; cursor: pointer; }
+.search-bar { display: flex; gap: clamp(4px,1vw,8px); margin-bottom: clamp(8px,2vw,16px); }
+.search-bar input { flex: 1; min-width: 0; padding: clamp(7px,1.8vw,9px) clamp(8px,2.5vw,14px); border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: clamp(.78rem,2.2vw,.85rem); background: var(--surface); min-height: clamp(34px,8vw,40px); }
+.search-bar input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+.section-title { font-size: clamp(.85rem,2.5vw,.95rem); font-weight: 600; margin-bottom: clamp(8px,2vw,12px); margin-top: clamp(16px,4vw,28px); display: flex; align-items: center; gap: clamp(4px,1.5vw,8px); }
+.section-title:first-child { margin-top: 0; }
+.section-title::after { content: ''; flex: 1; min-width: 20px; height: 1px; background: var(--border); }
+.toast-container { position: fixed; bottom: max(16px,var(--safe-bottom)); right: 16px; left: 16px; z-index: 2000; display: flex; flex-direction: column; gap: 6px; pointer-events: none; align-items: flex-end; }
+.toast { padding: clamp(8px,2vw,12px) clamp(14px,3.5vw,20px); border-radius: var(--radius-sm); color: #fff; font-size: clamp(.78rem,2.2vw,.85rem); font-weight: 500; box-shadow: var(--shadow-lg); pointer-events: auto; max-width: min(400px,calc(100vw - 32px)); word-wrap: break-word; }
+.toast-success { background: var(--success); }
+.toast-error { background: var(--danger); }
+.toast-info { background: var(--primary); }
+.toast-warning { background: var(--warning); }
+.login-overlay { position: fixed; inset: 0; z-index: 9999; background: linear-gradient(135deg,#0f172a 0%,#1e293b 100%); display: flex; align-items: center; justify-content: center; padding: clamp(12px,4vw,24px); }
+.login-overlay.hidden { display: none; }
+.login-box { background: var(--surface); border-radius: var(--radius); padding: clamp(24px,6vw,40px) clamp(20px,5vw,36px); width: 100%; max-width: min(400px,calc(100vw - 24px)); text-align: center; }
+.login-box h2 { font-size: clamp(1.2rem,5vw,1.5rem); font-weight: 700; background: linear-gradient(135deg,#60a5fa,#a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.login-box p { color: var(--text-light); font-size: clamp(.75rem,2.2vw,.8rem); margin-bottom: clamp(16px,4vw,24px); }
+.login-form { display: flex; flex-direction: column; gap: clamp(8px,2vw,12px); }
+.login-form input { padding: clamp(10px,2.5vw,11px) clamp(10px,3vw,14px); border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: clamp(.82rem,2.4vw,.9rem); min-height: clamp(40px,10vw,44px); }
+.login-form input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+.login-form .btn { padding: clamp(10px,2.5vw,12px); font-size: clamp(.82rem,2.4vw,.9rem); margin-top: clamp(2px,1vw,4px); }
+.login-error { color: var(--danger); font-size: .82rem; display: none; text-align: left; }
+.text-right { text-align: right; }
+
+/* === RESPONSIVE BREAKPOINTS === */
+
+/* Small phones (< 480px) */
+@media (max-width: 480px) {
+  .sidebar { width: 85vw; max-width: 300px; }
+  .cards { grid-template-columns: repeat(2,1fr); gap: 6px; }
+  .card { padding: 10px; }
+  .card .value { font-size: 1rem; }
+  .card h4 { font-size: .6rem; letter-spacing: .3px; }
+  .header-actions .btn { font-size: .68rem; padding: 5px 8px; min-height: 28px; }
+  .header-actions .btn-sm { padding: 4px 6px; font-size: .62rem; min-height: 24px; }
+  .actions-cell .btn-sm { padding: 3px 6px; font-size: .65rem; min-height: 24px; }
+  .module-content { padding: 8px; }
+  .main-header { padding: 8px 10px; }
+  .main-header h2 { font-size: .85rem; }
+  .main-header h2 .header-badge { display: none; }
+  .modal { max-width: 100vw; margin: 4px; border-radius: 8px; }
+  .modal-body { padding: 12px; }
+  th, td { padding: 6px 6px; font-size: .7rem; }
+  .empty-state { padding: 20px 10px; }
+  .empty-state .icon { font-size: 1.3rem; }
+  .toast-container { bottom: 8px; right: 8px; left: 8px; }
+  .form-row { gap: 4px; }
+  .form-group { margin-bottom: 8px; }
+  .badge { font-size: .58rem; padding: 1px 5px; }
+  .section-title { font-size: .78rem; }
+  .search-bar input { min-height: 30px; font-size: .75rem; padding: 5px 8px; }
+  .btn { min-height: 28px; padding: 5px 10px; font-size: .72rem; }
+  .btn-sm { min-height: 22px; padding: 3px 6px; font-size: .62rem; }
+}
+
+/* Tablets & small screens (< 768px) */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); width: 280px; }
+  .sidebar.open { transform: translateX(0); }
+  .main-content { margin-left: 0; }
+  .menu-toggle { display: block; }
+  .mobile-header { display: flex; }
+  .main-header { padding: 10px 14px; }
+  .module-content { padding: 12px; }
+  .cards { grid-template-columns: repeat(auto-fill, minmax(min(150px,100%), 1fr)); gap: 8px; }
+  .card { padding: 14px; }
+  .card .value { font-size: 1.2rem; }
+  .card h4 { font-size: .65rem; }
+  .form-row { grid-template-columns: 1fr; gap: 4px; }
+  .modal { max-width: calc(100vw - 8px); margin: 4px; border-radius: 10px; }
+  .modal-header, .modal-footer { padding: 12px 14px; }
+  .modal-body { padding: 12px 14px; }
+  .header-actions .btn { font-size: .72rem; padding: 6px 10px; }
+  .header-actions .btn-sm { font-size: .65rem; padding: 4px 8px; }
+  .table-scroll { margin: 0 -4px; }
+  .main-header h2 .header-badge { display: none; }
+  .toast-container { bottom: 12px; right: 12px; left: 12px; }
+}
+
+/* Medium devices (768px - 1024px) - tablet in landscape */
+@media (min-width: 769px) and (max-width: 1024px) {
+  :root { --sidebar-width: 230px; }
+  .sidebar-header { padding: 14px 16px 10px; }
+  .sidebar-header h1 { font-size: 1.1rem; }
+  .nav-item { padding: 8px 14px; font-size: .78rem; gap: 8px; margin: 1px 4px; }
+  .nav-section { padding: 10px 14px 2px; font-size: .6rem; }
+  .main-header { padding: 14px 20px; }
+  .main-header h2 { font-size: 1.1rem; }
+  .module-content { padding: 18px 20px; }
+  .cards { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+}
+
+/* Large screens (> 1280px) */
+@media (min-width: 1280px) {
+  .module-content { padding: 32px 40px; }
+  .main-header { padding: 24px 40px; }
+  .cards { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  .modal { max-width: 640px; }
+  .card { padding: 24px; }
+  .card .value { font-size: 2rem; }
+}
+
+/* Very large screens (> 1600px) */
+@media (min-width: 1600px) {
+  .module-content { max-width: 1400px; margin: 0 auto; padding: 40px 48px; }
+  .main-header { padding: 28px 48px; }
+  :root { --sidebar-width: 290px; }
+  .cards { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 18px; }
+}
+
+/* Sidebar overlay only on small/tablet */
+@media (min-width: 769px) {
+  .sidebar-overlay { display: none !important; }
+}
+
+/* Landscape phones */
+@media (max-width: 768px) and (orientation: landscape) {
+  .sidebar { width: 240px; }
+  .main-header { padding: 6px 12px; min-height: 40px; }
+  .main-header h2 { font-size: .9rem; }
+  .module-content { padding: 8px 12px; }
+  .cards { grid-template-columns: repeat(3,1fr); gap: 6px; }
+  .card { padding: 8px; }
+  .card .value { font-size: 1rem; }
+  .card h4 { font-size: .55rem; }
+  .btn { min-height: 26px; padding: 4px 8px; }
+  .btn-sm { min-height: 22px; padding: 3px 6px; }
+  .modal { max-height: 85vh; }
+}
+
+/* Print */
+@media print {
+  .sidebar, .main-header, .btn, .search-bar, .actions-cell, .module-toolbar, .menu-toggle, .mobile-header, .sidebar-overlay, .toast-container { display: none !important; }
+  .main-content { margin-left: 0 !important; padding: 0 !important; }
+  .card { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; transform: none; }
+  .card::before { display: none; }
+  table { font-size: .7rem; }
+  th, td { padding: 4px 6px; }
+  body { background: #fff; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  .card:hover { transform: none; }
+  .btn:active { transform: none; }
+}
+
+/* Dark mode support (optional, with data-theme) */
+@media (prefers-color-scheme: dark) {
+  /* Keep app light for now - accounting apps prefer light */
+}
+</style>
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="app-container">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header"><h1>ComptaAuto</h1><p class="subtitle">Comptabilit&eacute; &amp; stocks automatis&eacute;s</p></div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">Tableau de bord</div>
+      <a href="#" class="nav-item" data-module="dashboard"><span class="nav-icon">&#9670;</span>Tableau de bord</a>
+      <div class="nav-section">Comptabilit&eacute;</div>
+      <a href="#" class="nav-item" data-module="journal"><span class="nav-icon">&#128221;</span>&Eacute;critures journal</a>
+      <a href="#" class="nav-item" data-module="plan-comptable"><span class="nav-icon">&#128203;</span>Plan comptable</a>
+      <a href="#" class="nav-item" data-module="balance"><span class="nav-icon">&#9878;</span>Balance g&eacute;n&eacute;rale</a>
+      <a href="#" class="nav-item" data-module="grand-livre"><span class="nav-icon">&#128214;</span>Grand livre</a>
+      <a href="#" class="nav-item" data-module="comptes-resultat"><span class="nav-icon">&#128200;</span>Comptes de r&eacute;sultat</a>
+      <a href="#" class="nav-item" data-module="bilan"><span class="nav-icon">&#9878;&#65039;</span>Bilan comptable</a>
+      <div class="nav-section">Automatisation</div>
+      <a href="#" class="nav-item" data-module="regles"><span class="nav-icon">&#9881;</span>R&egrave;gles de comptabilisation</a>
+      <a href="#" class="nav-item" data-module="ecritures-auto"><span class="nav-icon">&#9889;</span>&Eacute;critures automatiques</a>
+      <a href="#" class="nav-item" data-module="tva"><span class="nav-icon">&#128176;</span>TVA / Taxes</a>
+      <a href="#" class="nav-item" data-module="amortissements"><span class="nav-icon">&#128252;</span>Amortissements</a>
+      <div class="nav-section">Stocks &amp; Achats</div>
+      <a href="#" class="nav-item" data-module="mouvements"><span class="nav-icon">&#128666;</span>Mouvements stock</a>
+      <a href="#" class="nav-item" data-module="etat-stock"><span class="nav-icon">&#128202;</span>&Eacute;tat des stocks</a>
+      <a href="#" class="nav-item" data-module="fournisseurs"><span class="nav-icon">&#127970;</span>Fournisseurs</a>
+      <a href="#" class="nav-item" data-module="alertes"><span class="nav-icon">&#9888;</span>Alertes stock<span class="sidebar-badge" id="alert-badge">0</span></a>
+      <div class="nav-section">Outils</div>
+      <a href="#" class="nav-item nav-logout" onclick="logout()"><span class="nav-icon">&#128682;</span>D&eacute;connexion</a>
+    </nav>
+  </aside>
+  <main class="main-content">
+    <header class="main-header">
+      <div class="mobile-header">
+        <button class="menu-toggle" onclick="toggleSidebar()">&#9776;</button>
+        <span id="mobile-module-title" style="font-weight:600;font-size:.95rem">Tableau de bord</span>
+      </div>
+      <h2 id="module-title">Tableau de bord <span class="header-badge" id="exercice-badge"></span></h2>
+      <div class="header-actions" id="header-actions"></div>
+    </header>
+    <div id="module-content" class="module-content"></div>
+  </main>
+</div>
+<div id="modal-overlay" class="modal-overlay hidden" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3 id="modal-title">Formulaire</h3>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-primary" id="btn-save" onclick="saveForm()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+<div id="login-overlay" class="login-overlay">
+  <div class="login-box">
+    <h2>ComptaAuto</h2>
+    <p>Gestion comptable et stocks automatis&eacute;e</p>
+    <div class="login-form">
+      <input type="text" id="login-username" placeholder="Identifiant" autocomplete="username">
+      <input type="password" id="login-password" placeholder="Mot de passe" autocomplete="current-password">
+      <div id="login-error" class="login-error"></div>
+      <button class="btn btn-primary" onclick="login()">Connexion</button>
+      <button class="btn btn-ghost" onclick="chargerDonneesDemo()" style="font-size:.8rem;margin-top:-4px">Charger donn&eacute;es de d&eacute;mo</button>
+    </div>
+  </div>
+</div>
+<div id="toast-container" class="toast-container"></div>
+<script>
+var STORE_PREFIX = 'compta_';
+var APP_KEY = 'compta_init';
+
+function uuid(){return crypto.randomUUID()}
+function nowISO(){return new Date().toISOString()}
+function today(){return new Date().toISOString().split('T')[0]}
+
+function formatDate(d){
+  if(!d)return '-';
+  try{return new Date(d).toLocaleDateString('fr-FR',{year:'numeric',month:'2-digit',day:'2-digit'})}catch(e){return d}
+}
+function formatCurrency(v){
+  return Number(v||0).toLocaleString('fr-FR',{minimumFractionDigits:0,maximumFractionDigits:0})+' FCFA';
+}
+function esc(s){
+  if(typeof s==='undefined'||s===null)s='';
+  var d=document.createElement('span');d.textContent=s;return d.innerHTML;
+}
+function em(s){return esc(s)||'-'}
+function ef(v){return formatCurrency(v)}
+
+function showToast(msg,type){
+  type=type||'success';
+  var c=document.getElementById('toast-container');
+  if(!c)return;
+  var t=document.createElement('div');
+  t.className='toast toast-'+type;
+  t.textContent=msg;
+  c.appendChild(t);
+  setTimeout(function(){t.style.opacity='0';t.style.transition='opacity 0.3s';setTimeout(function(){t.remove()},300)},3500);
+}
+
+// Help texts for all modules
+var HELP_TEXTS={
+  dashboard:'<h4>Tableau de bord</h4><p>Vue d\'ensemble de votre comptabilit&eacute; et stocks. Les chiffres cl&eacute;s (soldes, totaux) sont mis &agrave; jour automatiquement.</p><ul><li>Utilisez la barre lat&eacute;rale pour naviguer entre les modules</li><li>Ajoutez des &eacute;critures comptables dans <strong>Journal</strong></li><li>Enregistrez vos mouvements de stock dans <strong>Mouvements stock</strong></li><li>Les r&egrave;gles de comptabilisation g&eacute;n&egrave;rent automatiquement les &eacute;critures</li></ul>',
+  journal:'<h4>Journal comptable</h4><p>Saisie des &eacute;critures comptables en partie double (d&eacute;bit/cr&eacute;dit).</p><ul><li>Cliquez <strong>+ Ajouter</strong> pour cr&eacute;er une &eacute;criture</li><li>S&eacute;lectionnez les comptes dans le plan comptable SYSCOHADA</li><li>Une &eacute;criture <span class="badge badge-purple">Auto</span> est g&eacute;n&eacute;r&eacute;e automatiquement</li><li>Utilisez <strong>Valider</strong> pour approuver une &eacute;criture</li><li>Exportez les &eacute;critures en JSON ou imprimez</li></ul>',
+  'plan-comptable':'<h4>Plan comptable</h4><p>Liste des comptes SYSCOHADA avec soldes calcul&eacute;s automatiquement.</p><ul><li>Ajoutez, modifiez ou supprimez des comptes</li><li>Le <strong>solde</strong> est calcul&eacute; depuis les &eacute;critures du journal</li><li>Classes: 1=Capitaux, 2=Immobilisations, 3=Stocks, 4=Tiers, 5=Tr&eacute;sorerie, 6=Charges, 7=Produits</li></ul>',
+  balance:'<h4>Balance g&eacute;n&eacute;rale</h4><p>R&eacute;capitulatif des totaux d&eacute;biteurs et cr&eacute;diteurs par compte.</p><ul><li>La balance pr&eacute;sente tous les comptes ayant eu des mouvements</li><li>Le <strong>solde</strong> est la diff&eacute;rence D&eacute;bit - Cr&eacute;dit</li><li>La ligne <strong>TOTAUX</strong> en bas doit &ecirc;tre &eacute;quilibr&eacute;e</li></ul>',
+  'grand-livre':'<h4>Grand livre</h4><p>D&eacute;tail chronologique des mouvements pour chaque compte.</p><ul><li>Chaque compte est affich&eacute; avec ses &eacute;critures class&eacute;es par date</li><li>Le <strong>solde</strong> est mis &agrave; jour apr&egrave;s chaque ligne</li><li>Utilisez le filtre pour trouver un compte sp&eacute;cifique</li></ul>',
+  'comptes-resultat':'<h4>Comptes de r&eacute;sultat</h4><p>Pr&eacute;sentation synth&eacute;tique des charges et produits.</p><ul><li>Le <strong>r&eacute;sultat</strong> = Total produits - Total charges</li><li>Un r&eacute;sultat positif = b&eacute;n&eacute;fice (vert)</li><li>Un r&eacute;sultat n&eacute;gatif = perte (rouge)</li></ul>',
+  bilan:'<h4>Bilan comptable</h4><p>&Eacute;tat du patrimoine &agrave; une date donn&eacute;e.</p><ul><li><strong>Actif</strong> = ce que l\'entreprise poss&egrave;de</li><li><strong>Passif</strong> = ce que l\'entreprise doit</li><li>L\'<strong>&eacute;quilibre</strong> Actif = Passif doit &ecirc;tre respect&eacute;</li></ul>',
+  regles:'<h4>R&egrave;gles de comptabilisation</h4><p>Automatisez la cr&eacute;ation d\'&eacute;critures comptables.</p><ul><li>Cr&eacute;ez des r&egrave;gles d&eacute;clench&eacute;es par les mouvements de stock</li><li>Choisissez le mode de calcul (fixe, Qte x Prix, pourcentage)</li><li>Les &eacute;critures auto apparaissent dans <strong>&Eacute;critures automatiques</strong></li><li>3 r&egrave;gles par d&eacute;faut sont d&eacute;j&agrave; install&eacute;es</li></ul>',
+  'ecritures-auto':'<h4>&Eacute;critures automatiques</h4><p>G&eacute;n&eacute;ration d\'&eacute;critures comptables depuis les mouvements de stock.</p><ul><li><strong>G&eacute;n&eacute;rer &eacute;critures stocks</strong> : cr&eacute;e les &eacute;critures pour les mouvements non comptabilis&eacute;s</li><li><strong>Appliquer r&egrave;gles</strong> : utilise les r&egrave;gles configur&eacute;es</li><li>Les &eacute;critures g&eacute;n&eacute;r&eacute;es sont marqu&eacute;es <span class="badge badge-purple">Auto</span></li></ul>',
+  tva:'<h4>TVA / Taxes</h4><p>Calcul et suivi de la TVA.</p><ul><li><strong>TVA collect&eacute;e</strong> : TVA factur&eacute;e aux clients (compte 443)</li><li><strong>TVA d&eacute;ductible</strong> : TVA pay&eacute;e aux fournisseurs (compte 444)</li><li><strong>TVA due</strong> = TVA collect&eacute;e - TVA d&eacute;ductible</li><li>La simulation &agrave; 18% est indicative</li></ul>',
+  amortissements:'<h4>Amortissements</h4><p>Gestion des immobilisations et calcul des amortissements lin&eacute;aires.</p><ul><li>Ajoutez une <strong>immobilisation</strong> avec sa valeur et sa dur&eacute;e de vie</li><li>Cliquez <strong>Amortir</strong> pour calculer et comptabiliser l\'amortissement annuel</li><li>L\'&eacute;criture comptable est cr&eacute;&eacute;e automatiquement (compte 67/28)</li></ul>',
+  mouvements:'<h4>Mouvements de stock</h4><p>Enregistrement des entr&eacute;es et sorties de stock.</p><ul><li><strong>Entr&eacute;e</strong> = r&eacute;ception de marchandises</li><li><strong>Sortie</strong> = exp&eacute;dition/vente</li><li>Renseignez le prix pour la comptabilisation automatique</li><li>Les r&egrave;gles actives g&eacute;n&egrave;rent les &eacute;critures automatiquement</li></ul>',
+  'etat-stock':'<h4>&Eacute;tat des stocks</h4><p>Situation du stock par article.</p><ul><li>Stock calcul&eacute; automatiquement &agrave; partir des mouvements</li><li><strong>Valeur du stock</strong> = quantit&eacute; x prix d\'achat moyen</li><li>Les alertes sont visibles dans le module <strong>Alertes stock</strong></li></ul>',
+  fournisseurs:'<h4>Fournisseurs</h4><p>Gestion des fournisseurs.</p><ul><li>Ajoutez vos fournisseurs avec leurs coordonn&eacute;es</li><li>Le <strong>solde</strong> affich&eacute; est le solde du fournisseur (compte 401)</li></ul>',
+  alertes:'<h4>Alertes stock</h4><p>Articles en rupture ou en stock faible.</p><ul><li><span style="color:var(--danger)">Rouge</span> = rupture de stock (quantit&eacute; &le; 0)</li><li><span style="color:var(--warning)">Orange</span> = stock faible (1 &agrave; 5 unit&eacute;s)</li><li>Le badge dans la barre lat&eacute;rale indique le nombre d\'alertes</li></ul>'
+};
+
+function showHelp(){
+  var t=HELP_TEXTS[currentActiveModule]||'<p>Aide non disponible pour ce module.</p>';
+  openModal('Aide - '+MODULES[currentActiveModule].title,'<div style="line-height:1.7">'+t+'</div>');
+}
+
+function exportModuleJSON(){
+  var k={'dashboard':null,'plan-comptable':'plan_comptable','journal':'journal','mouvements':'mouvements','fournisseurs':'fournisseurs','regles':'regles_comptabilisation','ecritures-auto':'journal','tva':'tva_declarations','amortissements':'immobilisations','etat-stock':'mouvements'}[currentActiveModule];
+  if(!k){showToast('Export non disponible pour ce module','info');return}
+  var data=DB.all(k);
+  if(currentActiveModule==='ecritures-auto')data=data.filter(function(e){return e.type==='automatique'});
+  var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');a.href=url;a.download=k+'_'+today()+'.json';
+  document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+  showToast('Fichier export&eacute; ('+data.length+' &eacute;l&eacute;ments)')
+}
+function exportModuleCSV(){
+  var k={'plan-comptable':{key:'plan_comptable',fields:['numero','intitule','classe','type']},journal:{key:'journal',fields:['date','libelle','compteDebit','compteCredit','montant','type','categorie']},mouvements:{key:'mouvements',fields:['date','articleNom','articleReference','type','quantite','prixAchat','prixVente','emplacement']},fournisseurs:{key:'fournisseurs',fields:['nom','contact','email','telephone','adresse']}}[currentActiveModule];
+  if(!k){showToast('CSV non disponible','info');return}
+  var data=DB.all(k.key);
+  var lines=[k.fields.join(';')];
+  data.forEach(function(r){
+    lines.push(k.fields.map(function(f){var v=r[f];if(typeof v==='undefined'||v===null)v='';return String(v).replace(/;/g,',').replace(/\n/g,' ')}).join(';'))
+  });
+  var blob=new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');a.href=url;a.download=k.key+'_'+today()+'.csv';
+  document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+  showToast('CSV export&eacute; ('+data.length+' lignes)')
+}
+function importModuleJSON(){
+  var k={'plan-comptable':'plan_comptable','journal':'journal','mouvements':'mouvements','fournisseurs':'fournisseurs','regles':'regles_comptabilisation'}[currentActiveModule];
+  if(!k){showToast('Import non disponible','info');return}
+  var input=document.createElement('input');input.type='file';input.accept='.json';
+  input.onchange=function(e){
+    var file=e.target.files[0];if(!file)return;
+    var reader=new FileReader();
+    reader.onload=function(ev){
+      try{
+        var d=JSON.parse(ev.target.result);
+        if(!Array.isArray(d))throw new Error('Le fichier doit contenir un tableau');
+        d.forEach(function(item){
+          var newItem={id:uuid()};
+          for(var key in item)newItem[key]=item[key];
+          newItem.createdAt=nowISO();newItem.updatedAt=nowISO();
+          var items=DB.all(k);items.push(newItem);
+          localStorage.setItem(STORE_PREFIX+k,JSON.stringify(items));
+        });
+        showToast('Import&eacute;: '+d.length+' &eacute;l&eacute;ments');
+        MODULES[currentActiveModule].render();
+      }catch(err){showToast(err.message||'Erreur import','error')}
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+function clearModule(){
+  var k={'plan-comptable':'plan_comptable','journal':'journal','mouvements':'mouvements','fournisseurs':'fournisseurs','regles':'regles_comptabilisation','ecritures-auto':'journal','amortissements':'immobilisations'}[currentActiveModule];
+  if(!k){showToast('Action non disponible','info');return}
+  if(!confirm('Supprimer TOUTES les donn&eacute;es de ce module ? Cette action est irr&eacute;versible.'))return;
+  var title=MODULES[currentActiveModule].title;
+  DB.clear(k);
+  if(currentActiveModule==='amortissements')DB.clear('amortissements');
+  if(currentActiveModule==='ecritures-auto'){DB.clear('journal');DB.clear('mouvements')}
+  showToast('Donn&eacute;es de "'+title+'" effac&eacute;es');
+  MODULES[currentActiveModule].render();
+}
+function imprimerModule(){
+  var c=document.getElementById('module-content');
+  var title=MODULES[currentActiveModule].title;
+  var w=window.open('','_blank');
+  w.document.write('<html><head><title>'+title+' - ComptaAuto</title><style>body{font-family:sans-serif;padding:20px}table{width:100%;border-collapse:collapse;margin:10px 0}th,td{border:1px solid #ccc;padding:6px 10px;text-align:left;font-size:12px}th{background:#f0f0f0}h2{color:#2563eb}.badge{display:none}</style></head><body><h2>'+title+'</h2><p>G&eacute;n&eacute;r&eacute; le '+new Date().toLocaleString('fr-FR')+'</p>'+c.innerHTML+'</body></html>');
+  w.document.close();
+  setTimeout(function(){w.print()},500);
+}
+
+// Quick action panel for dashboard
+function getQuickActions(){
+  return '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(120px,100%),1fr));gap:clamp(4px,1vw,8px);margin-bottom:clamp(8px,2vw,16px);width:100%">'+
+    '<button class="btn btn-sm btn-primary" onclick="navigateTo(\'mouvements\')" style="justify-content:center">+ Mouvement stock</button>'+
+    '<button class="btn btn-sm btn-success" onclick="navigateTo(\'journal\')" style="justify-content:center">+ Ecriture compta</button>'+
+    '<button class="btn btn-sm btn-purple" onclick="navigateTo(\'regles\')" style="justify-content:center">G&eacute;rer r&egrave;gles</button>'+
+    '<button class="btn btn-sm btn-ghost" onclick="navigateTo(\'alertes\')" style="justify-content:center">Voir alertes</button>'+
+    '</div>';
+}
+
+// Status bar helpers
+function getStatusBar(){
+  var nbEcritures=DB.all('journal').length;
+  var nbMvt=DB.all('mouvements').length;
+  var exo=DB.getExerciceCourant();
+  return '<div style="margin-top:clamp(12px,3vw,20px);padding:clamp(6px,1.5vw,10px) clamp(10px,2.5vw,16px);background:var(--secondary-light);border-radius:var(--radius-sm);font-size:clamp(.65rem,1.8vw,.75rem);color:var(--text-secondary);display:flex;gap:clamp(8px,2vw,24px);flex-wrap:wrap;align-items:center"><span>&#128203; Ex: <strong>'+exo+'</strong></span><span>&#128221; &Eacute;critures: <strong>'+nbEcritures+'</strong></span><span>&#128666; Mouv.: <strong>'+nbMvt+'</strong></span><span style="margin-left:auto;opacity:.5">ComptaAuto</span></div>';
+}
+
+// "Ajouter" header button helper
+function addBtn(){
+  var h=ADD_HANDLERS[currentActiveModule];
+  return h?'<button class="btn btn-primary" onclick="openAddModal()">+ Ajouter</button>':'';
+}
+function exportBtn(){return'<button class="btn btn-sm btn-outline" onclick="exportModuleJSON()" title="Exporter en JSON">Export JSON</button>'}
+function csvBtn(){return'<button class="btn btn-sm btn-outline" onclick="exportModuleCSV()" title="Exporter en CSV">CSV</button>'}
+function importBtn(){return'<button class="btn btn-sm btn-ghost" onclick="importModuleJSON()" title="Importer un fichier JSON">Import JSON</button>'}
+function printBtn(){return'<button class="btn btn-sm btn-ghost" onclick="imprimerModule()" title="Imprimer">&#128424; Imprimer</button>'}
+function clearBtn(){return'<button class="btn btn-sm btn-danger-outline" onclick="clearModule()" title="Tout supprimer">Vider</button>'}
+function helpBtn(){return'<button class="btn btn-sm btn-ghost" onclick="showHelp()" title="Aide">&#10067; Aide</button>'}
+function fullToolbar(){return addBtn()+exportBtn()+csvBtn()+importBtn()+printBtn()+clearBtn()+helpBtn()}
+function readonlyToolbar(){return exportBtn()+csvBtn()+printBtn()+helpBtn()}
+
+function DB(){}
+DB.keys=['exercices','plan_comptable','journal','mouvements','fournisseurs','regles_comptabilisation','tva_declarations','amortissements','immobilisations'];
+DB.all=function(k){try{return JSON.parse(localStorage.getItem(STORE_PREFIX+k)||'[]')}catch(e){return[]}};
+DB.get=function(k,id){return DB.all(k).find(function(i){return i.id===id})};
+DB.add=function(k,data){var items=DB.all(k);var item={id:uuid()};for(var key in data)item[key]=data[key];item.createdAt=nowISO();item.updatedAt=nowISO();items.push(item);localStorage.setItem(STORE_PREFIX+k,JSON.stringify(items));return item};
+DB.update=function(k,id,data){var items=DB.all(k);var idx=items.findIndex(function(i){return i.id===id});if(idx===-1)return null;for(var key in data)items[idx][key]=data[key];items[idx].updatedAt=nowISO();localStorage.setItem(STORE_PREFIX+k,JSON.stringify(items));return items[idx]};
+DB.remove=function(k,id){localStorage.setItem(STORE_PREFIX+k,JSON.stringify(DB.all(k).filter(function(i){return i.id!==id})))};
+DB.clear=function(k){localStorage.setItem(STORE_PREFIX+k,'[]')};
+
+// Init
+(function(){
+  if(localStorage.getItem(APP_KEY))return;
+  DB.keys.forEach(function(k){if(!localStorage.getItem(STORE_PREFIX+k))localStorage.setItem(STORE_PREFIX+k,'[]')});
+  // Plan comptable SYSCOHADA
+  var accounts=[
+    {numero:'101',intitule:'Capital social',classe:'1',type:'passif'},
+    {numero:'106',intitule:'Reserves',classe:'1',type:'passif'},
+    {numero:'108',intitule:'Report a nouveau',classe:'1',type:'passif'},
+    {numero:'12',intitule:'Resultat net',classe:'1',type:'passif'},
+    {numero:'131',intitule:'Subventions investissement',classe:'1',type:'passif'},
+    {numero:'15',intitule:'Provisions reglementees',classe:'1',type:'passif'},
+    {numero:'16',intitule:'Emprunts et dettes financieres',classe:'1',type:'passif'},
+    {numero:'17',intitule:'Dettes location-acquisition',classe:'1',type:'passif'},
+    {numero:'2',intitule:'Immobilisations incorporelles',classe:'2',type:'actif'},
+    {numero:'21',intitule:'Terrains',classe:'2',type:'actif'},
+    {numero:'22',intitule:'Constructions',classe:'2',type:'actif'},
+    {numero:'23',intitule:'Installations techniques',classe:'2',type:'actif'},
+    {numero:'24',intitule:'Materiel et outillage',classe:'2',type:'actif'},
+    {numero:'25',intitule:'Materiel de transport',classe:'2',type:'actif'},
+    {numero:'26',intitule:'Mobilier materiel bureau',classe:'2',type:'actif'},
+    {numero:'27',intitule:'Autres immobilisations',classe:'2',type:'actif'},
+    {numero:'28',intitule:'Amortissements',classe:'2',type:'actif'},
+    {numero:'31',intitule:'Marchandises',classe:'3',type:'actif'},
+    {numero:'32',intitule:'Matières premieres',classe:'3',type:'actif'},
+    {numero:'33',intitule:'Produits finis',classe:'3',type:'actif'},
+    {numero:'35',intitule:'Stocks en cours',classe:'3',type:'actif'},
+    {numero:'37',intitule:'Stock magasin',classe:'3',type:'actif'},
+    {numero:'38',intitule:'Provisions stocks',classe:'3',type:'actif'},
+    {numero:'401',intitule:'Fournisseurs',classe:'4',type:'passif'},
+    {numero:'404',intitule:'Fournisseurs immobilisations',classe:'4',type:'passif'},
+    {numero:'409',intitule:'Fournisseurs debiteurs',classe:'4',type:'actif'},
+    {numero:'411',intitule:'Clients',classe:'4',type:'actif'},
+    {numero:'416',intitule:'Clients douteux',classe:'4',type:'actif'},
+    {numero:'419',intitule:'Clients crediteurs',classe:'4',type:'passif'},
+    {numero:'421',intitule:'Personnel remunerations',classe:'4',type:'passif'},
+    {numero:'422',intitule:'Personnel charges a payer',classe:'4',type:'passif'},
+    {numero:'431',intitule:'Securite sociale',classe:'4',type:'passif'},
+    {numero:'44',intitule:'Etat impots et taxes',classe:'4',type:'passif'},
+    {numero:'443',intitule:'TVA collectee',classe:'4',type:'passif'},
+    {numero:'444',intitule:'TVA deductible',classe:'4',type:'actif'},
+    {numero:'445',intitule:'Etat TVA a payer',classe:'4',type:'passif'},
+    {numero:'46',intitule:'Comptes tiers divers',classe:'4',type:'passif'},
+    {numero:'471',intitule:"Comptes d'attente",classe:'4',type:'passif'},
+    {numero:'48',intitule:'Provisions pour risques',classe:'4',type:'passif'},
+    {numero:'501',intitule:'Banque',classe:'5',type:'actif'},
+    {numero:'502',intitule:'Caisse',classe:'5',type:'actif'},
+    {numero:'52',intitule:'Virements internes',classe:'5',type:'actif'},
+    {numero:'53',intitule:'Titres de placement',classe:'5',type:'actif'},
+    {numero:'54',intitule:'Banque tiers',classe:'5',type:'actif'},
+    {numero:'56',intitule:"Caisse d'epargne",classe:'5',type:'actif'},
+    {numero:'601',intitule:'Achats marchandises',classe:'6',type:'charge'},
+    {numero:'602',intitule:'Achats matieres premieres',classe:'6',type:'charge'},
+    {numero:'603',intitule:'Variation des stocks',classe:'6',type:'charge'},
+    {numero:'604',intitule:'Achats stockes autres',classe:'6',type:'charge'},
+    {numero:'611',intitule:'Services exterieurs',classe:'6',type:'charge'},
+    {numero:'612',intitule:'Loyers',classe:'6',type:'charge'},
+    {numero:'613',intitule:'Entretien et reparations',classe:'6',type:'charge'},
+    {numero:'614',intitule:'Assurances',classe:'6',type:'charge'},
+    {numero:'616',intitule:'Transports',classe:'6',type:'charge'},
+    {numero:'617',intitule:'Frais bancaires',classe:'6',type:'charge'},
+    {numero:'618',intitule:'Frais telecom',classe:'6',type:'charge'},
+    {numero:'62',intitule:'Autres services',classe:'6',type:'charge'},
+    {numero:'63',intitule:'Impots et taxes',classe:'6',type:'charge'},
+    {numero:'64',intitule:'Charges de personnel',classe:'6',type:'charge'},
+    {numero:'65',intitule:'Autres charges',classe:'6',type:'charge'},
+    {numero:'66',intitule:'Charges financieres',classe:'6',type:'charge'},
+    {numero:'67',intitule:'Dotations amortissements',classe:'6',type:'charge'},
+    {numero:'68',intitule:'Dotations provisions',classe:'6',type:'charge'},
+    {numero:'701',intitule:'Ventes marchandises',classe:'7',type:'produit'},
+    {numero:'702',intitule:'Ventes produits finis',classe:'7',type:'produit'},
+    {numero:'703',intitule:'Prestations services',classe:'7',type:'produit'},
+    {numero:'71',intitule:"Subventions d'exploitation",classe:'7',type:'produit'},
+    {numero:'72',intitule:'Production immobilisee',classe:'7',type:'produit'},
+    {numero:'75',intitule:'Autres produits',classe:'7',type:'produit'},
+    {numero:'76',intitule:'Produits financiers',classe:'7',type:'produit'},
+    {numero:'77',intitule:'Reprises amortissements',classe:'7',type:'produit'},
+    {numero:'78',intitule:'Reprises provisions',classe:'7',type:'produit'}
+  ];
+  accounts.forEach(function(a){DB.add('plan_comptable',a)});
+  // Exercice
+  var y=new Date().getFullYear();
+  DB.add('exercices',{code:String(y),libelle:'Exercice '+y,dateDebut:y+'-01-01',dateFin:y+'-12-31',cloture:false});
+  // Regles par defaut
+  DB.add('regles_comptabilisation',{libelle:'Achat stock (Entree)',declencheur:'mouvement_stock',categorie:'achat',compteDebit:'37',compteCredit:'401',libelleModele:'Achat {nom} - {montant} FCFA',modeCalcul:'quantite_x_prix',champMontant:'prixAchat',actif:true,notes:'Automatique: entree stock -> debit stock, credit fournisseur'});
+  DB.add('regles_comptabilisation',{libelle:'Vente stock (Sortie)',declencheur:'mouvement_stock',categorie:'vente',compteDebit:'411',compteCredit:'701',libelleModele:'Vente {nom} - {montant} FCFA',modeCalcul:'quantite_x_prix',champMontant:'prixVente',actif:true,notes:'Automatique: sortie stock -> debit client, credit vente'});
+  DB.add('regles_comptabilisation',{libelle:'Variation stock (Sortie)',declencheur:'mouvement_stock',categorie:'stock',compteDebit:'603',compteCredit:'37',libelleModele:'Sortie stock {nom} - qte {quantite}',modeCalcul:'quantite_x_prix',champMontant:'prixAchat',actif:true,notes:'Constatation sortie de stock'});
+  localStorage.setItem(APP_KEY,'1');
+})();
+
+// Compta functions
+var Compta={};
+Compta.getSolde=function(numero,dateFin){
+  var es=DB.all('journal');
+  var debit=0,credit=0;
+  es.forEach(function(e){
+    if(dateFin&&e.date>dateFin)return;
+    if(e.compteDebit===numero)debit+=Number(e.montant)||0;
+    if(e.compteCredit===numero)credit+=Number(e.montant)||0;
+  });
+  var c=DB.all('plan_comptable').find(function(c){return c.numero===numero});
+  if(!c)return debit-credit;
+  return(c.type==='actif'||c.type==='charge')?debit-credit:credit-debit;
+};
+Compta.getSoldeNature=function(numero){
+  var c=DB.all('plan_comptable').find(function(c){return c.numero===numero});
+  if(!c)return 'debiteur';
+  return(c.type==='actif'||c.type==='charge')?'debiteur':'crediteur';
+};
+Compta.addEcriture=function(d){
+  return DB.add('journal',{
+    date:d.date||today(),libelle:d.libelle||'',compteDebit:d.compteDebit||'',compteCredit:d.compteCredit||'',
+    montant:Math.abs(Number(d.montant)||0),type:d.type||'manuelle',reference:d.reference||'',
+    categorie:d.categorie||'',validation:d.validation||'provisoire',
+    exercice:d.exercice||DB.getExerciceCourant(),notes:d.notes||''
+  });
+};
+DB.getExerciceCourant=function(){
+  var exs=DB.all('exercices');
+  var a=exs.find(function(e){return e.cloture!==true});
+  return a?a.code:(exs[0]?exs[0].code:String(new Date().getFullYear()));
+};
+
+// Regles
+var Regles={};
+Regles.executer=function(evenement,data){
+  var regles=DB.all('regles_comptabilisation').filter(function(r){return r.actif!==false&&r.declencheur===evenement});
+  var created=[];
+  regles.forEach(function(rule){
+    try{
+      var montant=0;
+      if(rule.modeCalcul==='fixe')montant=Number(rule.montantFixe)||0;
+      else if(rule.modeCalcul==='champ_montant')montant=Number(data[rule.champMontant])||0;
+      else if(rule.modeCalcul==='quantite_x_prix')montant=(Number(data.quantite)||0)*(Number(data[rule.champMontant||'prixAchat'])||0);
+      else if(rule.modeCalcul==='pourcentage'){var base=Number(data[rule.champBase])||0;montant=base*(Number(rule.pourcentage)||0)/100;}
+      else montant=Number(data.montant)||0;
+      if(montant<=0)return;
+      var lib=rule.libelleModele||rule.libelle||'Ecriture auto';
+      lib=lib.replace(/{nom}/g,data.articleNom||data.nom||'').replace(/{reference}/g,data.articleReference||data.reference||'').replace(/{quantite}/g,data.quantite||'').replace(/{montant}/g,montant).replace(/{date}/g,data.date||today());
+      Compta.addEcriture({date:data.date||today(),libelle:lib,compteDebit:rule.compteDebit,compteCredit:rule.compteCredit,montant:montant,type:'automatique',categorie:rule.categorie||data.type||'',reference:data.reference||data.id||'',notes:'Regle: '+rule.libelle});
+      created.push(1);
+    }catch(err){}
+  });
+  return created;
+};
+
+// Navigation
+var MODULES={},ADD_HANDLERS={},SAVE_HANDLERS={};
+var currentActiveModule='dashboard',currentEditId=null,currentModule=null;
+
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+function navigateTo(m){
+  currentActiveModule=m;
+  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active')});
+  var el=document.querySelector('.nav-item[data-module="'+m+'"]');
+  if(el)el.classList.add('active');
+  var mod=MODULES[m];
+  if(!mod){showToast('Module inconnu','error');return}
+  document.getElementById('module-title').textContent=mod.title;
+  document.getElementById('mobile-module-title').textContent=mod.title;
+  document.getElementById('header-actions').innerHTML=mod.headerActions?mod.headerActions():'';
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+  mod.render();
+  // Add status bar if not already added by the module
+  var mc=document.getElementById('module-content');
+  if(!mc.querySelector('.status-bar-placeholder')){
+    var sb=getStatusBar();
+    // Check if render already appended a status bar
+    if(mc.innerHTML.indexOf('Ex:')===-1)mc.insertAdjacentHTML('beforeend','<div class="status-bar-placeholder">'+sb+'</div>');
+  }
+  updateAlertBadge();
+}
+document.querySelectorAll('.nav-item[data-module]').forEach(function(i){
+  i.addEventListener('click',function(e){e.preventDefault();navigateTo(i.dataset.module)})
+});
+function openAddModal(){
+  var h=ADD_HANDLERS[currentActiveModule];
+  if(h)h();
+}
+function saveForm(){
+  var h=SAVE_HANDLERS[currentActiveModule];
+  if(!h){closeModal();return}
+  try{
+    var d=h();
+    if(!d)return;
+    if(currentEditId){DB.update(currentActiveModule,currentEditId,d);showToast('Modification enregistree')}
+    else{DB.add(currentActiveModule,d);showToast('Ajoute avec succes')}
+    closeModal();
+    MODULES[currentActiveModule].render();
+    updateAlertBadge();
+  }catch(err){showToast(err.message||'Erreur','error')}
+}
+
+function filterTable(sid,tid){
+  var q=document.getElementById(sid).value.toLowerCase();
+  document.querySelectorAll('#'+tid+' tr').forEach(function(r){
+    r.style.display=r.textContent.toLowerCase().includes(q)?'':'none';
+  });
+}
+
+function openModal(title,html){
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-body').innerHTML=html;
+  document.getElementById('modal-overlay').classList.remove('hidden');
+}
+function closeModal(e){
+  if(e&&e.target!==e.currentTarget)return;
+  document.getElementById('modal-overlay').classList.add('hidden');
+  currentEditId=null;currentModule=null;
+}
+
+// ============================================================
+// MODULE: DASHBOARD
+// ============================================================
+MODULES.dashboard={title:'Tableau de bord',headerActions:function(){return getQuickActions()+readonlyToolbar()},
+render:function(){
+  var journal=DB.all('journal');
+  var mvts=DB.all('mouvements');
+  var fours=DB.all('fournisseurs');
+  var regles=DB.all('regles_comptabilisation');
+  var totalEcritures=journal.length;
+  var totalMontant=journal.reduce(function(s,e){return s+(Number(e.montant)||0)},0);
+  var totalMvts=mvts.length;
+  var nbRegles=regles.filter(function(r){return r.actif!==false}).length;
+  var soldeBanque=Compta.getSolde('501');
+  var soldeCaisse=Compta.getSolde('502');
+  var totalVentes=journal.filter(function(e){return e.compteCredit&&e.compteCredit.charAt(0)==='7'}).reduce(function(s,e){return s+(Number(e.montant)||0)},0);
+  var totalAchats=journal.filter(function(e){return e.compteDebit&&e.compteDebit.charAt(0)==='6'}).reduce(function(s,e){return s+(Number(e.montant)||0)},0);
+  var c=document.getElementById('module-content');
+  c.innerHTML='<div class="cards">'+
+    '<div class="card" data-accent="blue"><h4>Ecritures comptables</h4><div class="value blue">'+totalEcritures+'</div></div>'+
+    '<div class="card" data-accent="orange"><h4>Mouvements stock</h4><div class="value orange">'+totalMvts+'</div></div>'+
+    '<div class="card" data-accent="green"><h4>Fournisseurs</h4><div class="value green">'+fours.length+'</div></div>'+
+    '<div class="card" data-accent="purple"><h4>Regles actives</h4><div class="value purple">'+nbRegles+'</div></div>'+
+    '<div class="card" data-accent="green"><h4>Solde banque</h4><div class="value green">'+ef(soldeBanque)+'</div></div>'+
+    '<div class="card" data-accent="blue"><h4>Solde caisse</h4><div class="value blue">'+ef(soldeCaisse)+'</div></div>'+
+    '<div class="card" data-accent="green"><h4>Total ventes</h4><div class="value green">'+ef(totalVentes)+'</div></div>'+
+    '<div class="card" data-accent="red"><h4>Total achats</h4><div class="value red">'+ef(totalAchats)+'</div></div>'+
+    '</div><h3 class="section-title">Dernieres ecritures</h3>'+
+    '<div class="table-wrapper"><div class="table-scroll"><table><thead><tr><th>Date</th><th>Libelle</th><th>Debit</th><th>Credit</th><th>Montant</th></tr></thead><tbody id="dash-tbody"></tbody></table></div></div>';
+  var tbody=document.getElementById('dash-tbody');
+  var recent=journal.slice(-10).reverse();
+  if(!recent.length){tbody.innerHTML='<tr><td colspan="5" class="empty-state"><span class="icon">&#128203;</span>Aucune ecriture</td></tr>'}
+
+else{recent.forEach(function(e){
+    var r=document.createElement('tr');
+    r.innerHTML='<td>'+formatDate(e.date)+'</td><td><strong>'+esc(e.libelle)+'</strong></td><td>'+esc(e.compteDebit)+'</td><td>'+esc(e.compteCredit)+'</td><td style="font-weight:600">'+ef(e.montant)+'</td>';
+    tbody.appendChild(r)
+  })}
+  document.getElementById('module-content').insertAdjacentHTML('beforeend',getStatusBar());
+  document.getElementById('exercice-badge').textContent=DB.getExerciceCourant()||'';
+  updateAlertBadge();
+}};
+
+// ============================================================
+// MODULE: PLAN COMPTABLE
+// ============================================================
+MODULES['plan-comptable']={title:'Plan comptable',headerActions:function(){return fullToolbar()},
+render:function(){
+  var comptes=DB.all('plan_comptable');
+  var c=document.getElementById('module-content');
+  c.innerHTML='<div class="search-bar"><input type="text" id="search-pc" placeholder="Rechercher..." oninput="filterTable(\'search-pc\',\'pc-tbody\')"></div>'+
+    '<div class="table-wrapper"><div class="table-scroll"><table><thead><tr><th>Numero</th><th>Intitule</th><th>Classe</th><th>Type</th><th>Solde</th><th>Actions</th></tr></thead><tbody id="pc-tbody"></tbody></table></div></div>';
+  var tbody=document.getElementById('pc-tbody');
+  if(!comptes.length){tbody.innerHTML='<tr><td colspan="6" class="empty-state"><span class="icon">&#128203;</span>Aucun compte</td></tr>';return}
+  comptes.forEach(function(cpt){
+    var solde=Compta.getSolde(cpt.numero);
+    var cls={'1':'Capitaux','2':'Immobilisations','3':'Stocks','4':'Tiers','5':'Tresorerie','6':'Charges','7':'Produits'}[cpt.classe]||cpt.classe;
+    var r=document.createElement('tr');
+    r.innerHTML='<td><strong>'+esc(cpt.numero)+'</strong></td><td>'+esc(cpt.intitule)+'</td><td>'+esc(cls)+'</td><td>'+esc(cpt.type)+'</td><td style="font-weight:600;color:'+(solde>=0?'var(--success)':'var(--danger)')+'">'+ef(solde)+'</td>'+
+      '<td class="actions-cell"><button class="btn btn-sm btn-primary" onclick="editCompte(\''+cpt.id+'\')">Modifier</button><button class="btn btn-sm btn-danger" onclick="deleteCompte(\''+cpt.id+'\')">Suppr.</button></td>';
+    tbody.appendChild(r)
+  })
+}};
+function compteForm(item){
+  return '<div class="form-row"><div class="form-group"><label>Numero *</label><input type="text" id="f-numero" value="'+esc(item?.numero||'')+'"></div>'+
+    '<div class="form-group"><label>Intitule *</label><input type="text" id="f-intitule" value="'+esc(item?.intitule||'')+'"></div></div>'+
+    '<div class="form-row"><div class="form-group"><label>Classe</label><select id="f-classe"><option value="1"'+(item?.classe==='1'?' selected':'')+'>1-Capitaux</option><option value="2"'+(item?.classe==='2'?' selected':'')+'>2-Immobilisations</option><option value="3"'+(item?.classe==='3'?' selected':'')+'>3-Stocks</option><option value="4"'+(item?.classe==='4'?' selected':'')+'>4-Tiers</option><option value="5"'+(item?.classe==='5'?' selected':'')+'>5-Tresorerie</option><option value="6"'+(item?.classe==='6'?' selected':'')+'>6-Charges</option><option value="7"'+(item?.classe==='7'?' selected':'')+'>7-Produits</option></select></div>'+
+    '<div class="form-group"><label>Type</label><select id="f-type"><option value="actif"'+(item?.type==='actif'?' selected':'')+'>Actif</option><option value="passif"'+(item?.type==='passif'?' selected':'')+'>Passif</option><option value="charge"'+(item?.type==='charge'?' selected':'')+'>Charge</option><option value="produit"'+(item?.type==='produit'?' selected':'')+'>Produit</option></select></div></div>';
+}
+function compteSave(){return{numero:document.getElementById('f-numero').value,intitule:document.getElementById('f-intitule').value,classe:document.getElementById('f-classe').value,type:document.getElementById('f-type').value}}
+function openAddCompte(){currentModule='plan-comptable';currentEditId=null;openModal('Ajouter compte',compteForm())}
+function editCompte(id){currentModule='plan-comptable';currentEditId=id;var item=DB.get('plan_comptable',id);if(item)openModal('Modifier compte',compteForm(item))}
+function deleteCompte(id){if(!confirm('Supprimer ce compte ?'))return;DB.remove('plan_comptable',id);showToast('Compte supprime');MODULES['plan-comptable'].render()}
+ADD_HANDLERS['plan-comptable']=openAddCompte;SAVE_HANDLERS['plan-comptable']=compteSave;
+
+// ============================================================
+// MODULE: JOURNAL
+// ============================================================
+MODULES.journal={title:'Journal comptable',headerActions:function(){return fullToolbar()},
+render:function(){
+  var es=DB.all('journal');
+  var c=document.getElementById('module-content');
+  c.innerHTML='<div class="search-bar"><input type="text" id="search-j" placeholder="Rechercher..." oninput="filterTable(\'search-j\',\'j-tbody\')"></div>'+
+    '<div class="table-wrapper"><div class="table-scroll"><table><thead><tr><th>Date</th><th>Libelle</th><th>Debit</th><th>Credit</th><th>Montant</th><th>Type</th><th>Val.</th><th>Actions</th></tr></thead><tbody id="j-tbody"></tbody></table></div></div>';
+  var tbody=document.getElementById('j-tbody');
+  if(!es.length){tbody.innerHTML='<tr><td colspan="8" class="empty-state"><span class="icon">&#128221;</span>Aucune ecriture</td></tr>';return}
+  es.forEach(function(e){
+    var r=document.createElement('tr');
+    var tLbl=e.type==='automatique'?'<span class="badge badge-purple">Auto</span>':'<span class="badge badge-info">Manuelle</span>';
+    var vLbl=e.validation==='validee'?'<span class="badge badge-success">Validee</span>':'<span class="badge badge-warning">Prov.</span>';
+    r.innerHTML='<td>'+formatDate(e.date)+'</td><td><strong>'+esc(e.libelle)+'</strong></td><td>'+esc(e.compteDebit)+'</td><td>'+esc(e.compteCredit)+'</td><td style="font-weight:600">'+ef(e.montant)+'</td><td>'+tLbl+'</td><td>'+vLbl+'</td>'+
+      '<td class="actions-cell"><button class="btn btn-sm btn-primary" onclick="editEcriture(\''+e.id+'\')">Modifier</button>'+
+      '<button class="btn btn-sm '+(e.validation==='validee'?'btn-ghost':'btn-success')+'" onclick="validerEcriture(\''+e.id+'\')">'+(e.validation==='validee'?'Devalider':'Valider')+'</button>'+
+      '<button class="btn btn-sm btn-danger" onclick="deleteEcriture(\''+e.id+'\')">Suppr.</button></td>';
+    tbody.appendChild(r)
+  })
+}};
+
+function ecritureForm(item){
+  var comptes=DB.all('plan_comptable');
+  var opts=comptes.map(function(c){return'<option value="'+esc(c.numero)+'">'+esc(c.numero)+' - '+esc(c.intitule)+'</option>'}).join('');
+  return '<div class="form-row"><div class="form-group"><label>Date *</label><input type="date" id="f-date" value="'+(item?.date||today())+'"></div>'+
+    '<div class="form-group"><label>Categorie</label><select id="f-cat"><option value="">--</option><option value="achat"'+(item?.categorie==='achat'?' selected':'')+'>Achat</option><option value="vente"'+(item?.categorie==='vente'?' selected':'')+'>Vente</option><option value="salaire"'+(item?.categorie==='salaire'?' selected':'')+'>Salaire</option><option value="frais"'+(item?.categorie==='frais'?' selected':'')+'>Frais</option><option value="tva"'+(item?.categorie==='tva'?' selected':'')+'>TVA</option><option value="amortissement"'+(item?.categorie==='amortissement'?' selected':'')+'>Amortissement</option><option value="investissement"'+(item?.categorie==='investissement'?' selected':'')+'>Investissement</option><option value="autre"'+(item?.categorie==='autre'?' selected':'')+'>Autre</option></select></div></div>'+
+    '<div class="form-group"><label>Libelle *</label><input type="text" id="f-libelle" value="'+esc(item?.libelle||'')+'"></div>'+
+    '<div class="form-row"><div class="form-group"><label>Compte Debit *</label><select id="f-cd">'+opts+'</select></div>'+
+    '<div class="form-group"><label>Compte Credit *</label><select id="f-cc">'+opts+'</select></div></div>'+
+    '<div class="form-group"><label>Montant * (FCFA)</label><input type="number" step="0.01" id="f-montant" value="'+(item?.montant||0)+'"></div>'+
+    '<div class="form-row"><div class="form-group"><label>Reference</label><input type="text" id="f-ref" value="'+esc(item?.reference||'')+'"></div>'+
+    '<div class="form-group"><label>Validation</label><select id="f-val"><option value="provisoire"'+(item?.validation!=='validee'?' selected':'')+'>Provisoire</option><option value="validee"'+(item?.validation==='validee'?' selected':'')+'>Validee</option></select></div></div>'+
+    '<div class="form-group"><label>Notes</label><textarea id="f-notes" rows="2">'+esc(item?.notes||'')+'</textarea></div>';
+}
+function ecritureSave(){
+  var d={date:document.getElementById('f-date').value,libelle:document.getElementById('f-libelle').value,compteDebit:document.getElementById('f-cd').value,compteCredit:document.getElementById('f-cc').value,montant:parseFloat(document.getElementById('f-montant').value)||0,categorie:document.getElementById('f-cat').value,reference:document.getElementById('f-ref').value,validation:document.getElementById('f-val').value,notes:document.getElementById('f-notes').value};
+  if(!d.libelle||!d.compteDebit||!d.compteCredit||d.montant<=0){showToast('Libelle, comptes et montant requis','error');return false}
+  d.exercice=DB.getExerciceCourant();return d;
+}
+function openAddEcriture(){currentModule='journal';currentEditId=null;openModal('Ajouter ecriture',ecritureForm())}
+function editEcriture(id){currentModule='journal';currentEditId=id;var item=DB.get('journal',id);if(item)openModal('Modifier ecriture',ecritureForm(item))}
+function deleteEcriture(id){if(!confirm('Supprimer ?'))return;DB.remove('journal',id);showToast('Supprimee');MODULES.journal.render()}
+function validerEcriture(id){
+  var e=DB.get('journal',id);if(!e)return;
+  DB.update('journal',id,{validation:e.validation==='validee'?'provisoire':'validee'});
+  showToast(e.validation==='validee'?'Devalidee':'Validee');MODULES.journal.render();
+}
+ADD_HANDLERS.journal=openAddEcriture;SAVE_HANDLERS.journal=ecritureSave;
+
+// ============================================================
+// MODULE: BALANCE GENERALE
+// ============================================================
+MODULES.balance={title:'Balance generale',headerActions:function(){return exportBtn()+csvBtn()+printBtn()+helpBtn()},
+render:function(){
+  var es=DB.all('journal');
+  var comptes=DB.all('plan_comptable');
+  var bal={};
+  es.forEach(function(e){
+    var m=Number(e.montant)||0;
+    if(e.compteDebit){if(!bal[e.compteDebit])bal[e.compteDebit]={compte:e.compteDebit,td:0,tc:0,lib:''};bal[e.compteDebit].td+=m}
+    if(e.compteCredit){if(!bal[e.compteCredit])bal[e.compteCredit]={compte:e.compteCredit,td:0,tc:0,lib:''};bal[e.compteCredit].tc+=m}
+  });
+  Object.keys(bal).forEach(function(k){var c=comptes.find(function(c){return c.numero===k});if(c)bal[k].lib=c.intitule});
+  var rows=Object.values(bal).sort(function(a,b){return a.compte.localeCompare(b.compte)});
+  var ttd=0,ttc=0;
+  var c=document.getElementById('module-content');
+  c.innerHTML='<div class="search-bar"><input type="text" id="search-bal" placeholder="Rechercher..." oninput="filterTable(\'search-bal\',\'bal-tbody\')"></div>'+
+    '<div class="table-wrapper"><div class="table-scroll"><table><thead><tr><th>Compte</th><th>Intitule</th><th>Total Debit</th><th>Total Credit</th><th>Solde</th></tr></thead><tbody id="bal-tbody"></tbody></table></div></div>';
+  var tbody=document.getElementById('bal-tbody');
+  if(!rows.length){tbody.innerHTML='<tr><td colspan="5" class="empty-state"><span class="icon">&#128203;</span>Aucune ecriture</td></tr>';return}
+  rows.forEach(function(r){
+    ttd+=r.td;ttc+=r.tc;
+    var solde=Compta.getSoldeNature(r.compte)==='crediteur'?r.tc-r.td:r.td-r.tc;
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td><strong>'+esc(r.compte)+'</strong></td><td>'+esc(r.lib||'-')+'</td><td class="text-right">'+ef(r.td)+'</td><td class="text-right">'+ef(r.tc)+'</td><td style="font-weight:600;color:'+(solde>=0?'var(--success)':'var(--danger)')+'">'+ef(solde)+'</td>';
+    tbody.appendChild(tr)
+  });
+  var tr=document.createElement('tr');
+  tr.style.background='var(--primary-light)';tr.style.fontWeight='700';
+  tr.innerHTML='<td colspan="2"><strong>TOTAUX</strong></td><td class="text-right"><strong>'+ef(ttd)+'</strong></td><td class="text-right"><strong>'+ef(ttc)+'</strong></td><td><strong>'+ef(ttd-ttc)+'</strong></td>';
+  tbody.appendChild(tr)
+}};
+
+// ============================================================
+// MODULE: GRAND LIVRE
+// ============================================================
+MODULES['grand-livre']={title:'Grand livre',headerActions:function(){return exportBtn()+csvBtn()+printBtn()+helpBtn()},
+render:function(){
+  var comptes=DB.all('plan_comptable');
+  var es=DB.all('journal');
+  var c=document.getElementById('module-content');
+  var fils=comptes.map(function(cpt){
+    var lignes=es.filter(function(e){return e.compteDebit===cpt.numero||e.compteCredit===cpt.numero}).sort(function(a,b){return(a.date||'').localeCompare(b.date||'')});
+    if(!lignes.length)return'';
+    var solde=0;
+    var rows=lignes.map(function(e){
+      var md=e.compteDebit===cpt.numero?Number(e.montant)||0:0;
+      var mc=e.compteCredit===cpt.numero?Number(e.montant)||0:0;
+      var nature=Compta.getSoldeNature(cpt.numero);
+      solde+=(nature==='crediteur'?mc-md:md-mc);
+      return'<tr><td>'+formatDate(e.date)+'</td><td>'+esc(e.libelle)+'</td><td class="text-right">'+(md?ef(md):'')+'</td><td class="text-right">'+(mc?ef(mc):'')+'</td><td style="font-weight:600">'+ef(solde)+'</td></tr>'
+    }).join('');
+    return'<div class="gl-section"><h3 class="section-title">'+esc(cpt.numero)+' - '+esc(cpt.intitule)+'</h3><div class="table-wrapper" style="margin-bottom:16px"><div class="table-scroll"><table><thead><tr><th>Date</th><th>Libelle</th><th>Debit</th><th>Credit</th><th>Solde</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>'
+  }).filter(function(s){return s}).join('');
+  c.innerHTML='<div class="search-bar"><input type="text" id="search-gl" placeholder="Filtrer..." oninput="filtrerGL()"></div><div id="gl-content">'+(fils||'<div class="empty-state"><span class="icon">&#128214;</span>Aucune ecriture</div>')+'</div>'
+}};
+function filtrerGL(){
+  var q=document.getElementById('search-gl').value.toLowerCase();
+  document.querySelectorAll('#gl-content .gl-section').forEach(function(el){
+    var h3=el.querySelector('h3');
+    if(!h3)return;
+    var visible=h3.textContent.toLowerCase().includes(q);
+    el.style.display=visible?'':'none';
+  })
+}
+
+// ============================================================
+// MODULE: COMPTES DE RESULTAT
+// ============================================================
+MODULES['comptes-resultat']={title:'Comptes de resultat',headerActions:function(){return exportBtn()+printBtn()+helpBtn()},
+render:function(){
+  var es=DB.all('journal');
+  var chMap={'601':'Achats','602':'Achats matieres','603':'Variation stocks','611':'Services','612':'Loyers','613':'Entretien','614':'Assurances','616':'Transports','617':'Frais banc.','618':'Telecom','62':'Autres serv.','63':'Impots','64':'Personnel','65':'Autres charges','66':'Charges fin.','67':'Dot. amort.','68':'Dot. prov.'};
+  var prMap={'701':'Ventes marchand.','702':'Ventes produits','703':'Prestations','71':'Subventions','75':'Autres prod.','76':'Prod. fin.','77':'Reprises amort.','78':'Reprises prov.'};
+  function calc(m,pref){
+    var t=0,d=[];
+    Object.keys(m).forEach(function(k){
+      var v=es.filter(function(e){return e.compteCredit===k||e.compteDebit===k}).reduce(function(s,e){
+        var mnt=Number(e.montant)||0;
+        if(pref==='c')return s+(e.compteDebit===k?mnt:0);
+        return s+(e.compteCredit===k?mnt:0)
+      },0);
+      if(v){d.push({c:k,l:m[k],m:v});t+=v}
+    });
+    return{t:t,d:d}
+  }
+  var ch=calc(chMap,'c'),pr=calc(prMap,'p');
+  var r=pr.t-ch.t;
+  var c=document.getElementById('module-content');
+  c.innerHTML='<div class="cards"><div class="card" data-accent="red"><h4>Charges</h4><div class="value red">'+ef(ch.t)+'</div></div>'+
+    '<div class="card" data-accent="green"><h4>Produits</h4><div class="value green">'+ef(pr.t)+'</div></div>'+
+    '<div class="card" data-accent="'+(r>=0?'green':'red')+'"><h4>Resultat</h4><div class="value '+(r>=0?'green':'red')+'">'+ef(r)+'</div></div></div>'+
+    '<div class="form-row"><div><h3 class="section-title">Charges</h3><div class="table-wrapper"><table><thead><tr><th>Compte</th><th>Libelle</th><th>Montant</th></tr></thead><tbody>'+
+    (ch.d.length?ch.d.map(function(d){return'<tr><td>'+esc(d.c)+'</td><td>'+esc(d.l)+'</td><td style="font-weight:600;color:var(--danger)">'+ef(d.m)+'</td></tr>'}).join('')+'<tr style="font-weight:700;background:var(--secondary-light)"><td colspan="2">TOTAL</td><td style="color:var(--danger)">'+ef(ch.t)+'</td></tr>':'<tr><td colspan="3" class="empty-state">Aucune</td></tr>')+
+    '</tbody></table></div></div><div><h3 class="section-title">Produits</h3><div class="table-wrapper"><table><thead><tr><th>Compte</th><th>Libelle</th><th>Montant</th></tr></thead><tbody>'+
+    (pr.d.length?pr.d.map(function(d){return'<tr><td>'+esc(d.c)+'</td><td>'+esc(d.l)+'</td><td style="font-weight:600;color:var(--success)">'+ef(d.m)+'</td></tr>'}).join('')+'<tr style="font-weight:700;background:var(--secondary-light)"><td colspan="2">TOTAL</td><td style="color:var(--success)">'+ef(pr.t)+'</td></tr>':'<tr><td colspan="3" class="empty-state">Aucun</td></tr>')+
+    '</tbody></table></div></div></div>'
+}};
+
+// ============================================================
+// MODULE: BILAN COMPTABLE
+// ============================================================
+MODULES.bilan={title:'Bilan comptable',headerActions:function(){return exportBtn()+printBtn()+helpBtn()},
+render:function(){
+  function totalClasse(cls,tp){
+    var total=0;
+    DB.all('plan_comptable').filter(function(c){return c.classe===cls}).forEach(function(c){
+      var s=Compta.getSolde(c.numero);
+      if(s>0)total+=s
+    });
+    return total
+  }
+  var immo=totalClasse('2');var stocks=totalClasse('3');
+  var creances=DB.all('plan_comptable').filter(function(c){return c.type==='actif'&&c.classe==='4'}).reduce(function(s,c){var v=Compta.getSolde(c.numero);return s+(v>0?v:0)},0);
+  var treso=totalClasse('5');
+  var actif=immo+stocks+creances+treso;
+  var capitaux=totalClasse('1');
+  var dettes=DB.all('plan_comptable').filter(function(c){return c.type==='passif'&&c.classe==='4'}).reduce(function(s,c){var v=Compta.getSolde(c.numero);return s+(v>0?v:0)},0);
+  var passif=capitaux+dettes;
+  var c=document.getElementById('module-content');
+  c.innerHTML='<div class="cards"><div class="card" data-accent="blue"><h4>Total Actif</h4><div class="value blue">'+ef(actif)+'</div></div>'+
+    '<div class="card" data-accent="green"><h4>Total Passif</h4><div class="value green">'+ef(passif)+'</div></div>'+
+    '<div class="card" data-accent="'+(Math.abs(actif-passif)<1?'green':'orange')+'"><h4>Equilibre</h4><div class="value '+(Math.abs(actif-passif)<1?'green':'orange')+'">'+ef(actif-passif)+'</div></div></div>'+
+    '<div class="form-row"><div><h3 class="section-title">Actif</h3><div class="table-wrapper"><table><thead><tr><th>Rubrique</th><th>Montant</th></tr></thead><tbody>'+
+    '<tr><td>Immobilisations</td><td style="font-weight:600">'+ef(immo)+'</td></tr><tr><td>Stocks</td><td style="font-weight:600">'+ef(stocks)+'</td></tr><tr><td>Creances</td><td style="font-weight:600">'+ef(creances)+'</td></tr><tr><td>Tresorerie</td><td style="font-weight:600">'+ef(treso)+'</td></tr>'+
+    '<tr style="font-weight:700;background:var(--secondary-light)"><td>TOTAL ACTIF</td><td style="color:var(--primary)">'+ef(actif)+'</td></tr></tbody></table></div></div>'+
+    '<div><h3 class="section-title">Passif</h3><div class="table-wrapper"><table><thead><tr><th>Rubrique</th><th>Montant</th></tr></thead><tbody>'+
+    '<tr><td>Capitaux propres</td><td style="font-weight:600">'+ef(capitaux)+'</td></tr><tr><td>Dettes</td><td style="font-weight:600">'+ef(dettes)+'</td></tr>'+
+    '<tr style="font-weight:700;background:var(--secondary-light)"><td>TOTAL PASSIF</td><td style="color:var(--success)">'+ef(passif)+'</td></tr></tbody></table></div></div></div>'+
+    '<p style="margin-top:12px;font-size:.8rem;color:var(--text-light)"><em>Bilan simplifie calcule depuis les ecritures et le plan comptable.</em></p>'
+}};
+
+// ============================================================
+// MODULE: REGLES DE COMPTABILISATION
+// ============================================================
+MODULES.regles={title:'Regles de comptabilisation',headerActions:function(){return fullToolbar()},
+render:function(){
+  var regles=DB.all('regles_comptabilisation');
+  var c=document.getElementById('module-content');
+  c.innerHTML='<p style="margin-bottom:12px;font-size:.82rem;color:var(--text-secondary)">Configurez les regles de comptabilisation automatique. Les ecritures sont creees automatiquement lors des mouvements de stock.</p>'+
+    '<div class="table-wrapper"><table><thead><tr><th>Libelle</th><th>Declencheur</th><th>Debit</th><th>Credit</th><th>Calcul</th><th>Actif</th><th>Actions</th></tr></thead><tbody id="regles-tbody"></tbody></table></div>';
+  var tbody=document.getElementById('regles-tbody');
+  if(!regles.length){tbody.innerHTML='<tr><td colspan="7" class="empty-state"><span class="icon">&#9881;</span>Aucune regle</td></tr>';return}
+  var dl={'mouvement_stock':'Stock','achat':'Achat','vente':'Vente'};
+  var cl={'fixe':'Fixe','champ_montant':'Champ','quantite_x_prix':'Qte x Prix','pourcentage':'%'};
+  regles.forEach(function(r){
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td><strong>'+esc(r.libelle)+'</strong></td><td>'+esc(dl[r.declencheur]||r.declencheur)+'</td><td>'+esc(r.compteDebit)+'</td><td>'+esc(r.compteCredit)+'</td><td>'+esc(cl[r.modeCalcul]||r.modeCalcul)+'</td><td>'+(r.actif!==false?'<span class="badge badge-success">Actif</span>':'<span class="badge badge-secondary">Inactif</span>')+'</td>'+
+      '<td class="actions-cell"><button class="btn btn-sm btn-primary" onclick="editRegle(\''+r.id+'\')">Modifier</button>'+
+      '<button class="btn btn-sm '+(r.actif!==false?'btn-ghost':'btn-success')+'" onclick="toggleRegle(\''+r.id+'\')">'+(r.actif!==false?'Desactiver':'Activer')+'</button>'+
+      '<button class="btn btn-sm btn-danger" onclick="deleteRegle(\''+r.id+'\')">Suppr.</button></td>';
+    tbody.appendChild(tr)
+  })
+}};
+
+function regleForm(item){
+  var comptes=DB.all('plan_comptable');
+  var opts=comptes.map(function(c){return'<option value="'+esc(c.numero)+'">'+esc(c.numero)+' - '+esc(c.intitule)+'</option>'}).join('');
+  return'<div class="form-group"><label>Libelle *</label><input type="text" id="f-libelle" value="'+esc(item?.libelle||'')+'"></div>'+
+    '<div class="form-row"><div class="form-group"><label>Declencheur</label><select id="f-decl"><option value="mouvement_stock"'+(item?.declencheur==='mouvement_stock'?' selected':'')+'>Mouvement stock</option><option value="achat"'+(item?.declencheur==='achat'?' selected':'')+'>Achat</option><option value="vente"'+(item?.declencheur==='vente'?' selected':'')+'>Vente</option></select></div>'+
+    '<div class="form-group"><label>Categorie</label><select id="f-cat"><option value="">--</option><option value="achat"'+(item?.categorie==='achat'?' selected':'')+'>Achat</option><option value="vente"'+(item?.categorie==='vente'?' selected':'')+'>Vente</option><option value="stock"'+(item?.categorie==='stock'?' selected':'')+'>Stock</option></select></div></div>'+
+    '<div class="form-row"><div class="form-group"><label>Compte Debit *</label><select id="f-cd">'+opts+'</select></div>'+
+    '<div class="form-group"><label>Compte Credit *</label><select id="f-cc">'+opts+'</select></div></div>'+
+    '<div class="form-group"><label>Modele libelle</label><input type="text" id="f-lm" value="'+esc(item?.libelleModele||'{nom} - {montant} FCFA')+'" placeholder="{nom},{reference},{quantite},{montant},{date}"><span class="help-text">Variables: {nom}, {reference}, {quantite}, {montant}, {date}</span></div>'+
+    '<div class="form-row"><div class="form-group"><label>Mode calcul</label><select id="f-mc" onchange="toggleCalc()"><option value="champ_montant"'+(item?.modeCalcul==='champ_montant'||!item?.modeCalcul?' selected':'')+'>Champ montant</option><option value="quantite_x_prix"'+(item?.modeCalcul==='quantite_x_prix'?' selected':'')+'>Qte x Prix</option><option value="fixe"'+(item?.modeCalcul==='fixe'?' selected':'')+'>Montant fixe</option><option value="pourcentage"'+(item?.modeCalcul==='pourcentage'?' selected':'')+'>Pourcentage</option></select></div>'+
+    '<div class="form-group" id="calc-fixe" style="display:'+(item?.modeCalcul==='fixe'?'block':'none')+'"><label>Montant fixe (FCFA)</label><input type="number" id="f-mf" value="'+(item?.montantFixe||0)+'"></div>'+
+    '<div class="form-group" id="calc-pct" style="display:'+(item?.modeCalcul==='pourcentage'?'block':'none')+'"><label>Pourcentage (%)</label><input type="number" step="0.01" id="f-pct" value="'+(item?.pourcentage||0)+'"></div></div>'+
+    '<div class="form-group" id="calc-champ" style="display:'+(item?.modeCalcul==='champ_montant'||!item?.modeCalcul?'block':'none')+'"><label>Champ montant</label><select id="f-cm"><option value="prixAchat"'+(item?.champMontant==='prixAchat'?' selected':'')+'>Prix achat</option><option value="prixVente"'+(item?.champMontant==='prixVente'?' selected':'')+'>Prix vente</option><option value="montant"'+(item?.champMontant==='montant'?' selected':'')+'>Montant</option></select></div>'+
+    '<div class="form-group" id="calc-base" style="display:'+(item?.modeCalcul==='pourcentage'?'block':'none')+'"><label>Champ base</label><select id="f-cb"><option value="montant"'+(item?.champBase==='montant'?' selected':'')+'>Montant</option><option value="prixAchat"'+(item?.champBase==='prixAchat'?' selected':'')+'>Prix achat</option></select></div>'+
+    '<div class="form-group"><label class="checkbox-label"><input type="checkbox" id="f-actif" '+(item?.actif!==false?'checked':'')+'> Regle active</label></div>';
+}
+function toggleCalc(){
+  var v=document.getElementById('f-mc').value;
+  document.getElementById('calc-fixe').style.display=v==='fixe'?'block':'none';
+  document.getElementById('calc-pct').style.display=v==='pourcentage'?'block':'none';
+  document.getElementById('calc-champ').style.display=v==='champ_montant'||v==='quantite_x_prix'?'block':'none';
+  document.getElementById('calc-base').style.display=v==='pourcentage'?'block':'none'
+}
+function regleSave(){
+  return{libelle:document.getElementById('f-libelle').value,declencheur:document.getElementById('f-decl').value,categorie:document.getElementById('f-cat').value,compteDebit:document.getElementById('f-cd').value,compteCredit:document.getElementById('f-cc').value,libelleModele:document.getElementById('f-lm').value,modeCalcul:document.getElementById('f-mc').value,montantFixe:parseFloat(document.getElementById('f-mf').value)||0,pourcentage:parseFloat(document.getElementById('f-pct').value)||0,champMontant:document.getElementById('f-cm')?.value||'prixAchat',champBase:document.getElementById('f-cb')?.value||'montant',actif:document.getElementById('f-actif').checked}
+}
+function openAddRegle(){currentModule='regles';currentEditId=null;openModal('Ajouter regle',regleForm())}
+function editRegle(id){currentModule='regles';currentEditId=id;var item=DB.get('regles_comptabilisation',id);if(item)openModal('Modifier regle',regleForm(item))}
+function deleteRegle(id){if(!confirm('Supprimer ?'))return;DB.remove('regles_comptabilisation',id);showToast('Supprimee');MODULES.regles.render()}
+function toggleRegle(id){var r=DB.get('regles_comptabilisation',id);if(!r)return;DB.update('regles_comptabilisation',id,{actif:r.actif!==false?false:true});showToast(r.actif!==false?'Desactivee':'Activee');MODULES.regles.render()}
+ADD_HANDLERS.regles=openAddRegle;SAVE_HANDLERS.regles=regleSave;
+
+// ============================================================
+// MODULE: ECRITURES AUTO
+// ============================================================
+MODULES['ecritures-auto']={title:'Ecritures automatiques',headerActions:function(){return readonlyToolbar()},
+render:function(){
+  var auto=DB.all('journal').filter(function(e){return e.type==='automatique'});
+  var reglesAct=DB.all('regles_comptabilisation').filter(function(r){return r.actif!==false});
+  var c=document.getElementById('module-content');
+  c.innerHTML='<div class="cards">'+
+    '<div class="card" data-accent="blue"><h4>Ecritures auto</h4><div class="value blue" id="auto-count">'+auto.length+'</div></div>'+
+    '<div class="card" data-accent="green"><h4>Regles actives</h4><div class="value green" id="auto-regles">'+reglesAct.length+'</div></div></div>'+
+    '<div class="module-toolbar">'+
+    '<button class="btn btn-sm btn-success" onclick="genererEcrituresStock()">Generer ecritures stocks</button>'+
+    '<button class="btn btn-sm btn-purple" onclick="genererEcrituresRegles()">Appliquer regles</button>'+
+    '<button class="btn btn-sm btn-ghost" onclick="navigateTo(\'journal\')">Voir journal</button></div>'+
+    '<h3 class="section-title">Dernieres ecritures automatiques</h3>'+
+    '<div class="table-wrapper"><table><thead><tr><th>Date</th><th>Libelle</th><th>Debit</th><th>Credit</th><th>Montant</th></tr></thead><tbody id="auto-tbody"></tbody></table></div>';
+  var tbody=document.getElementById('auto-tbody');
+  var recent=auto.slice(-20).reverse();
+  if(!recent.length){tbody.innerHTML='<tr><td colspan="5" class="empty-state"><span class="icon">&#9889;</span>Aucune ecriture auto</td></tr>';return}
+  recent.forEach(function(e){
+    var r=document.createElement('tr');
+    r.innerHTML='<td>'+formatDate(e.date)+'</td><td><strong>'+esc(e.libelle)+'</strong></td><td>'+esc(e.compteDebit)+'</td><td>'+esc(e.compteCredit)+'</td><td style="font-weight:600">'+ef(e.montant)+'</td>';
+    tbody.appendChild(r)
+  })
+}};
+
+function genererEcrituresStock(){
+  var mvts=DB.all('mouvements');var count=0;
+  mvts.forEach(function(m){
+    if(m._comptabilise)return;
+    if(m.type==='entree'&&(m.prixAchat||0)>0){
+      Compta.addEcriture({date:m.date||today(),libelle:'Achat stock - '+esc(m.articleNom||'Article'),compteDebit:'37',compteCredit:'401',montant:(Number(m.quantite)||1)*(Number(m.prixAchat)||0),type:'automatique',categorie:'achat',reference:m.id,notes:'Generation auto'});
+      DB.update('mouvements',m.id,{_comptabilise:true});count++
+    }
+    if(m.type==='sortie'&&(m.prixVente||0)>0){
+      Compta.addEcriture({date:m.date||today(),libelle:'Vente stock - '+esc(m.articleNom||'Article'),compteDebit:'411',compteCredit:'701',montant:(Number(m.quantite)||1)*(Number(m.prixVente)||0),type:'automatique',categorie:'vente',reference:m.id,notes:'Generation auto'});
+      Compta.addEcriture({date:m.date||today(),libelle:'Sortie stock - '+esc(m.articleNom||'Article'),compteDebit:'603',compteCredit:'37',montant:(Number(m.quantite)||1)*(Number(m.prixAchat)||0),type:'automatique',categorie:'stock',reference:m.id,notes:'Variation stock auto'});
+      DB.update('mouvements',m.id,{_comptabilise:true});count+=2
+    }
+  });
+  showToast(count+' ecritures generees');MODULES['ecritures-auto'].render()
+}
+function genererEcrituresRegles(){
+  var mvts=DB.all('mouvements');var count=0;
+  mvts.forEach(function(m){count+=Regles.executer('mouvement_stock',m).length});
+  showToast(count+' ecritures via regles');MODULES['ecritures-auto'].render()
+}
+
+// ============================================================
+// MODULE: TVA
+// ============================================================
+MODULES.tva={title:'TVA / Taxes',headerActions:function(){return exportBtn()+printBtn()+helpBtn()},
+render:function(){
+  var es=DB.all('journal');
+  var tvaC=es.filter(function(e){return e.compteCredit==='443'}).reduce(function(s,e){return s+(Number(e.montant)||0)},0);
+  var tvaD=es.filter(function(e){return e.compteDebit==='444'}).reduce(function(s,e){return s+(Number(e.montant)||0)},0);
+  var tvaDue=tvaC-tvaD;
+  var c=document.getElementById('module-content');
+  c.innerHTML='<div class="cards">'+
+    '<div class="card" data-accent="blue"><h4>TVA collectee</h4><div class="value blue">'+ef(tvaC)+'</div></div>'+
+    '<div class="card" data-accent="orange"><h4>TVA deductible</h4><div class="value orange">'+ef(tvaD)+'</div></div>'+
+    '<div class="card" data-accent="'+(tvaDue>=0?'red':'green')+'"><h4>TVA due</h4><div class="value '+(tvaDue>=0?'red':'green')+'">'+ef(Math.abs(tvaDue))+'</div></div></div>'+
+    '<div class="module-toolbar"><button class="btn btn-sm btn-primary" onclick="creerDeclarationTVA()">Creer declaration TVA</button></div>'+
+    '<h3 class="section-title">Simulation TVA 18%</h3>'+
+    '<div class="table-wrapper"><table><thead><tr><th>Type</th><th>Base HT</th><th>TVA 18%</th></tr></thead><tbody>'+
+    '<tr><td>Ventes</td><td>'+ef(es.filter(function(e){return e.compteCredit&&e.compteCredit.charAt(0)==='7'}).reduce(function(s,e){return s+(Number(e.montant)||0)},0))+'</td><td>'+ef(es.filter(function(e){return e.compteCredit&&e.compteCredit.charAt(0)==='7'}).reduce(function(s,e){return s+(Number(e.montant)||0)},0)*0.18)+'</td></tr>'+
+    '<tr><td>Achats</td><td>'+ef(es.filter(function(e){return e.compteDebit&&e.compteDebit.charAt(0)==='6'}).reduce(function(s,e){return s+(Number(e.montant)||0)},0))+'</td><td>'+ef(es.filter(function(e){return e.compteDebit&&e.compteDebit.charAt(0)==='6'}).reduce(function(s,e){return s+(Number(e.montant)||0)},0)*0.18)+'</td></tr>'+
+    '</tbody></table></div></div>'
+}};
+function creerDeclarationTVA(){
+  var es=DB.all('journal');
+  var tvaC=es.filter(function(e){return e.compteCredit==='443'}).reduce(function(s,e){return s+(Number(e.montant)||0)},0);
+  var tvaD=es.filter(function(e){return e.compteDebit==='444'}).reduce(function(s,e){return s+(Number(e.montant)||0)},0);
+  DB.add('tva_declarations',{periode:new Date().toISOString().slice(0,7),tvaCollectee:tvaC,tvaDeductible:tvaD,tvaDue:tvaC-tvaD,statut:'preparatoire',dateDeclaration:today()});
+  showToast('Declaration TVA creee: '+ef(tvaC-tvaD));MODULES.tva.render()
+}
+
+// ============================================================
+// MODULE: AMORTISSEMENTS
+// ============================================================
+MODULES.amortissements={title:'Amortissements',headerActions:function(){return fullToolbar()},
+render:function(){
+  var immos=DB.all('immobilisations');
+  var amortis=DB.all('amortissements');
+  var totalAmort=amortis.reduce(function(s,a){return s+(Number(a.montant)||0)},0);
+  var totalImmo=immos.reduce(function(s,i){return s+(Number(i.valeurAchat)||0)},0);
+  var c=document.getElementById('module-content');
+  c.innerHTML='<div class="cards">'+
+    '<div class="card" data-accent="blue"><h4>Immobilisations</h4><div class="value blue">'+ef(totalImmo)+'</div></div>'+
+    '<div class="card" data-accent="orange"><h4>Amortissements</h4><div class="value orange">'+ef(totalAmort)+'</div></div>'+
+    '<div class="card" data-accent="green"><h4>VNC</h4><div class="value green">'+ef(totalImmo-totalAmort)+'</div></div></div>'+
+    '<h3 class="section-title">Immobilisations</h3>'+
+    '<div class="table-wrapper"><table><thead><tr><th>Designation</th><th>Acquisition</th><th>Valeur</th><th>Duree</th><th>Taux</th><th>Actions</th></tr></thead><tbody id="immo-tbody"></tbody></table></div>';
+  var tbody=document.getElementById('immo-tbody');
+  if(!immos.length){tbody.innerHTML='<tr><td colspan="6" class="empty-state"><span class="icon">&#128252;</span>Aucune immobilisation</td></tr>';return}
+  immos.forEach(function(i){
+    var tx=i.dureeVie?(100/i.dureeVie).toFixed(1):'-';
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td><strong>'+esc(i.designation)+'</strong></td><td>'+formatDate(i.dateAcquisition)+'</td><td>'+ef(i.valeurAchat)+'</td><td>'+esc(i.dureeVie||'-')+' ans</td><td>'+tx+'%</td>'+
+      '<td class="actions-cell"><button class="btn btn-sm btn-primary" onclick="editImmo(\''+i.id+'\')">Modifier</button>'+
+      '<button class="btn btn-sm btn-success" onclick="calculerAmortissement(\''+i.id+'\')">Amortir</button>'+
+      '<button class="btn btn-sm btn-danger" onclick="deleteImmo(\''+i.id+'\')">Suppr.</button></td>';
+    tbody.appendChild(tr)
+  })
+}};
+
+function immoForm(item){
+  return '<div class="form-group"><label>Designation *</label><input type="text" id="f-des" value="'+esc(item?.designation||'')+'"></div>'+
+    '<div class="form-row"><div class="form-group"><label>Date acquisition</label><input type="date" id="f-da" value="'+(item?.dateAcquisition||today())+'"></div>'+
+    '<div class="form-group"><label>Valeur (FCFA) *</label><input type="number" step="0.01" id="f-val" value="'+(item?.valeurAchat||0)+'"></div></div>'+
+    '<div class="form-row"><div class="form-group"><label>Duree de vie (ans)</label><input type="number" id="f-dur" value="'+(item?.dureeVie||5)+'" min="1"></div>'+
+    '<div class="form-group"><label>Compte comptable</label><input type="text" id="f-cpt" value="'+esc(item?.compteComptable||'24')+'"></div></div>'+
+    '<div class="form-group"><label>Notes</label><textarea id="f-notes" rows="2">'+esc(item?.notes||'')+'</textarea></div>';
+}
+function immoSave(){return{designation:document.getElementById('f-des').value,dateAcquisition:document.getElementById('f-da').value,valeurAchat:parseFloat(document.getElementById('f-val').value)||0,dureeVie:parseInt(document.getElementById('f-dur').value)||5,compteComptable:document.getElementById('f-cpt').value,notes:document.getElementById('f-notes').value}}
+function openAddImmo(){currentModule='amortissements';currentEditId=null;openModal('Ajouter immobilisation',immoForm())}
+function editImmo(id){currentModule='amortissements';currentEditId=id;var item=DB.get('immobilisations',id);if(item)openModal('Modifier immobilisation',immoForm(item))}
+function deleteImmo(id){if(!confirm('Supprimer ?'))return;DB.remove('immobilisations',id);showToast('Supprimee');MODULES.amortissements.render()}
+function calculerAmortissement(id){
+  var i=DB.get('immobilisations',id);if(!i)return;
+  var v=Number(i.valeurAchat)||0;var d=parseInt(i.dureeVie)||5;
+  if(d<=0||v<=0){showToast('Valeur/duree invalide','error');return}
+  var annuel=v/d;
+  DB.add('amortissements',{immobilisationId:id,designation:i.designation,montant:annuel,date:today(),notes:'Amortissement lineaire '+i.designation});
+  Compta.addEcriture({date:today(),libelle:'Dotation amortissement - '+i.designation,compteDebit:'67',compteCredit:'28',montant:annuel,type:'automatique',categorie:'amortissement',notes:'Amortissement lineaire '+d+' ans'});
+  showToast('Amortissement '+ef(annuel)+' comptabilise');MODULES.amortissements.render()
+}
+ADD_HANDLERS.amortissements=openAddImmo;SAVE_HANDLERS.amortissements=immoSave;
+
+// ============================================================
+// MODULE: MOUVEMENTS STOCK
+// ============================================================
+MODULES.mouvements={title:'Mouvements stock',headerActions:function(){return fullToolbar()},
+render:function(){
+  var mvts=DB.all('mouvements');
+  var c=document.getElementById('module-content');
+  c.innerHTML='<div class="search-bar"><input type="text" id="search-mvt" placeholder="Rechercher..." oninput="filterTable(\'search-mvt\',\'mvt-tbody\')"></div>'+
+    '<div class="table-wrapper"><table><thead><tr><th>Date</th><th>Article</th><th>Ref.</th><th>Type</th><th>Qte</th><th>Emplacement</th><th>Compta</th><th>Actions</th></tr></thead><tbody id="mvt-tbody"></tbody></table></div>';
+  var tbody=document.getElementById('mvt-tbody');
+  if(!mvts.length){tbody.innerHTML='<tr><td colspan="8" class="empty-state"><span class="icon">&#128666;</span>Aucun mouvement</td></tr>';return}
+  mvts.forEach(function(m){
+    var tr=document.createElement('tr');
+    var tl=m.type==='entree'?'<span class="badge badge-success">Entree</span>':'<span class="badge badge-danger">Sortie</span>';
+    var cp=m._comptabilise?'<span class="badge badge-success">Oui</span>':'<span class="badge badge-warning">Non</span>';
+    tr.innerHTML='<td>'+formatDate(m.date)+'</td><td><strong>'+esc(m.articleNom)+'</strong></td><td>'+esc(m.articleReference||'-')+'</td><td>'+tl+'</td><td>'+(m.quantite||0)+'</td><td>'+esc(m.emplacement||'-')+'</td><td>'+cp+'</td>'+
+      '<td class="actions-cell"><button class="btn btn-sm btn-primary" onclick="editMvt(\''+m.id+'\')">Modifier</button>'+
+      '<button class="btn btn-sm btn-danger" onclick="deleteMvt(\''+m.id+'\')">Suppr.</button></td>';
+    tbody.appendChild(tr)
+  })
+}};
+
+function mvtForm(item){
+  var isSortie=item&&item.type==='sortie';
+  return'<div class="form-row"><div class="form-group"><label>Article *</label><input type="text" id="f-art" value="'+esc(item?.articleNom||'')+'"></div>'+
+    '<div class="form-group"><label>Reference</label><input type="text" id="f-ref" value="'+esc(item?.articleReference||'')+'"></div></div>'+
+    '<div class="form-row"><div class="form-group"><label>Type *</label><select id="f-type" onchange="togglePrix()"><option value="entree"'+(item?.type==='entree'||!item?.type?' selected':'')+'>Entree</option><option value="sortie"'+(item?.type==='sortie'?' selected':'')+'>Sortie</option></select></div>'+
+    '<div class="form-group"><label>Quantite *</label><input type="number" id="f-qte" value="'+(item?.quantite||1)+'" min="1"></div></div>'+
+    '<div class="form-row"><div class="form-group"><label>Emplacement</label><input type="text" id="f-emp" value="'+esc(item?.emplacement||'')+'"></div>'+
+    '<div class="form-group"><label>Date</label><input type="date" id="f-date" value="'+(item?.date||today())+'"></div></div>'+
+    '<div class="form-group"><label>Prix achat unitaire (FCFA)</label><input type="number" step="0.01" id="f-pa" value="'+(item?.prixAchat||0)+'"></div>'+
+    '<div class="form-group" id="pv-group" style="display:'+(isSortie?'block':'none')+'"><label>Prix vente unitaire (FCFA)</label><input type="number" step="0.01" id="f-pv" value="'+(item?.prixVente||0)+'"></div>'+
+    '<div class="form-group"><label>Fournisseur / Destinataire</label><input type="text" id="f-four" value="'+esc(item?.fournisseur||'')+'"></div>'+
+    '<div class="form-group"><label>Notes</label><textarea id="f-notes" rows="2">'+esc(item?.notes||'')+'</textarea></div>';
+}
+function togglePrix(){document.getElementById('pv-group').style.display=document.getElementById('f-type').value==='sortie'?'block':'none'}
+function mvtSave(){
+  var isSortie=document.getElementById('f-type').value==='sortie';
+  var d={articleNom:document.getElementById('f-art').value,articleReference:document.getElementById('f-ref').value,type:document.getElementById('f-type').value,quantite:parseInt(document.getElementById('f-qte').value)||1,prixAchat:parseFloat(document.getElementById('f-pa').value)||0,prixVente:isSortie?parseFloat(document.getElementById('f-pv').value)||0:0,emplacement:document.getElementById('f-emp').value,date:document.getElementById('f-date').value,fournisseur:document.getElementById('f-four').value,notes:document.getElementById('f-notes').value};
+  if(!d.articleNom){showToast('Nom article requis','error');return false}
+  return d
+}
+function openAddMvt(){currentModule='mouvements';currentEditId=null;openModal('Ajouter mouvement',mvtForm())}
+function editMvt(id){currentModule='mouvements';currentEditId=id;var item=DB.get('mouvements',id);if(item)openModal('Modifier mouvement',mvtForm(item))}
+function deleteMvt(id){if(!confirm('Supprimer ?'))return;DB.remove('mouvements',id);showToast('Supprime');MODULES.mouvements.render();updateAlertBadge()}
+var _origMvtSave=mvtSave;
+mvtSave=function(){
+  var d=_origMvtSave();
+  if(d){
+    setTimeout(function(){
+      var mvts=DB.all('mouvements');
+      var last=mvts[mvts.length-1];
+      if(last){Regles.executer('mouvement_stock',last);updateAlertBadge()}
+    },50)
+  }
+  return d
+};
+ADD_HANDLERS.mouvements=openAddMvt;SAVE_HANDLERS.mouvements=mvtSave;
+
+// ============================================================
+// MODULE: ETAT DES STOCKS
+// ============================================================
+MODULES['etat-stock']={title:'Etat des stocks',headerActions:function(){return readonlyToolbar()},
+render:function(){
+  var mvts=DB.all('mouvements');
+  var sm={};
+  mvts.forEach(function(m){
+    var k=m.articleNom+'|'+(m.articleReference||'');
+    if(!sm[k])sm[k]={an:m.articleNom,ar:m.articleReference||'',qte:0,emps:[],tAch:0,nbE:0};
+    sm[k].qte+=m.type==='entree'?m.quantite:-m.quantite;
+    if(m.emplacement&&sm[k].emps.indexOf(m.emplacement)===-1)sm[k].emps.push(m.emplacement);
+    if(m.type==='entree'&&m.prixAchat){sm[k].tAch+=m.prixAchat*m.quantite;sm[k].nbE+=m.quantite}
+  });
+  var sts=Object.values(sm).map(function(s){s.paMoy=s.nbE>0?s.tAch/s.nbE:0;s.vStock=s.qte*s.paMoy;return s});
+  var vt=sts.reduce(function(s,i){return s+(i.qte>0?i.vStock:0)},0);
+  var c=document.getElementById('module-content');
+  c.innerHTML='<div class="cards">'+
+    '<div class="card" data-accent="blue"><h4>Articles en stock</h4><div class="value blue">'+sts.filter(function(s){return s.qte>0}).length+'</div></div>'+
+    '<div class="card" data-accent="green"><h4>Valeur stock</h4><div class="value green">'+ef(vt)+'</div></div>'+
+    '<div class="card" data-accent="orange"><h4>Total unites</h4><div class="value orange">'+sts.reduce(function(s,i){return s+(i.qte>0?i.qte:0)},0)+'</div></div></div>'+
+    '<div class="search-bar"><input type="text" id="search-etat" placeholder="Rechercher..." oninput="filterTable(\'search-etat\',\'etat-tbody\')"></div>'+
+    '<div class="table-wrapper"><table><thead><tr><th>Article</th><th>Ref.</th><th>Stock</th><th>PA moyen</th><th>Valeur</th><th>Emplacements</th></tr></thead><tbody id="etat-tbody"></tbody></table></div>';
+  var tbody=document.getElementById('etat-tbody');
+  if(!sts.length){tbody.innerHTML='<tr><td colspan="6" class="empty-state"><span class="icon">&#128202;</span>Stock vide</td></tr>';return}
+  sts.forEach(function(s){
+    var col=s.qte<=0?'red':s.qte<10?'orange':'green';
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td><strong>'+esc(s.an)+'</strong></td><td>'+esc(s.ar||'-')+'</td><td style="color:var(--'+col+');font-weight:700">'+s.qte+'</td><td>'+(s.paMoy?ef(s.paMoy):'-')+'</td><td style="font-weight:600">'+ef(s.vStock)+'</td><td>'+esc(s.emps.join(', ')||'-')+'</td>';
+    tbody.appendChild(tr)
+  });
+  updateAlertBadge()
+}};
+
+// ============================================================
+// MODULE: FOURNISSEURS
+// ============================================================
+MODULES.fournisseurs={title:'Fournisseurs',headerActions:function(){return fullToolbar()},
+render:function(){
+  var fs=DB.all('fournisseurs');
+  var c=document.getElementById('module-content');
+  c.innerHTML='<div class="search-bar"><input type="text" id="search-four" placeholder="Rechercher..." oninput="filterTable(\'search-four\',\'four-tbody\')"></div>'+
+    '<div class="table-wrapper"><table><thead><tr><th>Nom</th><th>Contact</th><th>Email</th><th>Telephone</th><th>Solde</th><th>Actions</th></tr></thead><tbody id="four-tbody"></tbody></table></div>';
+  var tbody=document.getElementById('four-tbody');
+  if(!fs.length){tbody.innerHTML='<tr><td colspan="6" class="empty-state"><span class="icon">&#127970;</span>Aucun fournisseur</td></tr>';return}
+  fs.forEach(function(f){
+    var solde=Compta.getSolde('401');
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td><strong>'+esc(f.nom)+'</strong></td><td>'+esc(f.contact||'-')+'</td><td>'+esc(f.email||'-')+'</td><td>'+esc(f.telephone||'-')+'</td><td style="font-weight:600">'+ef(solde)+'</td>'+
+      '<td class="actions-cell"><button class="btn btn-sm btn-primary" onclick="editFour(\''+f.id+'\')">Modifier</button><button class="btn btn-sm btn-danger" onclick="deleteFour(\''+f.id+'\')">Suppr.</button></td>';
+    tbody.appendChild(tr)
+  })
+}};
+function fourForm(item){
+  return'<div class="form-group"><label>Nom *</label><input type="text" id="f-nom" value="'+esc(item?.nom||'')+'"></div>'+
+    '<div class="form-group"><label>Contact</label><input type="text" id="f-contact" value="'+esc(item?.contact||'')+'"></div>'+
+    '<div class="form-row"><div class="form-group"><label>Email</label><input type="email" id="f-email" value="'+esc(item?.email||'')+'"></div>'+
+    '<div class="form-group"><label>Telephone</label><input type="text" id="f-tel" value="'+esc(item?.telephone||'')+'"></div></div>'+
+    '<div class="form-group"><label>Adresse</label><textarea id="f-addr" rows="2">'+esc(item?.adresse||'')+'</textarea></div>';
+}
+function fourSave(){return{nom:document.getElementById('f-nom').value,contact:document.getElementById('f-contact').value,email:document.getElementById('f-email').value,telephone:document.getElementById('f-tel').value,adresse:document.getElementById('f-addr').value}}
+function openAddFour(){currentModule='fournisseurs';currentEditId=null;openModal('Ajouter fournisseur',fourForm())}
+function editFour(id){currentModule='fournisseurs';currentEditId=id;var item=DB.get('fournisseurs',id);if(item)openModal('Modifier fournisseur',fourForm(item))}
+function deleteFour(id){if(!confirm('Supprimer ?'))return;DB.remove('fournisseurs',id);showToast('Supprime');MODULES.fournisseurs.render()}
+ADD_HANDLERS.fournisseurs=openAddFour;SAVE_HANDLERS.fournisseurs=fourSave;
+
+// ============================================================
+// MODULE: ALERTES STOCK
+// ============================================================
+MODULES.alertes={title:'Alertes stock',headerActions:function(){return readonlyToolbar()},
+render:function(){
+  var mvts=DB.all('mouvements');
+  var sm={};
+  mvts.forEach(function(m){
+    var k=m.articleNom+'|'+(m.articleReference||'');
+    if(!sm[k])sm[k]={an:m.articleNom,ar:m.articleReference||'',qte:0,emps:[]};
+    sm[k].qte+=m.type==='entree'?m.quantite:-m.quantite;
+    if(m.emplacement&&sm[k].emps.indexOf(m.emplacement)===-1)sm[k].emps.push(m.emplacement)
+  });
+  var sts=Object.values(sm);
+  var ru=sts.filter(function(s){return s.qte<=0});
+  var lo=sts.filter(function(s){return s.qte>0&&s.qte<=5});
+  var ok=sts.filter(function(s){return s.qte>5});
+  var c=document.getElementById('module-content');
+  c.innerHTML='<div class="cards"><div class="card" data-accent="red"><h4>Rupture</h4><div class="value red">'+ru.length+'</div></div>'+
+    '<div class="card" data-accent="orange"><h4>Stock faible</h4><div class="value orange">'+lo.length+'</div></div>'+
+    '<div class="card" data-accent="green"><h4>Stock OK</h4><div class="value green">'+ok.length+'</div></div></div>'+
+    '<h3 class="section-title">Articles en alerte</h3><div id="alertes-list"></div>';
+  var al=document.getElementById('alertes-list');
+  var items=[].concat(ru,lo);
+  if(!items.length){al.innerHTML='<div class="alert-card ok" style="display:flex;align-items:center;gap:16px;padding:20px;background:var(--success-light);border-radius:var(--radius);margin-bottom:10px"><div style="font-size:1.5rem">&#9989;</div><div><h4 style="font-weight:600">Tous les articles ont un stock suffisant</h4></div></div>'}
+  else{items.forEach(function(s){
+    var ir=s.qte<=0;
+    var d=document.createElement('div');
+    d.style.cssText='display:flex;align-items:center;gap:16px;padding:20px;background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:10px;border-left:4px solid '+(ir?'var(--danger)':'var(--warning)');
+    d.innerHTML='<div style="font-size:1.5rem">'+(ir?'&#128683;':'&#9888;')+'</div><div style="flex:1"><h4 style="font-weight:600">'+esc(s.an)+'</h4><p style="font-size:.82rem;color:var(--text-secondary)">Ref: '+(esc(s.ar)||'-')+'</p></div><div style="font-size:1.2rem;font-weight:700;color:'+(ir?'var(--danger)':'var(--warning)')+'">'+s.qte+'</div>';
+    al.appendChild(d)
+  })}
+  updateAlertBadge()
+}};
+
+function updateAlertBadge(){
+  var mvts=DB.all('mouvements');
+  var sm={};
+  mvts.forEach(function(m){
+    var k=m.articleNom+'|'+(m.articleReference||'');
+    if(!sm[k])sm[k]={qte:0};sm[k].qte+=m.type==='entree'?m.quantite:-m.quantite
+  });
+  var count=Object.values(sm).filter(function(s){return s.qte<=5}).length;
+  var b=document.getElementById('alert-badge');
+  if(b){b.textContent=count;b.className='sidebar-badge'+(count===0?' zero':'')}
+}
+
+// ============================================================
+// FIRST-TIME ONBOARDING
+// ============================================================
+function showFirstTimeHelp(){
+  if(localStorage.getItem('compta_onboarded'))return;
+  localStorage.setItem('compta_onboarded','1');
+  setTimeout(function(){
+    openModal('Bienvenue sur ComptaAuto !','<div style="line-height:1.8">'+
+      '<p><strong>ComptaAuto</strong> est une application de gestion comptable et de stocks avec automatisation int&eacute;gr&eacute;e.</p>'+
+      '<h4 style="margin:12px 0 6px">Pour commencer :</h4>'+
+      '<ol>'+
+      '<li>Ajoutez des <strong>mouvements de stock</strong> (entr&eacute;es/sorties) dans le menu Stocks</li>'+
+      '<li>Les <strong>r&egrave;gles de comptabilisation</strong> cr&eacute;ent automatiquement les &eacute;critures comptables</li>'+
+      '<li>Consultez le <strong>Journal</strong> pour voir les &eacute;critures g&eacute;n&eacute;r&eacute;es</li>'+
+      '<li>Utilisez la <strong>Balance</strong>, le <strong>Grand livre</strong> et le <strong>Bilan</strong> pour analyser</li>'+
+      '<li>G&eacute;rez la <strong>TVA</strong> et les <strong>Amortissements</strong> dans les modules d&eacute;di&eacute;s</li>'+
+      '</ol>'+
+      '<p style="margin-top:12px;color:var(--text-light)">Cliquez sur <strong>Aide (?)</strong> dans chaque module pour des conseils d&eacute;taill&eacute;s.</p>'+
+      '<p style="margin-top:8px"><em>Identifiants: admin / admin123</em></p></div>');
+  },600);
+}
+
+// ============================================================
+// DEMO DATA
+// ============================================================
+function chargerDonneesDemo(){
+  if(DB.all('mouvements').length>0||DB.all('journal').length>0){
+    if(!confirm('Des donn&eacute;es existent d&eacute;j&agrave;. Les remplacer ?'))return;
+  }
+  // Clear existing
+  DB.clear('mouvements');DB.clear('journal');DB.clear('fournisseurs');DB.clear('immobilisations');DB.clear('amortissements');
+  // Fournisseurs
+  DB.add('fournisseurs',{nom:'Fournitures Tech SARL',contact:'M. Diallo',email:'diallo@fournitech.sn',telephone:'77 123 45 67',adresse:'Dakar, Senegal'});
+  DB.add('fournisseurs',{nom:'Materiel Pro SA',contact:'Mme Diop',email:'contact@materielpro.sn',telephone:'78 234 56 78',adresse:'Thi&egrave;s, Senegal'});
+  DB.add('fournisseurs',{nom:'Stock Express',contact:'M. Ndiaye',email:'info@stockexpress.sn',telephone:'76 345 67 89',adresse:'Saint-Louis, Senegal'});
+  // Mouvements stock
+  DB.add('mouvements',{articleNom:'Carton A4 5000',articleReference:'A4-5000',type:'entree',quantite:50,prixAchat:3500,emplacement:'Rayon A1',date:getDateAgo(30),fournisseur:'Fournitures Tech SARL',_comptabilise:true});
+  DB.add('mouvements',{articleNom:'Stylo bleu boite 50',articleReference:'STY-B50',type:'entree',quantite:100,prixAchat:1200,emplacement:'Rayon B2',date:getDateAgo(28),fournisseur:'Fournitures Tech SARL',_comptabilise:true});
+  DB.add('mouvements',{articleNom:'Classeur dossier',articleReference:'CLS-001',type:'entree',quantite:30,prixAchat:2500,emplacement:'Rayon A2',date:getDateAgo(25),fournisseur:'Materiel Pro SA',_comptabilise:true});
+  DB.add('mouvements',{articleNom:'Imprimante laser',articleReference:'IMP-L200',type:'entree',quantite:5,prixAchat:125000,emplacement:'Reserve 1',date:getDateAgo(20),fournisseur:'Materiel Pro SA',_comptabilise:true});
+  DB.add('mouvements',{articleNom:'Carton A4 5000',articleReference:'A4-5000',type:'sortie',quantite:10,prixAchat:3500,prixVente:5500,emplacement:'Rayon A1',date:getDateAgo(15),fournisseur:'Client Divers'});
+  DB.add('mouvements',{articleNom:'Stylo bleu boite 50',articleReference:'STY-B50',type:'sortie',quantite:25,prixAchat:1200,prixVente:2000,emplacement:'Rayon B2',date:getDateAgo(12),fournisseur:'Client Divers'});
+  DB.add('mouvements',{articleNom:'Classeur dossier',articleReference:'CLS-001',type:'sortie',quantite:8,prixAchat:2500,prixVente:4000,emplacement:'Rayon A2',date:getDateAgo(10),fournisseur:'Client Divers'});
+  // Ecritures comptables
+  Compta.addEcriture({date:getDateAgo(30),libelle:'Achat fournitures bureau',compteDebit:'601',compteCredit:'401',montant:475000,type:'manuelle',categorie:'achat',validation:'validee'});
+  Compta.addEcriture({date:getDateAgo(28),libelle:'Vente fournitures clients',compteDebit:'411',compteCredit:'701',montant:225000,type:'manuelle',categorie:'vente',validation:'validee'});
+  Compta.addEcriture({date:getDateAgo(25),libelle:'Loyer local mensuel',compteDebit:'612',compteCredit:'501',montant:350000,type:'manuelle',categorie:'frais',validation:'validee'});
+  Compta.addEcriture({date:getDateAgo(20),libelle:'Achat imprimante laser',compteDebit:'24',compteCredit:'401',montant:625000,type:'manuelle',categorie:'investissement',validation:'validee'});
+  Compta.addEcriture({date:getDateAgo(15),libelle:'Vente carton A4 clients',compteDebit:'411',compteCredit:'701',montant:55000,type:'automatique',categorie:'vente',validation:'validee'});
+  Compta.addEcriture({date:getDateAgo(15),libelle:'Sortie stock Carton A4',compteDebit:'603',compteCredit:'37',montant:35000,type:'automatique',categorie:'stock',validation:'validee'});
+  Compta.addEcriture({date:getDateAgo(12),libelle:'Vente stylos clients',compteDebit:'411',compteCredit:'701',montant:50000,type:'automatique',categorie:'vente',validation:'validee'});
+  Compta.addEcriture({date:getDateAgo(12),libelle:'Sortie stock stylos',compteDebit:'603',compteCredit:'37',montant:30000,type:'automatique',categorie:'stock',validation:'validee'});
+  Compta.addEcriture({date:getDateAgo(10),libelle:'Salaire employ&eacute;s',compteDebit:'64',compteCredit:'502',montant:1200000,type:'manuelle',categorie:'salaire',validation:'validee'});
+  Compta.addEcriture({date:getDateAgo(5),libelle:'Facture electricit&eacute;',compteDebit:'62',compteCredit:'401',montant:85000,type:'manuelle',categorie:'frais',validation:'provisoire'});
+  // Immobilisation
+  DB.add('immobilisations',{designation:'Imprimante laser HP',dateAcquisition:getDateAgo(20),valeurAchat:625000,dureeVie:5,compteComptable:'24',notes:'Imprimante bureau principal'});
+  showToast('Donn&eacute;es de d&eacute;mo charg&eacute;es avec succ&egrave;s');
+  if(sessionStorage.getItem('compta_auth')){navigateTo(currentActiveModule||'dashboard');updateAlertBadge()}
+}
+function getDateAgo(days){var d=new Date();d.setDate(d.getDate()-days);return d.toISOString().split('T')[0]}
+
+// ============================================================
+// AUTH & BOOT
+// ============================================================
+function login(){
+  var u=document.getElementById('login-username').value;
+  var p=document.getElementById('login-password').value;
+  var err=document.getElementById('login-error');
+  if(err)err.style.display='none';
+  if(u==='admin'&&p==='admin123'){
+    sessionStorage.setItem('compta_auth','1');
+    document.getElementById('login-overlay').classList.add('hidden');
+    navigateTo('dashboard');
+    showFirstTimeHelp()
+  } else {
+    if(err){err.textContent='Identifiant ou mot de passe incorrect';err.style.display='block'}
+    showToast('Identifiant ou mot de passe incorrect','error')
+  }
+}
+function logout(){
+  sessionStorage.removeItem('compta_auth');
+  document.getElementById('login-overlay').classList.remove('hidden')
+}
+document.addEventListener('DOMContentLoaded',function(){
+  if(sessionStorage.getItem('compta_auth'))document.getElementById('login-overlay').classList.add('hidden');
+  else document.getElementById('login-overlay').classList.remove('hidden');
+  navigateTo('dashboard');
+  updateAlertBadge()
+});
+</script>
+</body>
+</html>
