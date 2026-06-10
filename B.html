@@ -1807,7 +1807,7 @@ function initMap(){
     const el=document.getElementById('shop-map');if(!el)return;
     mapInst=L.map('shop-map',{center:C.shop,zoom:15,zoomControl:true});
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap'}).addTo(mapInst);
-    L.marker(C.shop).addTo(mapInst).bindPopup('<b>ETS EL Arafat</b><br>Atakpamé, ENS-Togo<br>Face station MRS<br>📞 +228 91 98 46 98').openPopup();
+    L.marker(C.shop).addTo(mapInst).bindPopup('<b>ETS EL Arafat</b><br>Atakpamé, ENS-Togo<br>Face station TEXACO<br>📞 +228 91 98 46 98').openPopup();
     setTimeout(()=>mapInst.invalidateSize(),300);
 }
 function getRouteOSM(){
