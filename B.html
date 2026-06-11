@@ -50,9 +50,11 @@ main{flex:1;padding:1.2rem 0}
 .filter-btn{padding:.35rem .75rem;border:1px solid var(--border);background:var(--card);border-radius:20px;cursor:pointer;transition:all .2s;font-size:.75rem;font-weight:500;white-space:nowrap;flex-shrink:0}
 .filter-btn:hover,.filter-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
 .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.8rem}
-.product-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s;position:relative}
+.product-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s;position:relative;will-change:transform}
 .product-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.product-card.sold-out{opacity:.85}.product-card.sold-out .product-img{filter:grayscale(.6)}
 .product-img{width:100%;height:160px;object-fit:cover;background:#f1f5f9;cursor:pointer}
+.sold-stamp{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-25deg);background:var(--red);color:#fff;font-size:1.2rem;font-weight:900;padding:6px 18px;border:3px solid #fff;z-index:3;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.3);pointer-events:none;letter-spacing:1px}
 .product-wish{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.9);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.9rem;transition:all .2s;z-index:2;box-shadow:0 2px 6px rgba(0,0,0,.1)}
 .product-wish:hover{transform:scale(1.1)}.product-wish.active i{color:var(--rose)}.product-wish i{color:#94a3b8}
 .product-body{padding:.7rem;flex:1;display:flex;flex-direction:column}
@@ -222,7 +224,11 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 .order-step.completed .dot:after{content:'\2713'}.order-step.active .dot{box-shadow:0 0 0 3px rgba(22,163,74,.3)}
 .order-step .label{font-size:.6rem;color:var(--text-light);white-space:nowrap}
 .order-step.completed .label,.order-step.active .label{color:var(--primary);font-weight:600}
+@media(pointer:fine){#pm-qr-grid{scrollbar-width:thin;scrollbar-color:var(--border) transparent}}
+.product-card.sold-out .sold-stamp{animation:fadeIn .4s ease}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
+<meta name="theme-color" content="#16a34a">
 </head>
 <body>
 
@@ -247,7 +253,7 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 <li><button data-view="wishlist" style="position:relative"><i class="fas fa-heart"></i> <span id="wish-badge" class="wish-badge">0</span></button></li>
 </ul>
 </nav>
-<button class="mobile-menu-btn" aria-label="Menu"><i class="fas fa-bars"></i></button>
+<button type="button" class="mobile-menu-btn" aria-label="Menu"><i class="fas fa-bars"></i></button>
 </div>
 </header>
 
@@ -255,7 +261,7 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 <div class="mobile-nav">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
 <span class="logo"><i class="fas fa-bolt"></i> ETS EL<span> Arafat</span></span>
-<button class="close-menu-btn" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-light)">&times;</button>
+<button type="button" class="close-menu-btn" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-light)">&times;</button>
 </div>
 <ul>
 <li><button data-view="store"><i class="fas fa-home"></i> Boutique</button></li>
@@ -629,7 +635,7 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 
 <div id="detail-modal" class="modal-overlay">
 <div class="modal-content" style="position:relative">
-<button id="btn-close-detail" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-light)">&times;</button>
+<button type="button" id="btn-close-detail" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-light)">&times;</button>
 <div id="detail-content"></div>
 </div>
 </div>
@@ -696,7 +702,7 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 
 <div id="toast-container" class="toast-container"></div>
 <div id="lightbox" class="lightbox-overlay" onclick="closeLightbox()">
-    <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+    <button type="button" class="lightbox-close" onclick="closeLightbox()">&times;</button>
     <img id="lightbox-img" src="" alt="Agrandissement">
 </div>
 <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-chevron-up"></i></button>
@@ -788,7 +794,7 @@ function stockBadge(p){if(p.stock>10)return'<i class="fas fa-check-circle" style
 function nombreEnLettres(n){
     const units=['','un','deux','trois','quatre','cinq','six','sept','huit','neuf','dix','onze','douze','treize','quatorze','quinze','seize','dix-sept','dix-huit','dix-neuf'];
     const tens=['','','vingt','trente','quarante','cinquante','soixante','soixante-dix','quatre-vingt','quatre-vingt-dix'];
-    function convertBelow1000(num){let s='';const h=Math.floor(num/100);num%=100;if(h){s+=h>1?units[h]+' cent ':'cent '}if(num<20){s+=units[num]}else{const t=Math.floor(num/10);num%=10;if(t===7||t===9){s+=tens[t-1]+'-'+units[num+10]}else{s+=tens[t];if(num)s+=num===1&&t<8?'-et-un':'-'+units[num]}}return s.replace(/\s+/g,' ').trim()}
+    function convertBelow1000(num){let s='';const h=Math.floor(num/100);num%=100;if(h){s+=h>1?units[h]+' cent ':'cent '}if(num<20){s+=units[num]}else{const t=Math.floor(num/10);num%=10;if(t===7||t===9){const sub=num+10;s+=tens[t-1];s+=sub===11?' et onze':'-'+units[sub]}else{s+=tens[t];if(num===1&&t<8)s+=' et un';else if(num>0)s+='-'+units[num];else if(t===8&&num===0)s+='s'}}return s.replace(/\s+/g,' ').trim()}
     if(n===0)return'zéro';let res='';const billions=Math.floor(n/1000000000);n%=1000000000;const millions=Math.floor(n/1000000);n%=1000000;const thousands=Math.floor(n/1000);n%=1000;
     if(billions){res+=convertBelow1000(billions)+(billions>1?' milliards ':' milliard ')}
     if(millions){res+=convertBelow1000(millions)+(millions>1?' millions ':' million ')}
@@ -823,9 +829,10 @@ function updateWishUI(){
 }
 
 function renderProductCard(p){
-    const pp=promoPrice(p),w=isWish(p.id);
-    return `<div class="product-card">
+    const pp=promoPrice(p),w=isWish(p.id),sold=p.stock<1;
+    return `<div class="product-card${sold?' sold-out':''}">
         ${p.promo?`<div class="promo-badge">-${p.promo}%</div>`:''}
+        ${sold?`<div class="sold-stamp">VENDU</div>`:''}
         <button class="product-wish ${w?'active':''}" onclick="toggleWish(${p.id})" title="Favoris"><i class="fa${w?'s':'r'} fa-heart"></i></button>
         <img class="product-img" src="${esc(p.img)}" loading="lazy" onerror="imgErr(this)" onclick="openLightbox('${esc(p.img)}')">
         <div class="product-body">
@@ -833,12 +840,12 @@ function renderProductCard(p){
             <div class="product-name" onclick="openDetail(${p.id})">${esc(p.name)}</div>
             ${p.brand?`<div class="product-brand"><i class="fas fa-tag"></i> ${esc(p.brand)}</div>`:''}
             ${p.seller?`<div class="product-brand"><i class="fas fa-store"></i> ${esc(p.seller)}</div>`:''}
-            <div class="product-price">${fmt(pp)}${p.promo?` <span class="product-ogprice">${fmt(p.price)}</span>`:''}</div>
-            <div class="product-wprice">Gros (\u2265${p.wqty}) : <strong>${fmt(p.wprice)}</strong>/u</div>
+            <div class="product-price">${sold?'<span style="color:var(--red);font-size:.78rem">ÉPUISÉ</span>':fmt(pp)}${!sold&&p.promo?` <span class="product-ogprice">${fmt(p.price)}</span>`:''}</div>
+            <div class="product-wprice">${sold?'':'Gros (\u2265'+p.wqty+') : <strong>'+fmt(p.wprice)+'</strong>/u'}</div>
             ${p.warranty?`<div class="product-warranty"><i class="fas fa-shield-alt"></i> Garantie ${esc(p.warranty)}</div>`:''}
-            <div style="font-size:.68rem;margin-top:2px">${stockBadge(p)}</div>
+            <div style="font-size:.68rem;margin-top:2px">${sold?'<span style="color:var(--red);font-weight:600"><i class="fas fa-times-circle"></i> Épuisé</span>':stockBadge(p)}</div>
             <div class="product-actions">
-                <button class="btn btn-primary" onclick="addToCart(${p.id})" ${p.stock<1?'disabled':''}><i class="fas fa-cart-plus"></i> ${p.stock<1?'Rupture':'Ajouter'}</button>
+                <button class="btn btn-primary" onclick="addToCart(${p.id})" ${sold?'disabled':''}><i class="fas fa-cart-plus"></i> ${sold?'Rupture':'Ajouter'}</button>
                 <button class="btn btn-accent btn-sm" onclick="openDetail(${p.id})"><i class="fas fa-eye"></i></button>
                 <button class="btn btn-sm btn-outline" onclick="shareProduct(${p.id})" title="Partager"><i class="fas fa-share-alt"></i></button>
             </div>
@@ -931,31 +938,34 @@ function renderWishlist(){
 
 function openDetail(id){
     const p=productById(id);if(!p)return;
-    const pp=promoPrice(p);
+    const pp=promoPrice(p),sold=p.stock<1;
     document.getElementById('detail-content').innerHTML=`
-        <img src="${esc(p.img)}" style="width:100%;max-height:260px;object-fit:cover;border-radius:12px;margin-bottom:.8rem" onerror="imgErr(this)">
+        <div style="position:relative;margin-bottom:.8rem">
+            <img src="${esc(p.img)}" style="width:100%;max-height:260px;object-fit:cover;border-radius:12px${sold?';filter:grayscale(.5)':''}" onerror="imgErr(this)">
+            ${sold?'<div class="sold-stamp" style="font-size:1.5rem;padding:8px 24px">VENDU</div>':''}
+        </div>
         <span class="badge badge-blue">${esc(p.cat)}</span>${p.brand?`<span class="badge badge-gray" style="margin-left:4px">${esc(p.brand)}</span>`:''}${p.promo?`<span class="badge badge-red" style="margin-left:4px">-${p.promo}%</span>`:''}
         <h2 style="margin:.4rem 0">${esc(p.name)}</h2>
         ${p.desc?`<p style="font-size:.8rem;color:var(--text-light);margin-bottom:.6rem">${esc(p.desc)}</p>`:''}
         <div style="display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:.8rem">
             <div style="background:#eff6ff;padding:.7rem;border-radius:8px;flex:1;min-width:120px;text-align:center">
                 <div style="font-size:.65rem;color:var(--text-light)">Prix</div>
-                <div style="font-size:1.2rem;font-weight:800;color:var(--primary)">${fmt(pp)}</div>
-                ${p.promo?`<div style="font-size:.7rem;color:#94a3b8;text-decoration:line-through">${fmt(p.price)}</div>`:''}
+                <div style="font-size:1.2rem;font-weight:800;color:${sold?'var(--red)':'var(--primary)'}">${sold?'ÉPUISÉ':fmt(pp)}</div>
+                ${!sold&&p.promo?`<div style="font-size:.7rem;color:#94a3b8;text-decoration:line-through">${fmt(p.price)}</div>`:''}
             </div>
             <div style="background:#fef3c7;padding:.7rem;border-radius:8px;flex:1;min-width:120px;text-align:center">
                 <div style="font-size:.65rem;color:var(--text-light)">Gros (\u2265${p.wqty})</div>
-                <div style="font-size:1.2rem;font-weight:800;color:var(--accent)">${fmt(p.wprice)}/u</div>
+                <div style="font-size:1.2rem;font-weight:800;color:${sold?'var(--text-light)':'var(--accent)'}">${sold?'—':fmt(p.wprice)+'/u'}</div>
             </div>
         </div>
         <div style="background:#f8fafc;padding:.7rem;border-radius:8px;margin-bottom:.8rem;font-size:.8rem">
             ${p.warranty?`<i class="fas fa-shield-alt" style="color:var(--green)"></i> Garantie ${esc(p.warranty)}<br>`:''}
             ${p.delivery?`<i class="fas fa-truck" style="color:var(--primary)"></i> Livraison : ${fmt(p.delivery)}<br>`:''}
             ${p.seller?`<i class="fas fa-store" style="color:var(--text-light)"></i> Vendu par : <strong>${esc(p.seller)}</strong><br>`:''}
-            <i class="fas fa-boxes" style="color:var(--text-light)"></i> ${stockBadge(p)}
+            <i class="fas fa-boxes" style="color:var(--text-light)"></i> ${sold?'<span style="color:var(--red);font-weight:600"><i class="fas fa-times-circle"></i> Épuisé</span>':stockBadge(p)}
         </div>
         <div style="display:flex;gap:6px">
-            <button class="btn btn-primary" style="flex:1" onclick="closeDetail();addToCart(${p.id})" ${p.stock<1?'disabled':''}>${p.stock<1?'<i class="fas fa-times-circle"></i> Rupture':'<i class="fas fa-cart-plus"></i> Ajouter'}</button>
+            <button class="btn btn-primary" style="flex:1" onclick="closeDetail();addToCart(${p.id})" ${sold?'disabled':''}>${sold?'<i class="fas fa-times-circle"></i> Rupture':'<i class="fas fa-cart-plus"></i> Ajouter'}</button>
             <button class="btn btn-whatsapp btn-sm" onclick="shareProduct(${p.id})" title="Partager"><i class="fab fa-whatsapp"></i></button>
             <button class="btn btn-outline btn-sm ${isWish(p.id)?'btn-rose':''}" onclick="toggleWish(${p.id});openDetail(${p.id})" title="Favoris"><i class="fa${isWish(p.id)?'s':'r'} fa-heart"></i></button>
         </div>`;
@@ -1002,7 +1012,7 @@ function openCheckout(){
     const t=sub+del;
     let msg='🛳️ *COMMANDE ETS EL Arafat*\n==============================\n';
     items.forEach(i=>{msg+=`📦 *${i.name}* x${i.qty} → ${fmt(i.price*i.qty)}\n`});
-    msg+=`==============================\n🚚 Livraison : ${fmt(del)}\n💵 *Total : ${fmt(t)}*\n🏪 ETS EL Arafat\n📍 Atakpamé, ENS-Togo, Face station MRS\n📞 +228 91 98 46 98\n💳 Flooz: +228 99 14 06 06\n💳 YAS: +228 91 98 46 98\n==============================`;
+    msg+=`==============================\n🚚 Livraison : ${fmt(del)}\n💵 *Total : ${fmt(t)}*\n🏪 ETS EL Arafat\n📍 Atakpamé, ENS-Togo, Face station TEXACO\n📞 +228 91 98 46 98\n💳 Flooz: +228 99 14 06 06\n💳 YAS: +228 91 98 46 98\n==============================`;
     window._ck={msg,total:t,delivery:del,items};
     document.getElementById('pay-summary').innerHTML=`<strong>Total : ${fmt(t)}</strong><br><small>dont ${fmt(del)} livraison</small>`;
     document.getElementById('checkout-name').value='';document.getElementById('checkout-phone').value='';
@@ -1091,14 +1101,15 @@ function renderOrderTimeline(containerId,status){
     ];
     let idx=steps.findIndex(s=>s.key===status);
     if(idx===-1)idx=0;
-    if(status==='annulé'){idx=3}
+    const isCancelled=status==='annulé';
     let html='<div class="order-timeline">';
     steps.forEach((s,i)=>{
-        if(s.key==='annulé'&&status!=='annulé')return;
+        if(s.key==='annulé'&&!isCancelled)return;
         let cls='';
         if(i<idx)cls='completed';
         else if(i===idx)cls='active';
-        html+=`<div class="order-step ${cls}"><div class="dot"><i class="fas ${s.icon}" style="font-size:9px"></i></div><div class="label">${s.label}</div></div>`;
+        if(isCancelled&&i===idx)cls='cancelled';
+        html+=`<div class="order-step ${cls}"${isCancelled&&i===idx?' style="--primary:var(--red)"':''}><div class="dot"><i class="fas ${s.icon}" style="font-size:9px"></i></div><div class="label">${s.label}</div></div>`;
     });
     html+='</div>';
     if(typeof containerId==='string'){const el=document.getElementById(containerId);if(el)el.innerHTML=html}
@@ -1376,13 +1387,18 @@ function renderPriceMgmtQR(){
 }
 function pmStartScanner(){
     if(pmStream)return;
-    navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(s=>{
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){showToast('Caméra non supportée par ce navigateur','error');return}
+    const v=document.getElementById('pm-video');if(!v){showToast('Élément vidéo introuvable','error');return}
+    navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:640},height:{ideal:480}}}).then(s=>{
         pmStream=s;pmScanActive=true;
-        const v=document.getElementById('pm-video');v.srcObject=s;
+        v.srcObject=s;
         document.getElementById('pm-start-scan').style.display='none';
         document.getElementById('pm-stop-scan').style.display='inline-flex';
         pmScanLoop();showToast('Scanner activé','success');
-    }).catch(()=>showToast('Accès caméra refusé','error'));
+    }).catch(e=>{
+        const msg=e.name==='NotAllowedError'?'Accès caméra refusé. Autorisez-la dans les paramètres.':e.name==='NotFoundError'?'Aucune caméra trouvée.':'Caméra indisponible: '+e.message;
+        showToast(msg,'error')
+    });
 }
 function pmStopScanner(){
     pmScanActive=false;
@@ -1784,12 +1800,12 @@ function sendContact(e){
 
 /* VIEW */
 function switchView(v){
+    document.querySelectorAll('.desktop-nav button, .mobile-nav button').forEach(b=>b.classList.remove('active'));
+    const btn=document.querySelector(`[data-view="${v}"]`);if(btn)btn.classList.add('active');
     if((v==='dash'||v==='prod'||v==='orders')&&!adminUser){showLogin();return}
     if((v==='vendor'||v==='vendor-orders'||v==='vendor-accounts')&&!vendorUser){openModal('vendor-login-modal');return}
     document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
     const sec=document.getElementById('view-'+v);if(sec)sec.classList.add('active');
-    document.querySelectorAll('.desktop-nav button, .mobile-nav button').forEach(b=>b.classList.remove('active'));
-    const btn=document.querySelector(`[data-view="${v}"]`);if(btn)btn.classList.add('active');
     if(v==='map')initMap();if(v==='dash')renderDash();if(v==='orders')renderSales();if(v==='cart')updateCartUI();
     if(v==='prod')renderAdmin();if(v==='promos')renderPromos();if(v==='wishlist')renderWishlist();
     if(v==='vendor'){renderVendorProducts();populateVendorDeliverySelect()}
@@ -1861,15 +1877,16 @@ function closeModal(id){
 /* TOAST */
 function showToast(msg,type){
     const c=document.getElementById('toast-container'),icons={success:'✅',warning:'⚠️',error:'❌',info:'ℹ️'};
+    if(c.children.length>=5){c.firstChild.remove()}
     const t=document.createElement('div');t.className=`toast toast-${type||'info'}`;t.innerHTML=`${icons[type]||''} ${msg}`;
+    t.setAttribute('role','alert');
     c.appendChild(t);
-    setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(50px)';t.style.transition='all .3s ease';setTimeout(()=>t.remove(),300)},3000);
+    setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(50px)';t.style.transition='all .3s ease';setTimeout(()=>t.remove(),300)},4000);
 }
 
 /* EVENTS */
 function initEvents(){
     document.querySelectorAll('[data-view]').forEach(el=>{el.addEventListener('click',e=>{e.preventDefault();switchView(el.dataset.view)})});
-    document.querySelectorAll('.desktop-nav button[data-view]').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.desktop-nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active')})});
     document.querySelector('.mobile-menu-btn').addEventListener('click',toggleMob);
     document.querySelector('.mobile-nav-overlay').addEventListener('click',closeMenu);
     document.querySelector('.close-menu-btn').addEventListener('click',closeMenu);
@@ -2031,6 +2048,9 @@ function initEvents(){
     });
 
     /* STORAGE SYNC — multi-onglets */
+    document.addEventListener('keydown',function(e){
+        if(e.key==='Escape')document.getElementById('search-suggest').classList.remove('show');
+    });
     window.addEventListener('storage',function(e){
         if(e.key&&e.key.startsWith('esodi-')){
             products=ld(C.keys.products,[]);
