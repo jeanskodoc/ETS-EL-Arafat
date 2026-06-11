@@ -292,7 +292,7 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 <div style="flex-shrink:0;font-size:2.5rem;color:var(--primary)"><i class="fas fa-store"></i></div>
 <div class="info">
 <h2>ETS EL Arafat</h2>
-<p><i class="fas fa-map-marker-alt"></i> Atakpamé, ENS-Togo, Face station TEXACO</p>
+<p><i class="fas fa-map-marker-alt"></i> Atakpamé, ENS-Togo, Face station MRS</p>
 <p><i class="fas fa-phone"></i> +228 91 98 46 98</p>
 <p><i class="fas fa-clock"></i> Lun-Sam 8h-19h · Dim 9h-13h</p>
 </div>
@@ -314,7 +314,7 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 <div class="store-info-card">
 <div class="info">
 <h2>ETS EL Arafat</h2>
-<p><i class="fas fa-map-marker-alt"></i> Atakpamé, ENS-Togo, Face station TEXACO</p>
+<p><i class="fas fa-map-marker-alt"></i> Atakpamé, ENS-Togo, Face station MRS</p>
 <p><i class="fas fa-phone"></i> +228 91 98 46 98</p>
 <p><i class="fas fa-envelope"></i> contact@etselarafat.tg</p>
 <p><i class="fas fa-clock"></i> Lun-Sam 8h-19h · Dim 9h-13h</p>
@@ -427,7 +427,7 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 <div class="card">
 <h3><i class="fas fa-store"></i> Nos coordonnées</h3>
 <div style="display:flex;flex-direction:column;gap:10px;font-size:.85rem;color:var(--text)">
-<p><i class="fas fa-map-marker-alt" style="width:20px;color:var(--primary)"></i> Atakpamé, ENS-Togo, Face station TEXACO</p>
+<p><i class="fas fa-map-marker-alt" style="width:20px;color:var(--primary)"></i> Atakpamé, ENS-Togo, Face station MRS</p>
 <p><i class="fas fa-phone" style="width:20px;color:var(--primary)"></i> <a href="tel:+22891984698" style="color:var(--primary);text-decoration:none">+228 91 98 46 98</a></p>
 <p><i class="fab fa-whatsapp" style="width:20px;color:var(--whatsapp)"></i> <a href="https://wa.me/22891984698" target="_blank" style="color:var(--whatsapp);text-decoration:none">WhatsApp</a></p>
 <p><i class="fas fa-envelope" style="width:20px;color:var(--primary)"></i> <a href="mailto:contact@etselarafat.tg" style="color:var(--primary);text-decoration:none">contact@etselarafat.tg</a></p>
@@ -696,7 +696,7 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 <footer>
 <div class="container">
 <p><strong>ETS EL Arafat</strong> — Électronique & Accessoires</p>
-<p style="margin-top:.3rem;font-size:.72rem">Atakpamé, ENS-Togo, Face station TEXACO — <i class="fab fa-whatsapp" style="color:#25D366"></i> +228 91 98 46 98</p>
+<p style="margin-top:.3rem;font-size:.72rem">Atakpamé, ENS-Togo, Face station MRS — <i class="fab fa-whatsapp" style="color:#25D366"></i> +228 91 98 46 98</p>
 </div>
 </footer>
 
@@ -1012,7 +1012,7 @@ function openCheckout(){
     const t=sub+del;
     let msg='🛳️ *COMMANDE ETS EL Arafat*\n==============================\n';
     items.forEach(i=>{msg+=`📦 *${i.name}* x${i.qty} → ${fmt(i.price*i.qty)}\n`});
-    msg+=`==============================\n🚚 Livraison : ${fmt(del)}\n💵 *Total : ${fmt(t)}*\n🏪 ETS EL Arafat\n📍 Atakpamé, ENS-Togo, Face station TEXACO\n📞 +228 91 98 46 98\n💳 Flooz: +228 99 14 06 06\n💳 YAS: +228 91 98 46 98\n==============================`;
+    msg+=`==============================\n🚚 Livraison : ${fmt(del)}\n💵 *Total : ${fmt(t)}*\n🏪 ETS EL Arafat\n📍 Atakpamé, ENS-Togo, Face station MRS\n📞 +228 91 98 46 98\n💳 Flooz: +228 99 14 06 06\n💳 YAS: +228 91 98 46 98\n==============================`;
     window._ck={msg,total:t,delivery:del,items};
     document.getElementById('pay-summary').innerHTML=`<strong>Total : ${fmt(t)}</strong><br><small>dont ${fmt(del)} livraison</small>`;
     document.getElementById('checkout-name').value='';document.getElementById('checkout-phone').value='';
@@ -1310,7 +1310,7 @@ function printDevInvoice(){
 </head><body>
     <div class="header">
         <h1>ETS EL Arafat</h1>
-        <p>Atakpamé, ENS-Togo, Face station TEXACO &bull; +228 91 98 46 98</p>
+        <p>Atakpamé, ENS-Togo, Face station MRS &bull; +228 91 98 46 98</p>
         <p>📧 contact@etselarafat.tg</p>
     </div>
     <div class="info">
@@ -1330,7 +1330,7 @@ function printDevInvoice(){
         <div class="row"><span class="label">💰 NET APRÈS PART DÉVELOPPEUR :</span><span class="net">${fmt(net)}</span></div>
     </div>
     <div class="footer">
-        ETS EL Arafat &bull; Atakpamé, ENS-Togo, Face station TEXACO &bull; +228 91 98 46 98<br>
+        ETS EL Arafat &bull; Atakpamé, ENS-Togo, Face station MRS &bull; +228 91 98 46 98<br>
         Document généré le ${today}
     </div>
 </body></html>`);
@@ -1695,7 +1695,7 @@ function printInvoice(id){
     </style></head><body>
         <div class="header">
             <h1><i class="fas fa-bolt"></i> ETS EL Arafat</h1>
-            <p>Atakpamé, ENS-Togo, Face station TEXACO &bull; +228 91 98 46 98 &bull; contact@etselarafat.tg</p>
+            <p>Atakpamé, ENS-Togo, Face station MRS &bull; +228 91 98 46 98 &bull; contact@etselarafat.tg</p>
         </div>
         <div class="info">
             <div><h3>Facture #${id}</h3><p>Date : ${new Date(ord.date).toLocaleDateString('fr-FR')}</p><p><span class="status">${esc(ord.status||'payé')}</span></p></div>
@@ -1739,7 +1739,7 @@ function printVendorInvoice(id){
     </style></head><body>
         <div class="header">
             <h1><i class="fas fa-store"></i> ETS EL Arafat — ${esc(sellerName||'Boutique')}</h1>
-            <p>Atakpamé, ENS-Togo, Face station TEXACO &bull; +228 91 98 46 98</p>
+            <p>Atakpamé, ENS-Togo, Face station MRS &bull; +228 91 98 46 98</p>
         </div>
         <div class="info">
             <div><h3>Facture #${id}</h3><p>Date : ${ord.date}</p><p><span class="status">${esc(ord.status)}</span></p></div>
@@ -1823,7 +1823,7 @@ function initMap(){
     const el=document.getElementById('shop-map');if(!el)return;
     mapInst=L.map('shop-map',{center:C.shop,zoom:15,zoomControl:true});
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap'}).addTo(mapInst);
-    L.marker(C.shop).addTo(mapInst).bindPopup('<b>ETS EL Arafat</b><br>Atakpamé, ENS-Togo<br>Face station TEXACO<br>📞 +228 91 98 46 98').openPopup();
+    L.marker(C.shop).addTo(mapInst).bindPopup('<b>ETS EL Arafat</b><br>Atakpamé, ENS-Togo<br>Face station MRS<br>📞 +228 91 98 46 98').openPopup();
     setTimeout(()=>mapInst.invalidateSize(),300);
 }
 function getRouteOSM(){
