@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ajouter des Produits - ETS EL Arafat</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#16a34a;--primary-h:#15803d;--primary-l:#dcfce7;
+  --accent:#2563eb;--accent-l:#dbeafe;
+  --dark:#0f172a;--bg:#f8fafc;--card:#ffffff;--text:#0f172a;--text-s:#475569;--text-l:#94a3b8;
+  --border:#e2e8f0;--border-f:#cbd5e1;
+  --green:#16a34a;--green-l:#dcfce7;
+  --red:#ef4444;--red-l:#fef2f2;
+  --orange:#f59e0b;--orange-l:#fef3c7;
+  --purple:#7c3aed;--purple-l:#ede9fe;
+  --whatsapp:#25D366;--whatsapp-h:#1da851;
+  --radius:16px;--radius-sm:10px;--radius-xs:6px;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:0 4px 12px rgba(0,0,0,.07);
+  --shadow-lg:0 10px 30px rgba(0,0,0,.1);
+  --shadow-xl:0 20px 60px rgba(0,0,0,.12);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.5}
+
+header{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-h) 100%);color:#fff;padding:1.5rem 1rem;text-align:center;position:relative;overflow:hidden}
+header::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 50%,rgba(255,255,255,.1) 0%,transparent 50%);pointer-events:none}
+header h1{font-size:clamp(1.1rem,4vw,1.6rem);font-weight:800;display:flex;align-items:center;justify-content:center;gap:10px;position:relative;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+header p{font-size:clamp(.75rem,2.5vw,.9rem);opacity:.9;margin-top:.4rem;position:relative;font-weight:400}
+
+.container{max-width:680px;margin:0 auto;padding:clamp(.75rem,3vw,1.5rem);width:100%}
+
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow-md);padding:1.5rem;margin-bottom:1rem;border:1px solid var(--border);transition:box-shadow .2s}
+.card:hover{box-shadow:var(--shadow-lg)}
+
+.card-section{padding:1rem;border-radius:var(--radius-sm);margin-bottom:.8rem;border:1px solid transparent}
+.section-info{background:var(--bg);border-color:var(--border)}
+.section-prix{background:var(--accent-l);border-color:#bfdbfe}
+.section-stock{background:var(--orange-l);border-color:#fde68a}
+.section-image{background:var(--green-l);border-color:#bbf7d0}
+.section-vendor{background:var(--purple-l);border-color:#ddd6fe}
+.section-title{font-weight:700;font-size:.85rem;margin-bottom:.7rem;display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.03em}
+
+.form-group{margin-bottom:.8rem}
+.form-group label{display:block;font-size:.78rem;font-weight:600;color:var(--text-s);margin-bottom:.35rem;letter-spacing:.01em}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:.7rem .85rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:.9rem;font-family:inherit;outline:none;transition:all .2s;background:var(--card);color:var(--text)}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(22,163,74,.12)}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--text-l)}
+.form-group textarea{resize:vertical;min-height:60px}
+.form-group select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .85rem center;padding-right:2rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+
+.btn{padding:.75rem 1rem;border:none;border-radius:var(--radius-sm);font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;font-size:.9rem;width:100%;font-family:inherit;letter-spacing:.01em}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-h) 100%);color:#fff;box-shadow:0 2px 8px rgba(22,163,74,.3)}
+.btn-primary:hover{box-shadow:0 4px 16px rgba(22,163,74,.4);transform:translateY(-1px)}
+.btn-green{background:linear-gradient(135deg,var(--whatsapp) 0%,var(--whatsapp-h) 100%);color:#fff;box-shadow:0 2px 8px rgba(37,211,102,.3)}
+.btn-green:hover{box-shadow:0 4px 16px rgba(37,211,102,.4);transform:translateY(-1px)}
+.btn-red{background:linear-gradient(135deg,var(--red) 0%,#dc2626 100%);color:#fff}
+.btn-red:hover{opacity:.9}
+.btn-outline{background:var(--card);color:var(--text-s);border:1.5px solid var(--border);box-shadow:var(--shadow)}
+.btn-outline:hover{background:var(--bg);border-color:var(--border-f);color:var(--text)}
+.btn-sm{padding:.45rem .7rem;font-size:.75rem;width:auto;border-radius:var(--radius-xs)}
+
+.required{color:var(--red);font-size:.7rem}
+
+.vendor-bar{padding:.8rem 1rem;background:linear-gradient(135deg,var(--green-l) 0%,#f0fdf4 100%);border:1px solid #bbf7d0;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.85rem;flex-wrap:wrap}
+.vendor-info{display:flex;align-items:center;gap:10px}
+.vendor-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--green) 0%,var(--primary-h) 100%);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.1rem;font-weight:700;flex-shrink:0}
+.vendor-name{font-weight:700;color:var(--dark);font-size:.9rem}
+.vendor-shop{font-size:.75rem;color:var(--text-s)}
+
+.login-bg{background:linear-gradient(135deg,#f0fdf4 0%,#ecfdf5 50%,#dcfce7 100%);min-height:calc(100vh - 100px);display:flex;align-items:center;justify-content:center;padding:1rem}
+.login-box{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow-xl);padding:2rem;width:100%;max-width:400px;border:1px solid var(--border)}
+.login-icon{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--green) 0%,var(--primary-h) 100%);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.6rem;color:#fff;box-shadow:0 4px 16px rgba(22,163,74,.25)}
+.login-box h2{text-align:center;margin-bottom:1.2rem;color:var(--dark);font-size:1.2rem;font-weight:800}
+.login-error{background:var(--red-l);border:1px solid #fecaca;border-radius:var(--radius-xs);padding:.6rem .8rem;font-size:.8rem;color:#991b1b;text-align:center;display:none;margin-bottom:.8rem;animation:shake .3s ease-in-out}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.login-hint{margin-top:1rem;padding:.7rem;background:var(--bg);border-radius:var(--radius-xs);font-size:.78rem;color:var(--text-s);text-align:center;border:1px solid var(--border)}
+.login-hint i{color:var(--primary);margin-right:4px}
+
+.product-item{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:1rem;margin-bottom:.6rem;transition:all .2s;position:relative;overflow:hidden}
+.product-item:hover{border-color:var(--primary);box-shadow:var(--shadow)}
+.product-item.editing{border-color:var(--accent);border-style:dashed}
+.product-item-header{display:flex;justify-content:space-between;align-items:start;gap:10px}
+.product-item-num{width:28px;height:28px;border-radius:50%;background:var(--primary-l);color:var(--green);font-size:.75rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.product-item-body{flex:1;min-width:0}
+.product-item-name{font-weight:700;font-size:.9rem;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.product-item-meta{font-size:.73rem;color:var(--text-l);margin-top:2px;display:flex;flex-wrap:wrap;gap:4px 10px}
+.product-item-meta span{display:inline-flex;align-items:center;gap:3px}
+.product-item-right{text-align:right;flex-shrink:0}
+.product-item-price{font-weight:800;color:var(--green);font-size:.95rem}
+.product-item-wprice{font-size:.72rem;color:var(--text-l);text-decoration:line-through;margin-top:2px}
+.product-item-actions{display:flex;gap:4px;justify-content:flex-end;margin-top:4px}
+.product-item-btn{border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:.7rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;border:1px solid}
+.product-item-edit{background:#eff6ff;color:var(--accent);border-color:#bfdbfe}
+.product-item-edit:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.product-item-remove{background:var(--red-l);color:var(--red);border-color:#fecaca}
+.product-item-remove:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.editing-indicator{background:var(--accent-l);border:2px dashed var(--accent);border-radius:var(--radius-sm);padding:.8rem 1rem;margin-bottom:1rem;display:none;align-items:center;gap:8px;font-size:.85rem;color:var(--accent);font-weight:600;justify-content:center}
+.editing-indicator.show{display:flex}
+.editing-indicator button{margin-left:8px;background:none;border:none;color:var(--red);cursor:pointer;font-size:1.1rem;padding:0 4px;line-height:1}
+.editing-indicator button:hover{transform:scale(1.2)}
+
+.counter-badge{background:var(--accent);color:#fff;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:6px;display:inline-flex;align-items:center;justify-content:center;min-width:22px}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;font-size:.68rem;font-weight:600}
+.badge-green{background:var(--green-l);color:#166534}
+.badge-red{background:var(--red-l);color:#991b1b}
+.badge-orange{background:var(--orange-l);color:#92400e}
+.badge-purple{background:var(--purple-l);color:#5b21b6}
+
+.commission-box{background:linear-gradient(135deg,#fef3c7 0%,#fffbeb 100%);border:2px solid #f59e0b;border-radius:var(--radius-sm);padding:1rem;margin-top:.8rem}
+.commission-title{font-weight:700;font-size:.85rem;color:#92400e;display:flex;align-items:center;gap:6px;margin-bottom:.6rem}
+.commission-row{display:flex;justify-content:space-between;align-items:center;font-size:.85rem;margin-bottom:.4rem}
+.commission-label{color:var(--text-s)}
+.commission-value{font-weight:700;color:#92400e}
+.commission-total{border-top:2px solid #f59e0b;padding-top:.6rem;margin-top:.6rem;font-size:1rem}
+.commission-check{display:flex;align-items:center;gap:8px;padding:.8rem;background:var(--card);border:2px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;margin-top:.8rem}
+.commission-check:hover{border-color:var(--primary);background:var(--green-l)}
+.commission-check.checked{border-color:var(--green);background:var(--green-l)}
+.commission-check input[type="checkbox"]{width:20px;height:20px;cursor:pointer;accent-color:var(--primary)}
+.commission-check label{cursor:pointer;font-size:.85rem;font-weight:600;color:var(--dark);flex:1}
+.commission-check .check-icon{width:24px;height:24px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.7rem;transition:all .2s}
+.commission-check.checked .check-icon{background:var(--green)}
+
+.recap-box{text-align:center;padding:1.5rem}
+.recap-icon{width:70px;height:70px;border-radius:50%;background:var(--green-l);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:2rem;color:var(--green);box-shadow:0 4px 20px rgba(22,163,74,.15)}
+.recap-number{font-size:2.2rem;font-weight:900;color:var(--green);line-height:1}
+.recap-label{font-size:.85rem;color:var(--text-s);margin-top:.3rem}
+.recap-value{background:var(--accent-l);border:1px solid #bfdbfe;border-radius:var(--radius-xs);padding:.6rem;margin-top:1rem}
+.recap-value-num{font-size:1.2rem;font-weight:800;color:var(--accent)}
+.recap-warn{background:var(--orange-l);border:1px solid #fde68a;border-radius:var(--radius-xs);padding:.6rem;margin-top:.8rem;font-size:.8rem;color:#92400e;display:flex;align-items:center;justify-content:center;gap:6px}
+
+footer{background:linear-gradient(135deg,var(--dark) 0%,#1e293b 100%);color:#94a3b8;padding:1.5rem 1rem;text-align:center;font-size:.78rem;margin-top:auto}
+footer strong{color:#fff}
+footer .wa-link{color:var(--whatsapp);text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:4px;margin-top:.3rem}
+footer .wa-link:hover{text-decoration:underline}
+
+.toast-container{position:fixed;bottom:16px;right:16px;z-index:3000;display:flex;flex-direction:column;gap:6px;max-width:320px}
+.toast{padding:12px 16px;border-radius:var(--radius-sm);box-shadow:var(--shadow-lg);font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:8px;animation:slideIn .3s ease}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+.toast-success{border-left:4px solid var(--green);background:var(--green-l);color:#166534}
+.toast-warning{border-left:4px solid var(--orange);background:var(--orange-l);color:#92400e}
+.toast-error{border-left:4px solid var(--red);background:var(--red-l);color:#991b1b}
+.toast-info{border-left:4px solid var(--accent);background:var(--accent-l);color:#1e40af}
+
+.empty-state{text-align:center;padding:2rem 1rem;color:var(--text-l)}
+.empty-state i{font-size:2.5rem;margin-bottom:.8rem;color:var(--border-f)}
+.empty-state p{font-size:.85rem}
+
+@media(max-width:480px){
+  .form-row{grid-template-columns:1fr;gap:0}
+  .card{padding:1rem}
+  .card-section{padding:.8rem}
+  .login-box{padding:1.5rem}
+  .vendor-bar{flex-direction:column;text-align:center}
+  .vendor-info{flex-direction:column}
+  .product-item{padding:.8rem}
+  .product-item-header{flex-wrap:wrap}
+  .product-item-right{width:100%;display:flex;justify-content:space-between;align-items:center;margin-top:.4rem}
+  .product-item-actions{justify-content:flex-start}
+  .btn{padding:.65rem .8rem;font-size:.85rem}
+  header{padding:1.2rem .8rem}
+  .container{padding:.6rem}
+  .toast-container{left:8px;right:8px;max-width:none;bottom:12px}
+}
+@media(max-width:360px){
+  .login-box{padding:1.2rem}
+  .login-icon{width:52px;height:52px;font-size:1.3rem}
+  .btn{font-size:.82rem;padding:.6rem}
+}
+@media(min-width:768px){
+  .card{padding:2rem}
+  .card-section{padding:1.2rem}
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1><i class="fas fa-bolt"></i> ETS EL Arafat</h1>
+<p>Ajout de produits en masse</p>
+</header>
+
+<div id="login-screen" class="login-bg">
+<div class="login-box">
+<div class="login-icon"><i class="fas fa-user-shield"></i></div>
+<h2>Connexion Vendeur</h2>
+<form id="login-form">
+<div class="form-group">
+<label>Identifiant</label>
+<input type="text" id="login-user" required placeholder="Entrez votre identifiant" autocomplete="username">
+</div>
+<div class="form-group">
+<label>Mot de passe</label>
+<input type="password" id="login-pass" required placeholder="Entrez votre mot de passe" autocomplete="current-password">
+</div>
+<div id="login-error" class="login-error"></div>
+<button type="submit" class="btn btn-primary">
+<i class="fas fa-sign-in-alt"></i> Se connecter
+</button>
+</form>
+<div class="login-hint">
+<i class="fas fa-info-circle"></i> Demandez vos identifiants a l'administrateur
+</div>
+</div>
+</div>
+
+<div id="app-content" class="container" style="display:none">
+
+<div class="vendor-bar" style="margin-bottom:1rem;border-radius:var(--radius)">
+<div class="vendor-info">
+<div class="vendor-avatar" id="vendor-avatar">V</div>
+<div>
+<div class="vendor-name" id="display-vendor">---</div>
+<div class="vendor-shop" id="display-shop">---</div>
+</div>
+</div>
+<button class="btn btn-outline btn-sm" onclick="logout()" style="flex-shrink:0">
+<i class="fas fa-sign-out-alt"></i> Deconnexion
+</button>
+</div>
+
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem">
+<div style="font-weight:700;font-size:.95rem;color:var(--dark)">
+<i class="fas fa-box" style="color:var(--green);margin-right:4px"></i> Produits a ajouter
+</div>
+<span id="product-count" class="counter-badge">0</span>
+</div>
+
+<div class="editing-indicator" id="editing-indicator">
+<i class="fas fa-pen"></i> Modification en cours...
+<button onclick="cancelEdit()" title="Annuler"><i class="fas fa-times"></i></button>
+</div>
+
+<div class="card" style="border:2px solid var(--green)">
+<h2 id="form-title" style="font-size:1rem;color:var(--green);margin-bottom:1rem;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px">
+<i class="fas fa-plus-circle"></i> Nouveau produit
+</h2>
+
+<form id="product-form">
+
+<div class="card-section section-vendor">
+<div class="section-title" style="color:var(--purple)"><i class="fas fa-store" style="color:var(--purple)"></i> Informations vendeur</div>
+<div class="form-row">
+<div class="form-group"><label>Nom complet <span class="required">*</span></label><input type="text" id="v-name" required placeholder="Ex: Kofi Agbeko"></div>
+<div class="form-group"><label>Boutique <span class="required">*</span></label><input type="text" id="v-shop" required placeholder="Ex: Tech Store Lome"></div>
+</div>
+<div class="form-group"><label>Contact WhatsApp <span class="required">*</span></label><input type="tel" id="v-phone" required placeholder="+228 91 23 45 67"></div>
+</div>
+
+<div class="card-section section-info">
+<div class="section-title" style="color:var(--text)"><i class="fas fa-box" style="color:var(--green)"></i> Produit</div>
+<div class="form-group"><label>Nom du produit <span class="required">*</span></label><input type="text" id="p-name" required placeholder="Ex: TV Smart Samsung 43 pouces"></div>
+<div class="form-row">
+<div class="form-group"><label>Marque</label><input type="text" id="p-brand" placeholder="Samsung, LG..."></div>
+<div class="form-group"><label>Categorie <span class="required">*</span></label><select id="p-cat" required>
+<option value="">-- Choisir --</option>
+<option>TV & Audio</option><option>Smartphone</option><option>Informatique</option>
+<option>Electromenager</option><option>Climatisation</option><option>Accessoires</option>
+<option>Eclairage</option><option>Cuisine</option><option>Sport</option><option>Autre</option>
+</select></div>
+</div>
+<div class="form-group"><label>Description</label><textarea id="p-desc" rows="2" placeholder="Description du produit..."></textarea></div>
+</div>
+
+<div class="card-section section-prix">
+<div class="section-title" style="color:var(--accent)"><i class="fas fa-coins" style="color:var(--accent)"></i> Prix</div>
+<div class="form-row">
+<div class="form-group"><label>Detaile (FCFA) <span class="required">*</span></label><input type="number" id="p-price" required min="0" placeholder="350000"></div>
+<div class="form-group"><label>Gros (FCFA) <span class="required">*</span></label><input type="number" id="p-wprice" required min="0" placeholder="300000"></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>Seuil gros</label><input type="number" id="p-wqty" value="5" min="2"></div>
+<div class="form-group"><label>Promo (%)</label><input type="number" id="p-promo" value="0" min="0" max="100"></div>
+</div>
+</div>
+
+<div class="card-section section-stock">
+<div class="section-title" style="color:#92400e"><i class="fas fa-warehouse" style="color:#92400e"></i> Stock & Livraison</div>
+<div class="form-row">
+<div class="form-group"><label>Stock <span class="required">*</span></label><input type="number" id="p-stock" value="10" min="0" required></div>
+<div class="form-group"><label>Garantie</label><input type="text" id="p-warranty" placeholder="Ex: 2 ans"></div>
+</div>
+<div class="form-group"><label>Livraison (FCFA)</label><input type="number" id="p-delivery" value="0" min="0"></div>
+</div>
+
+<div class="card-section section-image">
+<div class="section-title" style="color:var(--green)"><i class="fas fa-image" style="color:var(--green)"></i> Image</div>
+<div class="form-group"><label>URL de l'image</label><input type="url" id="p-img" placeholder="https://..."></div>
+<div id="img-preview" style="display:none;text-align:center;margin-top:.5rem">
+<img id="preview-img" src="" style="max-width:160px;max-height:110px;object-fit:cover;border-radius:var(--radius-sm);border:2px solid var(--border);box-shadow:var(--shadow)">
+</div>
+</div>
+
+<div style="display:flex;gap:.5rem;flex-wrap:wrap">
+<button type="submit" class="btn btn-primary" style="flex:2" id="submit-btn">
+<i class="fas fa-plus"></i> Ajouter
+</button>
+<button type="button" class="btn btn-outline" style="flex:1" onclick="resetForm()">
+<i class="fas fa-eraser"></i> Effacer
+</button>
+</div>
+
+</form>
+</div>
+
+<div class="card" id="products-list-card" style="display:none;border:2px solid var(--accent)">
+<h3 style="font-size:.95rem;margin-bottom:.8rem;display:flex;align-items:center;gap:6px">
+<i class="fas fa-list-check" style="color:var(--accent)"></i> Liste <span id="list-count" class="counter-badge">0</span>
+</h3>
+<div id="products-list"></div>
+
+<!-- Commission box -->
+<div class="commission-box" id="commission-box">
+<div class="commission-title"><i class="fas fa-handshake"></i> Commission developpeur (10%)</div>
+<div class="commission-row">
+<span class="commission-label">Chiffre d'affaire total</span>
+<span class="commission-value" id="total-ca">0</span>
+</div>
+<div class="commission-row commission-total">
+<span class="commission-label"><strong>Commission developpeur (10%)</strong></span>
+<span class="commission-value" id="total-commission" style="font-size:1.1rem">0</span>
+</div>
+</div>
+
+<div class="commission-check" id="commission-check" onclick="toggleCommission()">
+<input type="checkbox" id="commission-accepted" onchange="toggleCommission()">
+<label for="commission-accepted">J'accepte de reverser 10% de mon chiffre d'affaire au developpeur</label>
+<div class="check-icon" id="check-icon"><i class="fas fa-check"></i></div>
+</div>
+
+<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.8rem">
+<button class="btn btn-green" onclick="sendAllWhatsApp()" style="flex:2" id="send-btn">
+<i class="fab fa-whatsapp"></i> Envoyer via WhatsApp
+</button>
+<button class="btn btn-outline" onclick="clearAll()" style="flex:1">
+<i class="fas fa-trash"></i> Tout effacer
+</button>
+</div>
+</div>
+
+<div class="card" id="recap-card" style="display:none;border:2px solid var(--green)">
+<div class="recap-box">
+<div class="recap-icon"><i class="fas fa-check"></i></div>
+<div class="recap-number" id="recap-count">0</div>
+<div class="recap-label">produit(s) envoye(s)</div>
+<div class="recap-value"><div class="recap-value-num" id="recap-value">0</div></div>
+<div class="commission-box" style="margin-top:1rem;border-color:var(--green)">
+<div class="commission-title" style="color:var(--green)"><i class="fas fa-handshake" style="color:var(--green)"></i> Commission developpeur</div>
+<div class="commission-row">
+<span class="commission-label">Montant</span>
+<span class="commission-value" id="recap-commission" style="color:var(--green)">0</span>
+</div>
+</div>
+<div class="recap-warn"><i class="fab fa-whatsapp"></i> Envoyez les images dans le chat WhatsApp</div>
+</div>
+<div style="display:flex;gap:.5rem;margin-top:1rem">
+<button class="btn btn-primary" onclick="continueAdding()" style="flex:1">
+<i class="fas fa-plus"></i> Ajouter
+</button>
+<button class="btn btn-outline" onclick="newSession()" style="flex:1">
+<i class="fas fa-redo"></i> Nouvelle session
+</button>
+</div>
+</div>
+
+</div>
+
+<footer>
+<div><strong>ETS EL Arafat</strong> &mdash; Electronique & Accessoires</div>
+<a class="wa-link" href="https://wa.me/22892871605" target="_blank"><i class="fab fa-whatsapp"></i> +228 92 87 16 05</a>
+</footer>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script>
+var WA_NUMBER = '22892871605';
+var PLACEHOLDER = 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=400';
+var productsToAdd = [];
+var currentUser = null;
+var editingIndex = -1;
+var commissionAccepted = false;
+
+var USERS = [
+    {user:'admin', pass:'admin123', name:'Administrateur', shop:'ETS EL Arafat'}
+];
+
+function showToast(msg, type) {
+    var c = document.getElementById('toast-container');
+    var icons = {success:'&#9989;', warning:'&#9888;&#65039;', error:'&#10060;', info:'&#8505;&#65039;'};
+    if (c.children.length >= 3) c.firstChild.remove();
+    var t = document.createElement('div');
+    t.className = 'toast toast-' + (type || 'info');
+    t.innerHTML = (icons[type] || '') + ' ' + msg;
+    c.appendChild(t);
+    setTimeout(function() { if (t.parentNode) t.remove(); }, 3500);
+}
+
+function fmt(n) {
+    return new Intl.NumberFormat('fr-FR', {style:'currency', currency:'XOF', minimumFractionDigits:0}).format(n);
+}
+
+function esc(s) {
+    var d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+}
+
+function hash(p) {
+    var h = 0;
+    for (var i = 0; i < p.length; i++) { h = ((h << 5) - h) + p.charCodeAt(i); h |= 0; }
+    return 'h' + Math.abs(h).toString(36);
+}
+
+function login(u, pw) {
+    var acc = USERS.find(function(x) { return x.user === u && x.pass === pw; });
+    if (!acc) return false;
+    currentUser = acc;
+    localStorage.setItem('eta-form-session', JSON.stringify({user: acc.user}));
+    return true;
+}
+
+function logout() {
+    currentUser = null;
+    localStorage.removeItem('eta-form-session');
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('app-content').style.display = 'none';
+    document.getElementById('login-user').value = '';
+    document.getElementById('login-pass').value = '';
+    document.getElementById('login-error').style.display = 'none';
+    showToast('Deconnecte', 'info');
+}
+
+function checkSession() {
+    try {
+        var session = JSON.parse(localStorage.getItem('eta-form-session') || 'null');
+        if (session && session.user) {
+            var acc = USERS.find(function(x) { return x.user === session.user; });
+            if (acc) { currentUser = acc; showApp(); return; }
+        }
+    } catch(e) {}
+    showLogin();
+}
+
+function showLogin() {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('app-content').style.display = 'none';
+}
+
+function showApp() {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app-content').style.display = 'block';
+    document.getElementById('display-vendor').textContent = currentUser.name;
+    document.getElementById('display-shop').textContent = currentUser.shop;
+    document.getElementById('vendor-avatar').textContent = currentUser.name.charAt(0).toUpperCase();
+    document.getElementById('v-name').value = currentUser.name;
+    document.getElementById('v-shop').value = currentUser.shop;
+}
+
+document.getElementById('login-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var u = document.getElementById('login-user').value.trim();
+    var pw = document.getElementById('login-pass').value;
+    var err = document.getElementById('login-error');
+
+    if (!u || !pw) {
+        err.style.display = 'block';
+        err.textContent = 'Remplissez tous les champs';
+        return;
+    }
+
+    if (login(u, pw)) {
+        err.style.display = 'none';
+        showToast('Bienvenue ' + currentUser.name + ' !', 'success');
+        showApp();
+    } else {
+        err.style.display = 'block';
+        err.textContent = 'Identifiant ou mot de passe incorrect';
+        showToast('Identifiants incorrects', 'error');
+    }
+});
+
+document.getElementById('p-img').addEventListener('input', function() {
+    var url = this.value.trim();
+    var preview = document.getElementById('img-preview');
+    var img = document.getElementById('preview-img');
+    if (url) {
+        img.src = url;
+        img.onload = function() { preview.style.display = 'block'; };
+        img.onerror = function() { preview.style.display = 'none'; };
+    } else {
+        preview.style.display = 'none';
+    }
+});
+
+function resetForm() {
+    var vName = document.getElementById('v-name').value;
+    var vShop = document.getElementById('v-shop').value;
+    var vPhone = document.getElementById('v-phone').value;
+    document.getElementById('product-form').reset();
+    document.getElementById('v-name').value = vName;
+    document.getElementById('v-shop').value = vShop;
+    document.getElementById('v-phone').value = vPhone;
+    document.getElementById('img-preview').style.display = 'none';
+    editingIndex = -1;
+    document.getElementById('form-title').innerHTML = '<i class="fas fa-plus-circle"></i> Nouveau produit';
+    document.getElementById('editing-indicator').classList.remove('show');
+    document.getElementById('submit-btn').innerHTML = '<i class="fas fa-plus"></i> Ajouter';
+    var items = document.querySelectorAll('.product-item');
+    items.forEach(function(item) { item.classList.remove('editing'); });
+}
+
+function cancelEdit() {
+    resetForm();
+    showToast('Modification annulee', 'info');
+}
+
+function editProduct(index) {
+    var p = productsToAdd[index];
+    editingIndex = index;
+
+    document.getElementById('v-name').value = p.vendor || currentUser.name;
+    document.getElementById('v-shop').value = p.seller || currentUser.shop;
+    document.getElementById('v-phone').value = p.phone || '';
+    document.getElementById('p-name').value = p.name;
+    document.getElementById('p-brand').value = p.brand || '';
+    document.getElementById('p-cat').value = p.cat;
+    document.getElementById('p-desc').value = p.desc || '';
+    document.getElementById('p-price').value = p.price;
+    document.getElementById('p-wprice').value = p.wprice;
+    document.getElementById('p-wqty').value = p.wqty;
+    document.getElementById('p-promo').value = p.promo;
+    document.getElementById('p-stock').value = p.stock;
+    document.getElementById('p-warranty').value = p.warranty || '';
+    document.getElementById('p-delivery').value = p.delivery || 0;
+    document.getElementById('p-img').value = p.img || '';
+
+    if (p.img) {
+        document.getElementById('preview-img').src = p.img;
+        document.getElementById('img-preview').style.display = 'block';
+    } else {
+        document.getElementById('img-preview').style.display = 'none';
+    }
+
+    document.getElementById('form-title').innerHTML = '<i class="fas fa-pen"></i> Modifier le produit';
+    document.getElementById('editing-indicator').classList.add('show');
+    document.getElementById('submit-btn').innerHTML = '<i class="fas fa-check"></i> Enregistrer';
+
+    var items = document.querySelectorAll('.product-item');
+    items.forEach(function(item, i) {
+        if (i === index) item.classList.add('editing');
+        else item.classList.remove('editing');
+    });
+
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    showToast('Modification du produit #' + (index + 1), 'info');
+}
+
+document.getElementById('product-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var name = document.getElementById('p-name').value.trim();
+    var price = parseInt(document.getElementById('p-price').value) || 0;
+    var cat = document.getElementById('p-cat').value;
+
+    if (!name) { showToast('Entrez le nom du produit', 'warning'); return; }
+    if (!price) { showToast('Entrez le prix', 'warning'); return; }
+    if (!cat) { showToast('Choisissez une categorie', 'warning'); return; }
+
+    var vName = document.getElementById('v-name').value.trim();
+    var vShop = document.getElementById('v-shop').value.trim();
+    var vPhone = document.getElementById('v-phone').value.trim();
+
+    var product = {
+        id: editingIndex >= 0 ? productsToAdd[editingIndex].id : Date.now(),
+        name: name,
+        brand: document.getElementById('p-brand').value.trim(),
+        cat: cat,
+        desc: document.getElementById('p-desc').value.trim(),
+        price: price,
+        wprice: parseInt(document.getElementById('p-wprice').value) || 0,
+        wqty: parseInt(document.getElementById('p-wqty').value) || 5,
+        promo: parseInt(document.getElementById('p-promo').value) || 0,
+        stock: parseInt(document.getElementById('p-stock').value) || 0,
+        warranty: document.getElementById('p-warranty').value.trim(),
+        delivery: parseInt(document.getElementById('p-delivery').value) || 0,
+        img: document.getElementById('p-img').value.trim(),
+        vendor: vName,
+        seller: vShop,
+        phone: vPhone
+    };
+
+    if (editingIndex >= 0) {
+        productsToAdd[editingIndex] = product;
+        showToast('Produit modifie !', 'success');
+    } else {
+        productsToAdd.push(product);
+        showToast('Produit ajoute ! (' + productsToAdd.length + ')', 'success');
+    }
+
+    updateProductsList();
+    resetForm();
+});
+
+function updateProductsList() {
+    var count = productsToAdd.length;
+    document.getElementById('product-count').textContent = count;
+    document.getElementById('list-count').textContent = count;
+    document.getElementById('products-list-card').style.display = count > 0 ? 'block' : 'none';
+
+    if (count === 0) {
+        document.getElementById('products-list').innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>Aucun produit dans la liste</p></div>';
+        document.getElementById('commission-box').style.display = 'none';
+        document.getElementById('commission-check').style.display = 'none';
+        return;
+    }
+
+    document.getElementById('commission-box').style.display = 'block';
+    document.getElementById('commission-check').style.display = 'flex';
+    calculateCommission();
+
+    document.getElementById('products-list').innerHTML = productsToAdd.map(function(p, i) {
+        var pp = p.promo > 0 ? Math.round(p.price * (1 - p.promo / 100)) : p.price;
+        var html = '<div class="product-item">';
+        html += '<div class="product-item-header">';
+        html += '<div class="product-item-num">' + (i + 1) + '</div>';
+        html += '<div class="product-item-body">';
+        html += '<div class="product-item-name">' + esc(p.name) + '</div>';
+        html += '<div class="product-item-meta">';
+        if (p.brand) html += '<span><i class="fas fa-tag"></i> ' + esc(p.brand) + '</span>';
+        html += '<span><i class="fas fa-folder"></i> ' + esc(p.cat) + '</span>';
+        html += '<span><i class="fas fa-cube"></i> ' + p.stock + '</span>';
+        if (p.promo > 0) html += '<span class="badge badge-red">-' + p.promo + '%</span>';
+        html += '</div></div>';
+        html += '<div class="product-item-right">';
+        html += '<div class="product-item-price">' + fmt(pp) + '</div>';
+        if (p.promo > 0) html += '<div class="product-item-wprice">' + fmt(p.price) + '</div>';
+        html += '<div class="product-item-actions">';
+        html += '<button class="product-item-btn product-item-edit" onclick="editProduct(' + i + ')" title="Modifier"><i class="fas fa-pen"></i></button>';
+        html += '<button class="product-item-btn product-item-remove" onclick="removeProduct(' + i + ')" title="Supprimer"><i class="fas fa-times"></i></button>';
+        html += '</div>';
+        html += '</div></div></div>';
+        return html;
+    }).join('');
+}
+
+function removeProduct(index) {
+    if (editingIndex === index) {
+        resetForm();
+    } else if (editingIndex > index) {
+        editingIndex--;
+    }
+    productsToAdd.splice(index, 1);
+    updateProductsList();
+    showToast('Produit retire', 'warning');
+}
+
+function clearAll() {
+    if (productsToAdd.length === 0) return;
+    if (!confirm('Supprimer tous les produits ?')) return;
+    productsToAdd = [];
+    commissionAccepted = false;
+    document.getElementById('commission-accepted').checked = false;
+    document.getElementById('commission-check').classList.remove('checked');
+    resetForm();
+    updateProductsList();
+    showToast('Liste videe', 'warning');
+}
+
+function buildWhatsAppMessage(commissionData) {
+    var vName = document.getElementById('v-name').value.trim() || currentUser.name;
+    var vShop = document.getElementById('v-shop').value.trim() || currentUser.shop;
+    var vPhone = document.getElementById('v-phone').value.trim() || 'N/A';
+
+    var msg = '*BATCH PRODUITS - ETS EL Arafat*\n';
+    msg += '\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n';
+    msg += '*Vendeur:* ' + vName + '\n';
+    msg += '*Boutique:* ' + vShop + '\n';
+    msg += '*Contact:* ' + vPhone + '\n';
+    msg += '*Nombre:* ' + productsToAdd.length + ' produits\n';
+    msg += '\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\n';
+
+    productsToAdd.forEach(function(p, i) {
+        var pp = p.promo > 0 ? Math.round(p.price * (1 - p.promo / 100)) : p.price;
+        msg += '*[' + (i + 1) + '] ' + p.name + '*\n';
+        if (p.brand) msg += '  Marque: ' + p.brand + '\n';
+        msg += '  Categorie: ' + p.cat + '\n';
+        msg += '  Prix detail: ' + fmt(pp) + '\n';
+        msg += '  Prix gros: ' + fmt(p.wprice) + '\n';
+        msg += '  Stock: ' + p.stock + ' unites\n';
+        if (p.warranty) msg += '  Garantie: ' + p.warranty + '\n';
+        if (p.promo > 0) msg += '  Promo: -' + p.promo + '%\n';
+        if (p.delivery > 0) msg += '  Livraison: ' + fmt(p.delivery) + '\n';
+        if (p.img) msg += '  Image: ' + p.img + '\n';
+        msg += '\n';
+    });
+
+    msg += '\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n';
+    msg += '*RESUME FINANCIER*\n';
+    msg += '  Chiffre d\'affaire: *' + fmt(commissionData.total) + '*\n';
+    msg += '  Commission developpeur (10%): *' + fmt(commissionData.commission) + '*\n';
+    msg += '\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n';
+    msg += '*Statut:* En attente de validation\n';
+    msg += '*Conditions:* Commission 10% acceptee\n';
+    msg += 'ETS EL Arafat - Atakpame';
+
+    return msg;
+}
+
+function sendWhatsAppSingle(product, commissionData, callback) {
+    var vName = product.vendor || currentUser.name;
+    var vShop = product.seller || currentUser.shop;
+    var vPhone = product.phone || 'N/A';
+    var pp = product.promo > 0 ? Math.round(product.price * (1 - product.promo / 100)) : product.price;
+
+    var msg = '*PRODUIT - ETS EL Arafat*\n';
+    msg += '\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n';
+    msg += '*Vendeur:* ' + vName + '\n';
+    msg += '*Boutique:* ' + vShop + '\n';
+    msg += '*Contact:* ' + vPhone + '\n';
+    msg += '\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\n';
+    msg += '*Nom:* ' + product.name + '\n';
+    if (product.brand) msg += '*Marque:* ' + product.brand + '\n';
+    msg += '*Categorie:* ' + product.cat + '\n';
+    msg += '*Prix detail:* ' + fmt(pp) + '\n';
+    msg += '*Prix gros:* ' + fmt(product.wprice) + '\n';
+    msg += '*Stock:* ' + product.stock + ' unites\n';
+    if (product.warranty) msg += '*Garantie:* ' + product.warranty + '\n';
+    if (product.promo > 0) msg += '*Promo:* -' + product.promo + '%\n';
+    if (product.delivery > 0) msg += '*Livraison:* ' + fmt(product.delivery) + '\n';
+    if (product.desc) msg += '*Description:* ' + product.desc + '\n';
+    if (product.img) msg += '*Image:* ' + product.img + '\n';
+    msg += '\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n';
+    msg += '*RESUME FINANCIER*\n';
+    msg += '  Chiffre d\'affaire: *' + fmt(commissionData.total) + '*\n';
+    msg += '  Commission developpeur (10%): *' + fmt(commissionData.commission) + '*\n';
+    msg += '\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n';
+    msg += '*Statut:* En attente de validation\n';
+    msg += '*Conditions:* Commission 10% acceptee';
+
+    var waUrl = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg);
+
+    var a = document.createElement('a');
+    a.href = waUrl;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    if (callback) setTimeout(callback, 800);
+}
+
+function toggleCommission() {
+    var checkbox = document.getElementById('commission-accepted');
+    var checkDiv = document.getElementById('commission-check');
+    commissionAccepted = checkbox.checked;
+    if (commissionAccepted) {
+        checkDiv.classList.add('checked');
+    } else {
+        checkDiv.classList.remove('checked');
+    }
+}
+
+function calculateCommission() {
+    var totalValue = productsToAdd.reduce(function(s, p) {
+        var pp = p.promo > 0 ? Math.round(p.price * (1 - p.promo / 100)) : p.price;
+        return s + (pp * p.stock);
+    }, 0);
+    var commission = Math.round(totalValue * 0.10);
+    document.getElementById('total-ca').textContent = fmt(totalValue);
+    document.getElementById('total-commission').textContent = fmt(commission);
+    return {total: totalValue, commission: commission};
+}
+
+function sendAllWhatsApp() {
+    if (productsToAdd.length === 0) {
+        showToast('Aucun produit a envoyer', 'warning');
+        return;
+    }
+
+    var vName = document.getElementById('v-name').value.trim();
+    var vShop = document.getElementById('v-shop').value.trim();
+    var vPhone = document.getElementById('v-phone').value.trim();
+
+    if (!vName || !vShop || !vPhone) {
+        showToast('Remplissez vos informations vendeur', 'warning');
+        return;
+    }
+
+    if (!commissionAccepted) {
+        showToast('Vous devez accepter les conditions de commission (10%)', 'warning');
+        document.getElementById('commission-check').style.animation = 'shake 0.3s ease-in-out';
+        setTimeout(function() { document.getElementById('commission-check').style.animation = ''; }, 300);
+        return;
+    }
+
+    var commissionData = calculateCommission();
+
+    var existingProducts = JSON.parse(localStorage.getItem('eta-products') || '[]');
+    productsToAdd.forEach(function(p) {
+        existingProducts.push({
+            id: p.id, vendor: vName, name: p.name, brand: p.brand, cat: p.cat,
+            price: p.price, wprice: p.wprice, wqty: p.wqty, promo: p.promo,
+            warranty: p.warranty, stock: p.stock, img: p.img || PLACEHOLDER,
+            desc: p.desc, delivery: p.delivery, seller: vShop, phone: vPhone, status: 'pending'
+        });
+    });
+    localStorage.setItem('eta-products', JSON.stringify(existingProducts));
+
+    document.getElementById('recap-count').textContent = productsToAdd.length;
+    document.getElementById('recap-value').textContent = fmt(commissionData.total);
+    document.getElementById('recap-commission').textContent = fmt(commissionData.commission);
+
+    if (productsToAdd.length === 1) {
+        sendWhatsAppSingle(productsToAdd[0], commissionData, function() {
+            productsToAdd = [];
+            commissionAccepted = false;
+            document.getElementById('commission-accepted').checked = false;
+            document.getElementById('commission-check').classList.remove('checked');
+            updateProductsList();
+            document.getElementById('product-form').style.display = 'none';
+            document.getElementById('products-list-card').style.display = 'none';
+            document.getElementById('recap-card').style.display = 'block';
+            showToast('Produit envoye !', 'success');
+        });
+    } else {
+        var msg = buildWhatsAppMessage(commissionData);
+        var waUrl = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg);
+
+        var a = document.createElement('a');
+        a.href = waUrl;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        productsToAdd = [];
+        commissionAccepted = false;
+        document.getElementById('commission-accepted').checked = false;
+        document.getElementById('commission-check').classList.remove('checked');
+        updateProductsList();
+        document.getElementById('product-form').style.display = 'none';
+        document.getElementById('products-list-card').style.display = 'none';
+        document.getElementById('recap-card').style.display = 'block';
+        showToast('Produits envoyes !', 'success');
+    }
+}
+
+function continueAdding() {
+    document.getElementById('product-form').style.display = 'block';
+    document.getElementById('recap-card').style.display = 'none';
+    document.getElementById('products-list-card').style.display = productsToAdd.length > 0 ? 'block' : 'none';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function newSession() {
+    productsToAdd = [];
+    commissionAccepted = false;
+    document.getElementById('commission-accepted').checked = false;
+    document.getElementById('commission-check').classList.remove('checked');
+    updateProductsList();
+    document.getElementById('product-form').style.display = 'block';
+    document.getElementById('recap-card').style.display = 'none';
+    document.getElementById('products-list-card').style.display = 'none';
+    resetForm();
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+checkSession();
+</script>
+</body>
+</html>
