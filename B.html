@@ -778,7 +778,7 @@ function initVendors(){
     if(!localStorage.getItem(C.keys.vendors)){
         const exp=Date.now()+2592000000*12;
         sd(C.keys.vendors,[
-            {user:'admin',pass:hash('admin123'),created:Date.now(),expires:exp},
+            {user:'KOLA',pass:hash('KOLA123'),created:Date.now(),expires:exp},
             {user:'VEN01',pass:hash('VEN123'),created:Date.now(),expires:Date.now()+2592000000,profile:{name:'Tech Distrib',shop:'Tech Distrib',phone:'+22800000001'}},
             {user:'VEN02',pass:hash('VEN456'),created:Date.now(),expires:Date.now()+2592000000,profile:{name:'Mama Textile',shop:'Mama Textile',phone:'+22800000002'}}
         ]);
