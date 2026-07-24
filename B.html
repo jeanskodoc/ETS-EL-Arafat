@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
 <title>ETS EL Arafat - Électronique & Accessoires</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -18,14 +18,14 @@ header{background:var(--card);box-shadow:var(--shadow);position:sticky;top:0;z-i
 .nav-wrapper{display:flex;justify-content:space-between;align-items:center;padding:.6rem 0;gap:8px}
 .logo{font-size:1.2rem;font-weight:800;color:var(--dark);text-decoration:none;display:flex;align-items:center;gap:6px;white-space:nowrap}
 .logo i{color:var(--primary)}.logo span{color:var(--accent)}
-.desktop-nav ul{display:flex;gap:4px;list-style:none;align-items:center}
+.desktop-nav ul{display:flex;gap:4px;list-style:none;align-items:center;flex-wrap:wrap}
 .desktop-nav button{background:none;border:none;font-size:.72rem;font-weight:600;color:var(--text-light);cursor:pointer;transition:all .2s;padding:.3rem .4rem;white-space:nowrap;border-radius:6px}
 .desktop-nav button:hover,.desktop-nav button.active{color:var(--primary);background:#eff6ff}
 .desktop-nav button i{margin-right:2px}
 .cart-badge{position:absolute;top:-6px;right:-6px;background:var(--accent);color:#fff;font-size:.55rem;min-width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700}
 .wish-badge{position:absolute;top:-6px;right:-6px;background:var(--rose);color:#fff;font-size:.55rem;min-width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;font-weight:700}
 .mobile-menu-btn{display:none;background:none;border:none;font-size:1.3rem;color:var(--dark);cursor:pointer;padding:.3rem}
-.mobile-nav{position:fixed;top:0;left:-100%;width:80%;max-width:260px;height:100%;background:var(--card);z-index:200;transition:left .3s ease;box-shadow:2px 0 10px rgba(0,0,0,.1);padding:1.5rem}
+.mobile-nav{position:fixed;top:0;left:-100%;width:80%;max-width:280px;height:100%;background:var(--card);z-index:200;transition:left .3s ease;box-shadow:2px 0 10px rgba(0,0,0,.1);padding:1.5rem;overflow-y:auto}
 .mobile-nav.active{left:0}
 .mobile-nav-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:150;display:none}
 .mobile-nav-overlay.active{display:block}
@@ -39,11 +39,11 @@ main{flex:1;padding:1.2rem 0}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
-.hero{background:linear-gradient(135deg,var(--dark),var(--primary));color:#fff;padding:1.5rem 2rem;border-radius:var(--radius);margin-bottom:1.2rem;text-align:center;position:relative;overflow:hidden}
+.hero{background:linear-gradient(135deg,var(--dark),var(--primary));color:#fff;padding:1.5rem 1.5rem;border-radius:var(--radius);margin-bottom:1.2rem;text-align:center;position:relative;overflow:hidden}
 .hero:before{content:'🔌';position:absolute;right:-20px;bottom:-20px;font-size:8rem;opacity:.1}
 .hero h1{font-size:1.5rem;margin-bottom:.2rem}
 .hero p{font-size:.85rem;opacity:.9}
-.search-bar{display:flex;gap:8px;margin-bottom:.8rem;flex-wrap:wrap}
+.search-bar{display:flex;gap:8px;margin-bottom:.8rem;flex-wrap:wrap;position:relative}
 .search-bar input{flex:1;min-width:160px;padding:.65rem 1rem;border:2px solid var(--border);border-radius:50px;font-size:.9rem;outline:none;transition:border-color .2s}
 .search-bar input:focus{border-color:var(--primary)}
 .filters{display:flex;gap:5px;margin-bottom:.8rem;flex-wrap:wrap;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
@@ -66,9 +66,9 @@ main{flex:1;padding:1.2rem 0}
 .product-ogprice{font-size:.7rem;color:#94a3b8;text-decoration:line-through;font-weight:400}
 .product-wprice{font-size:.7rem;color:var(--text-light)}.product-wprice strong{color:var(--accent)}
 .product-warranty{font-size:.68rem;color:var(--green);margin-top:2px}
-.product-actions{display:flex;gap:5px;margin-top:auto;padding-top:.4rem}
+.product-actions{display:flex;gap:5px;margin-top:auto;padding-top:.4rem;flex-wrap:wrap}
 .promo-badge{position:absolute;top:8px;left:8px;background:var(--red);color:#fff;font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:4px;z-index:2}
-.btn{padding:.5rem;border:none;border-radius:var(--radius-sm);font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:5px;font-size:.76rem;text-decoration:none}
+.btn{padding:.5rem;border:none;border-radius:var(--radius-sm);font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:5px;font-size:.76rem;text-decoration:none;min-height:36px}
 .btn:active{transform:scale(.97)}
 .btn-block{width:100%;padding:.65rem;font-size:.85rem;display:flex}
 .btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-h)}
@@ -83,7 +83,7 @@ main{flex:1;padding:1.2rem 0}
 .admin-layout{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 @media(max-width:900px){.admin-layout{grid-template-columns:1fr}}
 .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:1rem}
-.card h3{font-size:.95rem;margin-bottom:.8rem;color:var(--dark);display:flex;align-items:center;gap:6px}
+.card h3{font-size:.95rem;margin-bottom:.8rem;color:var(--dark);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .card p{font-size:.82rem;color:var(--text-light);line-height:1.5}
 .form-group{margin-bottom:.6rem}
 .form-group label{display:block;font-size:.75rem;font-weight:600;color:var(--dark);margin-bottom:.2rem}
@@ -99,6 +99,7 @@ tbody tr:hover{background:#f8fafc}
 .badge-gray{background:#f1f5f9;color:var(--text-light)}.badge-red{background:#fee2e2;color:#991b1b}
 .badge-purple{background:#ede9fe;color:#5b21b6}.badge-orange{background:#fef3c7;color:#92400e}
 .badge-rose{background:#fce7f3;color:#9d174d}
+.pagination{display:flex;justify-content:center;gap:5px;margin-top:.8rem;flex-wrap:wrap}
 .pagination .page-btn{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-weight:600;font-size:.75rem;transition:all .15s;display:flex;align-items:center;justify-content:center}
 .pagination .page-btn:hover{background:var(--primary);color:#fff;border-color:var(--primary)}
 .pagination .page-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
@@ -109,16 +110,16 @@ tbody tr:hover{background:#f8fafc}
 .kpi-card .icon{font-size:1.8rem;margin-bottom:.2rem}
 .kpi-card .value{font-size:1.3rem;font-weight:800;color:var(--dark)}
 .kpi-card .label{font-size:.7rem;color:var(--text-light);text-transform:uppercase;letter-spacing:.5px}
-.chart-bar{display:flex;align-items:end;gap:2px;height:130px;padding:.8rem 0}
-.chart-bar .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px}
+.chart-bar{display:flex;align-items:end;gap:2px;height:130px;padding:.8rem 0;overflow-x:auto}
+.chart-bar .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:20px}
 .chart-bar .bar{width:100%;min-height:3px;border-radius:3px 3px 0 0;transition:height .4s ease;cursor:help}
 .chart-bar .bar:hover{opacity:.8}
 .chart-bar .lbl{font-size:.5rem;color:var(--text-light);text-align:center}
-.cart-item{display:flex;align-items:center;gap:.8rem;padding:.7rem 0;border-bottom:1px solid var(--border);animation:slideUp .25s ease}
+.cart-item{display:flex;align-items:center;gap:.8rem;padding:.7rem 0;border-bottom:1px solid var(--border);animation:slideUp .25s ease;flex-wrap:wrap}
 .cart-item img{width:48px;height:48px;object-fit:cover;border-radius:var(--radius-sm)}
 .cart-item-info{flex:1}.cart-item-info strong{font-size:.8rem}
 .cart-item-info small{color:var(--text-light);font-size:.7rem}
-.qty-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .15s;user-select:none;font-size:.85rem}
+.qty-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:var(--card);cursor:pointer;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .15s;user-select:none;font-size:.85rem;flex-shrink:0}
 .qty-btn:hover{background:#f1f5f9;border-color:var(--primary)}
 .qty-btn:active{transform:scale(.9)}
 .cart-total{text-align:right;padding-top:.8rem;font-size:1.1rem;font-weight:800;color:var(--dark)}
@@ -132,7 +133,7 @@ tbody tr:hover{background:#f8fafc}
 .store-info-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:1rem;margin-bottom:1.2rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
 .store-info-card .info{flex:1;min-width:200px}
 .store-info-card .info h2{font-size:1.05rem;margin-bottom:.4rem}
-.store-info-card .info p{font-size:.8rem;color:var(--text-light);margin-bottom:.25rem}
+.store-info-card .info p{font-size:.8rem;color:var(--text-light);margin-bottom:.25rem;word-break:break-word}
 .store-info-card .info i{width:18px;color:var(--primary)}
 .empty-state{text-align:center;padding:2rem 1rem;color:var(--text-light)}
 .empty-state i{font-size:2.5rem;margin-bottom:.4rem;opacity:.4}
@@ -140,7 +141,7 @@ tbody tr:hover{background:#f8fafc}
 .loading-spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle}
 .toast-container{position:fixed;bottom:16px;right:16px;z-index:3000;display:flex;flex-direction:column;gap:6px;max-width:300px}
 @media(max-width:480px){.toast-container{left:16px;right:16px;max-width:none}}
-.toast{padding:10px 14px;border-radius:8px;box-shadow:var(--shadow-lg);font-size:.82rem;font-weight:600;animation:slideUp .3s ease;display:flex;align-items:center;gap:6px}
+.toast{padding:10px 14px;border-radius:8px;box-shadow:var(--shadow-lg);font-size:.82rem;font-weight:600;animation:slideUp .3s ease;display:flex;align-items:center;gap:6px;word-break:break-word}
 .toast-success{border-left:4px solid #16a34a;background:#f0fdf4;color:#166534}
 .toast-warning{border-left:4px solid #f59e0b;background:#fffbeb;color:#92400e}
 .toast-error{border-left:4px solid #ef4444;background:#fef2f2;color:#991b1b}
@@ -148,58 +149,6 @@ tbody tr:hover{background:#f8fafc}
 .divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
 footer{background:var(--dark);color:#cbd5e1;padding:1.2rem 0;margin-top:auto;text-align:center;font-size:.78rem}
 footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}footer a:hover{color:#fff}
-@media(max-width:399px){
-.container{padding:0 .5rem}.hero{padding:.8rem}.hero h1{font-size:1rem}
-.products-grid{grid-template-columns:1fr;gap:.5rem}.product-img{height:180px}
-.modal-content{padding:.8rem}.logo{font-size:.9rem}
-.map-container{height:180px}.store-info-card{flex-direction:column;text-align:center}
-.kpi-grid{grid-template-columns:repeat(2,1fr);gap:.4rem}.kpi-card{padding:.6rem}.kpi-card .value{font-size:.9rem}
-.btn{padding:.45rem;font-size:.72rem}.btn-block{padding:.55rem;font-size:.8rem}
-.search-bar input{padding:.55rem .8rem;font-size:.85rem}
-.filters{gap:4px}.filter-btn{padding:.3rem .6rem;font-size:.7rem}
-.product-body{padding:.6rem}.product-name{font-size:.8rem}.product-price{font-size:.95rem}
-.admin-layout{gap:.5rem}.card{padding:.7rem}
-}
-@media(min-width:400px)and(max-width:599px){
-.products-grid{grid-template-columns:repeat(2,1fr);gap:.5rem}.product-img{height:150px}
-.hero{padding:1rem}.hero h1{font-size:1.1rem}
-.modal-content{padding:1rem}
-}
-@media(min-width:600px)and(max-width:767px){
-.products-grid{grid-template-columns:repeat(3,1fr);gap:.6rem}.product-img{height:160px}
-.hero{padding:1.2rem}.hero h1{font-size:1.2rem}
-}
-@media(max-width:767px){
-.desktop-nav{display:none}.mobile-menu-btn{display:block}
-.admin-layout{grid-template-columns:1fr}.product-actions{flex-direction:column}
-.search-bar{flex-direction:column}.search-bar input{min-width:auto}
-.chart-bar{height:80px}.chart-bar .lbl{display:none}
-.store-info-card{flex-direction:column;text-align:center;gap:.8rem}
-.store-info-card .btn{width:100%}
-.footer-grid{grid-template-columns:1fr!important;gap:1rem!important;text-align:center}
-.footer-col{padding:0!important}
-}
-@media(min-width:768px)and(max-width:1023px){
-.desktop-nav{display:block}.mobile-menu-btn{display:none}
-.products-grid{grid-template-columns:repeat(3,1fr);gap:.7rem}
-.hero{padding:1.5rem}
-}
-@media(min-width:768px){.desktop-nav{display:block}.mobile-menu-btn{display:none}}
-@media(min-width:1024px){
-.hero{padding:2rem}.hero h1{font-size:1.6rem}.products-grid{gap:.8rem}
-.container{padding:0 2rem}
-}
-@media(min-width:1200px){
-.products-grid{grid-template-columns:repeat(4,1fr);gap:1rem}
-.hero h1{font-size:1.8rem}
-}
-@media(orientation:landscape)and (max-height:500px){
-.hero{padding:.6rem}.hero h1{font-size:1rem}.hero p{font-size:.75rem}
-}
-.skeleton{background:linear-gradient(90deg,#e2e8f0 25%,#f1f5f9 50%,#e2e8f0 75%);background-size:200% 100%;animation:shimmer 1.2s infinite;border-radius:6px}
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-.skeleton-card{background:var(--card);border-radius:var(--radius);overflow:hidden}
-.skeleton-img{width:100%;height:160px}.skeleton-body{padding:.7rem}.skeleton-line{height:12px;margin-bottom:8px;width:100%}.skeleton-line:last-child{width:60%}
 #scroll-top{position:fixed;bottom:80px;right:16px;width:42px;height:42px;border-radius:50%;background:var(--primary);color:#fff;border:none;box-shadow:var(--shadow-lg);cursor:pointer;display:none;align-items:center;justify-content:center;z-index:100;font-size:1rem;transition:all .2s}
 #scroll-top:hover{transform:scale(1.1);background:var(--primary-h)}
 #scroll-top.visible{display:flex}
@@ -210,12 +159,11 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 .lightbox-close:hover{background:rgba(255,255,255,.4)}
 .search-suggest{position:absolute;top:100%;left:0;right:0;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);box-shadow:var(--shadow-lg);z-index:50;max-height:250px;overflow-y:auto;display:none;margin-top:2px}
 .search-suggest.show{display:block}
-.search-suggest-item{padding:.5rem .8rem;cursor:pointer;font-size:.8rem;display:flex;align-items:center;gap:8px;transition:background .15s}
+.search-suggest-item{padding:.5rem .8rem;cursor:pointer;font-size:.8rem;display:flex;align-items:center;gap:8px;transition:background .15s;flex-wrap:wrap}
 .search-suggest-item:hover{background:#f1f5f9}
 .search-suggest-item img{width:28px;height:28px;border-radius:4px;object-fit:cover}
-.search-bar{position:relative}
 .order-timeline{display:flex;gap:0;margin:.8rem 0;position:relative;flex-wrap:wrap}
-.order-step{flex:1;text-align:center;min-width:80px;padding:.4rem .2rem;position:relative}
+.order-step{flex:1;text-align:center;min-width:60px;padding:.4rem .2rem;position:relative}
 .order-step:before{content:'';position:absolute;top:20px;left:50%;width:100%;height:3px;background:var(--border);z-index:0}
 .order-step:last-child:before{display:none}
 .order-step .dot{width:18px;height:18px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;margin:0 auto 4px;position:relative;z-index:1;font-size:.5rem;color:#fff;transition:all .3s}
@@ -227,6 +175,148 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 @media(pointer:fine){#pm-qr-grid{scrollbar-width:thin;scrollbar-color:var(--border) transparent}}
 .product-card.sold-out .sold-stamp{animation:fadeIn .4s ease}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* ========== RESPONSIVE AMÉLIORÉ ========== */
+
+/* Très petits écrans (moins de 360px) */
+@media(max-width:359px){
+.container{padding:0 .4rem}
+.products-grid{grid-template-columns:1fr;gap:.4rem}
+.product-img{height:160px}
+.hero{padding:.6rem .8rem;margin-bottom:.6rem}
+.hero h1{font-size:1rem}
+.hero p{font-size:.75rem}
+.logo{font-size:.85rem}
+.desktop-nav button{font-size:.6rem;padding:.2rem .3rem}
+.btn{font-size:.65rem;padding:.35rem .4rem;min-height:30px}
+.btn-block{padding:.45rem;font-size:.72rem}
+.card{padding:.6rem}
+.modal-content{padding:.6rem}
+.kpi-grid{grid-template-columns:1fr 1fr;gap:.3rem}
+.kpi-card{padding:.4rem}
+.kpi-card .value{font-size:.8rem}
+.kpi-card .icon{font-size:1.3rem}
+.map-container{height:160px}
+.store-info-card{padding:.6rem}
+.store-info-card .info h2{font-size:.9rem}
+.store-info-card .info p{font-size:.7rem}
+.filters{gap:3px}
+.filter-btn{padding:.2rem .5rem;font-size:.65rem}
+.search-bar input{padding:.45rem .7rem;font-size:.8rem}
+table{font-size:.65rem}
+th,td{padding:.3rem .2rem}
+.cart-item{gap:.4rem}
+.cart-item img{width:36px;height:36px}
+}
+
+/* Petits écrans (360px - 480px) */
+@media(min-width:360px)and(max-width:480px){
+.container{padding:0 .5rem}
+.products-grid{grid-template-columns:1fr 1fr;gap:.4rem}
+.product-img{height:140px}
+.hero{padding:.8rem 1rem}
+.hero h1{font-size:1.1rem}
+.hero p{font-size:.78rem}
+.logo{font-size:.95rem}
+.desktop-nav button{font-size:.65rem;padding:.25rem .3rem}
+.btn{font-size:.7rem;padding:.4rem .45rem;min-height:32px}
+.btn-block{padding:.5rem;font-size:.78rem}
+.card{padding:.7rem}
+.modal-content{padding:.8rem}
+.kpi-grid{grid-template-columns:1fr 1fr;gap:.4rem}
+.kpi-card{padding:.5rem}
+.kpi-card .value{font-size:.9rem}
+.map-container{height:180px}
+}
+
+/* Écrans moyens (481px - 768px) */
+@media(min-width:481px)and(max-width:768px){
+.products-grid{grid-template-columns:repeat(2,1fr);gap:.6rem}
+.product-img{height:160px}
+.hero{padding:1rem 1.5rem}
+.hero h1{font-size:1.2rem}
+.container{padding:0 .8rem}
+.desktop-nav button{font-size:.7rem;padding:.3rem .35rem}
+.btn{font-size:.74rem}
+}
+
+/* Tablettes (769px - 1024px) */
+@media(min-width:769px)and(max-width:1024px){
+.products-grid{grid-template-columns:repeat(3,1fr);gap:.7rem}
+.product-img{height:170px}
+.hero{padding:1.5rem}
+.hero h1{font-size:1.4rem}
+}
+
+/* Grands écrans (1025px - 1366px) */
+@media(min-width:1025px)and(max-width:1366px){
+.products-grid{grid-template-columns:repeat(4,1fr);gap:.8rem}
+}
+
+/* Très grands écrans (>1366px) */
+@media(min-width:1367px){
+.products-grid{grid-template-columns:repeat(4,1fr);gap:1rem}
+.container{max-width:1400px;padding:0 2rem}
+.hero{padding:2.5rem}
+.hero h1{font-size:2rem}
+}
+
+/* Mode paysage sur mobile */
+@media(orientation:landscape)and (max-height:500px){
+.hero{padding:.5rem 1rem}
+.hero h1{font-size:.9rem}
+.hero p{font-size:.7rem}
+.hero:before{font-size:4rem}
+.products-grid{grid-template-columns:repeat(3,1fr)}
+.product-img{height:120px}
+header .nav-wrapper{padding:.3rem 0}
+.logo{font-size:.8rem}
+}
+
+/* Menu mobile - amélioré */
+@media(max-width:768px){
+.desktop-nav{display:none}
+.mobile-menu-btn{display:block}
+.admin-layout{grid-template-columns:1fr}
+.product-actions{flex-direction:row}
+.product-actions .btn{flex:1;min-width:40px}
+.search-bar{flex-direction:column}
+.search-bar input{min-width:auto}
+.chart-bar{height:80px}
+.chart-bar .lbl{display:none}
+.store-info-card{flex-direction:column;text-align:center;gap:.8rem}
+.store-info-card .btn{width:100%}
+}
+
+/* Menu desktop visible à partir de 769px */
+@media(min-width:769px){
+.desktop-nav{display:block}
+.mobile-menu-btn{display:none}
+.mobile-nav{display:none}
+.mobile-nav-overlay{display:none}
+}
+
+/* Améliorations générales pour le responsive */
+img{max-width:100%;height:auto}
+input,select,textarea{font-size:16px!important} /* Empêche zoom sur iOS */
+button{cursor:pointer;touch-action:manipulation}
+a{-webkit-tap-highlight-color:transparent}
+.flex-wrap{flex-wrap:wrap}
+.text-center{text-align:center}
+.w-100{width:100%}
+
+/* Améliorations pour les tablettes en mode paysage */
+@media(min-width:768px)and (orientation:landscape){
+.products-grid{grid-template-columns:repeat(3,1fr)}
+}
+
+/* Améliorations pour les écrans tactiles */
+@media(hover:none){
+.btn:hover{transform:none}
+.product-card:hover{transform:none}
+.filter-btn:hover{background:var(--card);color:var(--text)}
+.filter-btn.active:hover{background:var(--primary);color:#fff}
+}
 </style>
 <meta name="theme-color" content="#16a34a">
 </head>
@@ -251,6 +341,7 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 <li><button data-view="price-mgmt"><i class="fas fa-qrcode"></i> Gestion de prix</button></li>
 <li><button data-view="cart" style="position:relative"><i class="fas fa-shopping-cart"></i> Panier <span id="cart-count" class="cart-badge">0</span></button></li>
 <li><button data-view="wishlist" style="position:relative"><i class="fas fa-heart"></i> <span id="wish-badge" class="wish-badge">0</span></button></li>
+<li id="desktop-vendor-logout" hidden><button onclick="vendorLogout()" style="color:var(--red);border:1px solid var(--red);padding:.2rem .5rem"><i class="fas fa-sign-out-alt"></i> Déconnexion</button></li>
 </ul>
 </nav>
 <button type="button" class="mobile-menu-btn" aria-label="Menu"><i class="fas fa-bars"></i></button>
@@ -278,6 +369,7 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 <li><button data-view="price-mgmt"><i class="fas fa-qrcode"></i> Gestion de prix</button></li>
 <li><button data-view="cart"><i class="fas fa-shopping-cart"></i> Panier</button></li>
 <li><button data-view="wishlist"><i class="fas fa-heart"></i> Favoris</button></li>
+<li id="mobile-vendor-logout" hidden><button onclick="vendorLogout();closeMenu();" style="color:var(--red)"><i class="fas fa-sign-out-alt"></i> Déconnexion</button></li>
 </ul>
 </div>
 
@@ -293,7 +385,7 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 <div class="info">
 <h2>ETS EL Arafat</h2>
 <p><i class="fas fa-map-marker-alt"></i> Atakpamé, ENS-Togo, Face station MRS</p>
-<p><i class="fas fa-phone"></i> +228 91 98 46 98</p>
+<p><i class="fas fa-phone"></i> +228 92 87 16 05 / +228 93 38 75 95</p>
 <p><i class="fas fa-clock"></i> Lun-Sam 8h-19h · Dim 9h-13h</p>
 </div>
 <button class="btn btn-primary" data-view="map" style="flex:0;padding:.55rem 1rem"><i class="fas fa-map-marked-alt"></i> Carte</button>
@@ -301,7 +393,7 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 <div class="search-bar"><input type="text" id="search" placeholder="Rechercher un produit, une marque..." autocomplete="off"><div id="search-suggest" class="search-suggest"></div></div>
 <div class="filters" id="filters"></div>
 <div id="products-grid" class="products-grid"></div>
-<div id="prod-pagination" class="pagination" style="display:flex;justify-content:center;gap:5px;margin-top:.8rem;flex-wrap:wrap"></div>
+<div id="prod-pagination" class="pagination"></div>
 </section>
 
 <section id="view-promos" class="section">
@@ -315,7 +407,7 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 <div class="info">
 <h2>ETS EL Arafat</h2>
 <p><i class="fas fa-map-marker-alt"></i> Atakpamé, ENS-Togo, Face station MRS</p>
-<p><i class="fas fa-phone"></i> +228 91 98 46 98</p>
+<p><i class="fas fa-phone"></i> +228 92 87 16 05 / +228 93 38 75 95</p>
 <p><i class="fas fa-envelope"></i> contact@etselarafat.tg</p>
 <p><i class="fas fa-clock"></i> Lun-Sam 8h-19h · Dim 9h-13h</p>
 </div>
@@ -348,7 +440,7 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 <section id="view-prod" class="section">
 <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:.8rem">
 <h2 style="font-size:1.1rem"><i class="fas fa-box"></i> Gestion des produits</h2>
-<div style="display:flex;align-items:center;gap:8px">
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
 <span id="admin-info" style="font-size:.78rem;color:var(--text-light);display:none"></span>
 <button id="logout-btn" class="btn btn-sm btn-outline" style="color:var(--red);border-color:var(--red)" hidden><i class="fas fa-sign-out-alt"></i> Quitter</button>
 </div>
@@ -399,12 +491,12 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 <h3><i class="fas fa-search"></i> Filtres</h3>
 <div class="form-group"><label>Du</label><input type="date" id="filter-from"></div>
 <div class="form-group"><label>Au</label><input type="date" id="filter-to"></div>
-<div style="display:flex;gap:6px"><button class="btn btn-sm btn-primary" id="btn-filter-sales">Filtrer</button><button class="btn btn-sm btn-outline" id="btn-reset-filters">Réinitialiser</button></div>
+<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-sm btn-primary" id="btn-filter-sales">Filtrer</button><button class="btn btn-sm btn-outline" id="btn-reset-filters">Réinitialiser</button></div>
 </div>
 <div class="card">
 <h3>Toutes les ventes <span id="sales-count" style="font-weight:400;font-size:.78rem;color:var(--text-light)"></span></h3>
             <div class="table-wrap"><table><thead><tr><th>Date</th><th>Client</th><th>Tél</th><th>Produits</th><th>Total</th><th>Statut</th><th></th></tr></thead><tbody id="sales-tbody"></tbody></table></div>
-            <div id="sales-pagination" class="pagination" style="display:flex;justify-content:center;gap:5px;margin-top:.8rem;flex-wrap:wrap"></div>
+            <div id="sales-pagination" class="pagination"></div>
 </div>
 </div>
 </section>
@@ -428,14 +520,14 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 <h3><i class="fas fa-store"></i> Nos coordonnées</h3>
 <div style="display:flex;flex-direction:column;gap:10px;font-size:.85rem;color:var(--text)">
 <p><i class="fas fa-map-marker-alt" style="width:20px;color:var(--primary)"></i> Atakpamé, ENS-Togo, Face station MRS</p>
-<p><i class="fas fa-phone" style="width:20px;color:var(--primary)"></i> <a href="tel:+22891984698" style="color:var(--primary);text-decoration:none">+228 91 98 46 98</a></p>
-<p><i class="fab fa-whatsapp" style="width:20px;color:var(--whatsapp)"></i> <a href="https://wa.me/22891984698" target="_blank" style="color:var(--whatsapp);text-decoration:none">WhatsApp</a></p>
+<p><i class="fas fa-phone" style="width:20px;color:var(--primary)"></i> <a href="tel:+22892871605" style="color:var(--primary);text-decoration:none">+228 92 87 16 05</a> / <a href="tel:+22893387595" style="color:var(--primary);text-decoration:none">+228 93 38 75 95</a></p>
+<p><i class="fab fa-whatsapp" style="width:20px;color:var(--whatsapp)"></i> <a href="https://wa.me/22892871605" target="_blank" style="color:var(--whatsapp);text-decoration:none">WhatsApp</a></p>
 <p><i class="fas fa-envelope" style="width:20px;color:var(--primary)"></i> <a href="mailto:contact@etselarafat.tg" style="color:var(--primary);text-decoration:none">contact@etselarafat.tg</a></p>
 <p><i class="fas fa-clock" style="width:20px;color:var(--primary)"></i> Lun-Sam 8h-19h · Dim 9h-13h</p>
 </div>
 <div style="display:flex;gap:8px;margin-top:1rem;flex-wrap:wrap">
-<a class="btn btn-whatsapp" href="https://wa.me/22891984698" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-<a class="btn btn-primary" href="tel:+22891984698"><i class="fas fa-phone"></i> Appeler</a>
+<a class="btn btn-whatsapp" href="https://wa.me/22892871605" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+<a class="btn btn-primary" href="tel:+22892871605"><i class="fas fa-phone"></i> Appeler</a>
 <a class="btn btn-outline" href="mailto:contact@etselarafat.tg"><i class="fas fa-envelope"></i> Email</a>
 </div>
 </div>
@@ -471,7 +563,7 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 <h2 style="font-size:1.1rem"><i class="fas fa-store"></i> Espace Vendeur</h2>
 <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
 <span id="vendor-info" style="font-size:.78rem;color:var(--text-light);display:none"></span>
-<button id="vendor-logout-btn" class="btn btn-sm btn-outline" style="color:var(--red);border-color:var(--red);display:none" onclick="vendorLogout()"><i class="fas fa-sign-out-alt"></i> Quitter</button>
+<button id="vendor-logout-btn" class="btn btn-sm btn-outline" style="color:var(--red);border-color:var(--red);display:none"><i class="fas fa-sign-out-alt"></i> Quitter</button>
 </div>
 </div>
 <div class="admin-layout">
@@ -658,7 +750,7 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 <div class="form-group"><label>Image URL</label><input type="url" id="edit-img"></div>
 <div class="form-group"><label>Description</label><textarea id="edit-desc" rows="2"></textarea></div>
 <div class="form-group"><label>Livraison (FCFA)</label><input type="number" id="edit-delivery" min="0"></div>
-<div style="display:flex;gap:8px">
+<div style="display:flex;gap:8px;flex-wrap:wrap">
 <button type="submit" class="btn btn-primary" style="flex:1"><i class="fas fa-save"></i> Enregistrer</button>
 <button type="button" class="btn btn-outline" onclick="closeModal('edit-modal')" style="flex:0">Annuler</button>
 </div>
@@ -696,7 +788,7 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 <footer>
 <div class="container">
 <p><strong>ETS EL Arafat</strong> — Électronique & Accessoires</p>
-<p style="margin-top:.3rem;font-size:.72rem">Atakpamé, ENS-Togo, Face station MRS — <i class="fab fa-whatsapp" style="color:#25D366"></i> +228 91 98 46 98</p>
+<p style="margin-top:.3rem;font-size:.72rem">Atakpamé, ENS-Togo, Face station MRS — <i class="fab fa-whatsapp" style="color:#25D366"></i> +228 92 87 16 05</p>
 </div>
 </footer>
 
@@ -711,10 +803,10 @@ footer strong{color:var(--accent)}footer a{color:#94a3b8;text-decoration:none}fo
 <script>
 'use strict';
 
-/* =========== CONFIG (mêmes clés que electro-shop.html) =========== */
+/* =========== CONFIG =========== */
 const C = {
-    wa:'22891984698',
-    shop:[7.528691,1.130505],
+    wa:'22892871605',
+    shop:[7.5345556,1.1243611], // 7°32'04.4"N 1°07'27.7"E
     keys:{
         products:'esodi-products',
         cart:'esodi-cart',
@@ -871,7 +963,7 @@ function shareProduct(id){
     if(navigator.share){
         navigator.share({title:p.name,text:`${p.name} - ${fmt(pp)} chez ETS EL Arafat`,url:window.location.href}).catch(()=>{});
     }else{
-        const msg=`*${p.name}* - ETS EL Arafat\n💰 Prix: ${fmt(pp)}\n📞 +228 91 98 46 98`;
+        const msg=`*${p.name}* - ETS EL Arafat\n💰 Prix: ${fmt(pp)}\n📞 +228 92 87 16 05`;
         window.open(`https://wa.me/${C.wa}?text=${encodeURIComponent(msg)}`,'_blank');
     }
 }
@@ -917,9 +1009,9 @@ function filterProducts(){
 
 function renderProdPagination(tp){
     const el=document.getElementById('prod-pagination');if(tp<=1){el.innerHTML='';return}
-    let html='<button class="page-btn" onclick="prodPage=Math.max(1,prodPage-1);filterProducts()"'+(prodPage<=1?' disabled':'')+'><i class="fas fa-chevron-left" style="font-size:.65rem"></i></button>';
+    let html='<button class="page-btn" onclick="prodPage=Math.max(1,prodPage-1);filterProducts()" '+(prodPage<=1?'disabled':'')+'><i class="fas fa-chevron-left" style="font-size:.65rem"></i></button>';
     for(let i=1;i<=tp;i++)html+=`<button class="page-btn ${i===prodPage?'active':''}" onclick="prodPage=${i};filterProducts()">${i}</button>`;
-    html+=`<button class="page-btn" onclick="prodPage=Math.min(${tp},prodPage+1);filterProducts()"'+(prodPage>=tp?' disabled':'')+'><i class="fas fa-chevron-right" style="font-size:.65rem"></i></button>`;
+    html+=`<button class="page-btn" onclick="prodPage=Math.min(${tp},prodPage+1);filterProducts()" `+(prodPage>=tp?'disabled':'')+'><i class="fas fa-chevron-right" style="font-size:.65rem"></i></button>';
     el.innerHTML=html;
 }
 function renderPromos(){
@@ -964,7 +1056,7 @@ function openDetail(id){
             ${p.seller?`<i class="fas fa-store" style="color:var(--text-light)"></i> Vendu par : <strong>${esc(p.seller)}</strong><br>`:''}
             <i class="fas fa-boxes" style="color:var(--text-light)"></i> ${sold?'<span style="color:var(--red);font-weight:600"><i class="fas fa-times-circle"></i> Épuisé</span>':stockBadge(p)}
         </div>
-        <div style="display:flex;gap:6px">
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
             <button class="btn btn-primary" style="flex:1" onclick="closeDetail();addToCart(${p.id})" ${sold?'disabled':''}>${sold?'<i class="fas fa-times-circle"></i> Rupture':'<i class="fas fa-cart-plus"></i> Ajouter'}</button>
             <button class="btn btn-whatsapp btn-sm" onclick="shareProduct(${p.id})" title="Partager"><i class="fab fa-whatsapp"></i></button>
             <button class="btn btn-outline btn-sm ${isWish(p.id)?'btn-rose':''}" onclick="toggleWish(${p.id});openDetail(${p.id})" title="Favoris"><i class="fa${isWish(p.id)?'s':'r'} fa-heart"></i></button>
@@ -994,7 +1086,7 @@ function updateCartUI(){
         return `<div class="cart-item">
             <img src="${esc(i.img)}" onerror="imgErr(this,'${C.imgS}')">
             <div class="cart-item-info"><strong>${esc(i.name)}</strong><small>${fmt(up)} ${w?'<span class="badge badge-green">Gros</span>':'<span class="badge badge-blue">Détail</span>'}</small>${i.delivery?`<br><small><i class="fas fa-truck"></i> ${fmt(i.delivery)}</small>`:''}</div>
-            <div style="display:flex;align-items:center;gap:5px">
+            <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
                 <button class="qty-btn" onclick="cq(${i.id},-1)">−</button>
                 <span style="font-weight:700;min-width:18px;text-align:center">${i.qty}</span>
                 <button class="qty-btn" onclick="cq(${i.id},1)">+</button>
@@ -1012,7 +1104,7 @@ function openCheckout(){
     const t=sub+del;
     let msg='🛳️ *COMMANDE ETS EL Arafat*\n==============================\n';
     items.forEach(i=>{msg+=`📦 *${i.name}* x${i.qty} → ${fmt(i.price*i.qty)}\n`});
-    msg+=`==============================\n🚚 Livraison : ${fmt(del)}\n💵 *Total : ${fmt(t)}*\n🏪 ETS EL Arafat\n📍 Atakpamé, ENS-Togo, Face station MRS\n📞 +228 91 98 46 98\n💳 Flooz: +228 99 14 06 06\n💳 YAS: +228 91 98 46 98\n==============================`;
+    msg+=`==============================\n🚚 Livraison : ${fmt(del)}\n💵 *Total : ${fmt(t)}*\n🏪 ETS EL Arafat\n📍 Atakpamé, ENS-Togo, Face station MRS\n📞 +228 92 87 16 05 / +228 93 38 75 95\n💳 Flooz: +228 99 14 06 06\n💳 YAS: +228 92 87 16 05\n==============================`;
     window._ck={msg,total:t,delivery:del,items};
     document.getElementById('pay-summary').innerHTML=`<strong>Total : ${fmt(t)}</strong><br><small>dont ${fmt(del)} livraison</small>`;
     document.getElementById('checkout-name').value='';document.getElementById('checkout-phone').value='';
@@ -1075,13 +1167,13 @@ function renderTop(o){
     const top=Object.entries(c).sort((a,b)=>b[1]-a[1]).slice(0,5),maxQ=Math.max(...top.map(t=>t[1]),1);
     const el=document.getElementById('top-products');
     if(!top.length){el.innerHTML='<div class="empty-state"><i class="fas fa-chart-bar"></i><p>Aucune vente</p></div>';return}
-    el.innerHTML=top.map(([n,q])=>`<div style="display:flex;align-items:center;gap:6px"><span style="flex:1;font-size:.78rem">${esc(n)}</span><span style="font-weight:700;font-size:.78rem;width:35px;text-align:right">${q}</span><div style="flex:2;height:18px;background:#f1f5f9;border-radius:4px;overflow:hidden"><div style="height:100%;width:${(q/maxQ)*100}%;background:var(--accent);border-radius:4px;transition:width .5s"></div></div></div>`).join('');
+    el.innerHTML=top.map(([n,q])=>`<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="flex:1;font-size:.78rem">${esc(n)}</span><span style="font-weight:700;font-size:.78rem;width:35px;text-align:right">${q}</span><div style="flex:2;height:18px;background:#f1f5f9;border-radius:4px;overflow:hidden;min-width:40px"><div style="height:100%;width:${(q/maxQ)*100}%;background:var(--accent);border-radius:4px;transition:width .5s"></div></div></div>`).join('');
 }
 function renderSalesPagination(tp){
     const el=document.getElementById('sales-pagination');if(tp<=1){el.innerHTML='';return}
-    let html='<button class="page-btn" onclick="salesPage=Math.max(1,salesPage-1);renderSales()"'+(salesPage<=1?' disabled':'')+'><i class="fas fa-chevron-left" style="font-size:.65rem"></i></button>';
+    let html='<button class="page-btn" onclick="salesPage=Math.max(1,salesPage-1);renderSales()" '+(salesPage<=1?'disabled':'')+'><i class="fas fa-chevron-left" style="font-size:.65rem"></i></button>';
     for(let i=1;i<=tp;i++)html+=`<button class="page-btn ${i===salesPage?'active':''}" onclick="salesPage=${i};renderSales()">${i}</button>`;
-    html+=`<button class="page-btn" onclick="salesPage=Math.min(${tp},salesPage+1);renderSales()"'+(salesPage>=tp?' disabled':'')+'><i class="fas fa-chevron-right" style="font-size:.65rem"></i></button>`;
+    html+=`<button class="page-btn" onclick="salesPage=Math.min(${tp},salesPage+1);renderSales()" `+(salesPage>=tp?'disabled':'')+'><i class="fas fa-chevron-right" style="font-size:.65rem"></i></button>';
     el.innerHTML=html;
 }
 function renderRecent(o){
@@ -1142,6 +1234,8 @@ function vendorLogout(){
 function showVendorUI(s){
     const e=document.getElementById('vendor-info');if(e){e.style.display=s?'':'none';if(s){const a=ld(C.keys.vendors,[]).find(x=>x.user===vendorUser);if(a)e.textContent='👤 '+(a.profile?esc(a.profile.name)||a.profile.shop:vendorUser)+' ⏳ '+Math.ceil((a.expires-Date.now())/86400000)+'j'}}
     document.getElementById('vendor-logout-btn').style.display=s?'':'none';
+    document.getElementById('desktop-vendor-logout').hidden=!s;
+    document.getElementById('mobile-vendor-logout').hidden=!s;
     if(s){renderVendorProducts();renderVendorOrders();populateVendorDeliverySelect()}
 }
 function renderVendorProducts(){
@@ -1310,7 +1404,7 @@ function printDevInvoice(){
 </head><body>
     <div class="header">
         <h1>ETS EL Arafat</h1>
-        <p>Atakpamé, ENS-Togo, Face station MRS &bull; +228 91 98 46 98</p>
+        <p>Atakpamé, ENS-Togo, Face station MRS &bull; +228 92 87 16 05 / +228 93 38 75 95</p>
         <p>📧 contact@etselarafat.tg</p>
     </div>
     <div class="info">
@@ -1330,7 +1424,7 @@ function printDevInvoice(){
         <div class="row"><span class="label">💰 NET APRÈS PART DÉVELOPPEUR :</span><span class="net">${fmt(net)}</span></div>
     </div>
     <div class="footer">
-        ETS EL Arafat &bull; Atakpamé, ENS-Togo, Face station MRS &bull; +228 91 98 46 98<br>
+        ETS EL Arafat &bull; Atakpamé, ENS-Togo, Face station MRS &bull; +228 92 87 16 05 / +228 93 38 75 95<br>
         Document généré le ${today}
     </div>
 </body></html>`);
@@ -1517,7 +1611,7 @@ function pmConfirmSale(pid){
     msg+=`✅ Statut: Livré et payé\n`;
     msg+=`🏪 Vendu par: ${p.seller||'ETS EL Arafat'}\n`;
     msg+=`📍 ${vendorUser||'Admin'}`;
-    window.open(`https://wa.me/22891984698?text=${encodeURIComponent(msg)}`,'_blank');
+    window.open(`https://wa.me/22892871605?text=${encodeURIComponent(msg)}`,'_blank');
     showToast(`Vente confirmée ! Stock: ${p.stock} restant(s) — ${fmt(amount)}`,'success');playBeep('success');
     const el=document.getElementById('pm-product-info');if(el)el.innerHTML=`<div style="background:#dcfce7;color:#166534;border-left:4px solid var(--green);padding:12px;border-radius:8px;font-size:.85rem;display:flex;align-items:center;gap:8px"><i class="fas fa-check-circle"></i> Vente enregistrée ! N° ${order.id}<br><small>📦 ${qty} vendu(s) → Stock: ${p.stock} | Prix: ${fmt(unitPrice)}/u | Total: ${fmt(amount)}</small></div>`;
     syncAllTabs();
@@ -1530,8 +1624,8 @@ function syncAllTabs(){
 function pmSendWhatsApp(pid){
     const p=productById(pid);if(!p)return;
     const pp=promoPrice(p);
-    const msg=`🏷️ *Demande de prix ETS EL Arafat*\n━━━━━━━━━━━━━━━━━━━\n📦 *${p.name}*\n${p.brand?'🏷️ '+p.brand+'\n':''}💰 Prix: ${fmt(pp)}\n${p.wprice?' wholesale: '+fmt(p.wprice)+'/u\n':''}${p.warranty?'🛡️ Garantie: '+p.warranty+'\n':''}📊 Stock: ${p.stock}\n━━━━━━━━━━━━━━━━━━━\n📞 +228 91 98 46 98\n💳 Flooz: +228 99 14 06 06\n💳 YAS: +228 91 98 46 98`;
-    window.open(`https://wa.me/22891984698?text=${encodeURIComponent(msg)}`,'_blank');
+    const msg=`🏷️ *Demande de prix ETS EL Arafat*\n━━━━━━━━━━━━━━━━━━━\n📦 *${p.name}*\n${p.brand?'🏷️ '+p.brand+'\n':''}💰 Prix: ${fmt(pp)}\n${p.wprice?' wholesale: '+fmt(p.wprice)+'/u\n':''}${p.warranty?'🛡️ Garantie: '+p.warranty+'\n':''}📊 Stock: ${p.stock}\n━━━━━━━━━━━━━━━━━━━\n📞 +228 92 87 16 05 / +228 93 38 75 95\n💳 Flooz: +228 99 14 06 06\n💳 YAS: +228 92 87 16 05`;
+    window.open(`https://wa.me/22892871605?text=${encodeURIComponent(msg)}`,'_blank');
     showToast('Message WhatsApp envoyé','success');
 }
 function pmPrintAll(){
@@ -1558,6 +1652,7 @@ body{font-family:Arial,sans-serif;padding:20px;text-align:center}
 h1{color:#f59e0b;font-size:18px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
 @media print{@page{margin:8mm}.grid{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:768px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.grid{grid-template-columns:1fr}}
 </style></head><body><h1>🏷️ ETS EL Arafat — Étiquettes Prix</h1><div class="grid">${cards.join('')}</div></body></html>`);
     w.document.close();setTimeout(()=>w.print(),300);
     showToast('Impression lancée','success');
@@ -1604,7 +1699,7 @@ function renderAdmin(){
         <td>${fmt(p.wprice)}<small>(\u2265${p.wqty})</small></td>
         <td>${p.stock<1?'<span class="badge badge-red">Rupture</span>':p.stock<=(p.minStock||3)?'<span class="badge badge-orange">'+p.stock+'</span>':'<span class="badge badge-green">'+p.stock+'</span>'}</td>
         <td>${p.promo?`<span class="badge badge-red">-${p.promo}%</span>`:'-'}</td>
-        <td style="display:flex;gap:4px">
+        <td style="display:flex;gap:4px;flex-wrap:wrap">
             <button class="btn btn-sm btn-primary" onclick="editProduct(${p.id})" title="Modifier">✏️</button>
             <button class="btn btn-sm btn-red" onclick="delProd(${p.id})" title="Supprimer">🗑️</button>
         </td>
@@ -1657,7 +1752,7 @@ function renderSales(){
             <option value="livré et payé" ${x.status==='livré et payé'?'selected':''}>Livré et payé</option>
             <option value="annulé" ${x.status==='annulé'?'selected':''}>Annulé</option>
         </select></td>
-        <td style="display:flex;gap:3px">
+        <td style="display:flex;gap:3px;flex-wrap:wrap">
             <button class="btn btn-sm btn-outline" onclick="printInvoice(${x.id})" title="Facture" style="padding:2px 6px">🧾</button>
             <button class="btn btn-sm btn-red" onclick="delOrder(${x.id})" style="padding:2px 6px" title="Supprimer">🗑️</button>
         </td>
@@ -1695,7 +1790,7 @@ function printInvoice(id){
     </style></head><body>
         <div class="header">
             <h1><i class="fas fa-bolt"></i> ETS EL Arafat</h1>
-            <p>Atakpamé, ENS-Togo, Face station MRS &bull; +228 91 98 46 98 &bull; contact@etselarafat.tg</p>
+            <p>Atakpamé, ENS-Togo, Face station MRS &bull; +228 92 87 16 05 / +228 93 38 75 95 &bull; contact@etselarafat.tg</p>
         </div>
         <div class="info">
             <div><h3>Facture #${id}</h3><p>Date : ${new Date(ord.date).toLocaleDateString('fr-FR')}</p><p><span class="status">${esc(ord.status||'payé')}</span></p></div>
@@ -1709,7 +1804,7 @@ function printInvoice(id){
         </div>
         <div class="footer">
             <p>Merci de votre confiance ! &bull; <strong>ETS EL Arafat</strong> &bull; Électronique &amp; Accessoires</p>
-            <p style="margin-top:4px"><i class="fab fa-whatsapp"></i> +228 91 98 46 98 &bull; contact@etselarafat.tg</p>
+            <p style="margin-top:4px"><i class="fab fa-whatsapp"></i> +228 92 87 16 05 &bull; contact@etselarafat.tg</p>
         </div>
         <script>window.onload=function(){window.print()}<\/script>
     </body></html>`);
@@ -1739,7 +1834,7 @@ function printVendorInvoice(id){
     </style></head><body>
         <div class="header">
             <h1><i class="fas fa-store"></i> ETS EL Arafat — ${esc(sellerName||'Boutique')}</h1>
-            <p>Atakpamé, ENS-Togo, Face station MRS &bull; +228 91 98 46 98</p>
+            <p>Atakpamé, ENS-Togo, Face station MRS &bull; +228 92 87 16 05 / +228 93 38 75 95</p>
         </div>
         <div class="info">
             <div><h3>Facture #${id}</h3><p>Date : ${ord.date}</p><p><span class="status">${esc(ord.status)}</span></p></div>
@@ -1752,7 +1847,7 @@ function printVendorInvoice(id){
         </div>
         <div class="footer">
             <p>Merci de votre confiance ! &bull; <strong>ETS EL Arafat</strong> &bull; Vente en Gros &amp; Détail</p>
-            <p style="margin-top:4px"><i class="fab fa-whatsapp"></i> +228 91 98 46 98</p>
+            <p style="margin-top:4px"><i class="fab fa-whatsapp"></i> +228 92 87 16 05</p>
         </div>
         <script>window.onload=function(){window.print()}<\/script>
     </body></html>`);
@@ -1821,9 +1916,9 @@ function toggleMob(){document.querySelector('.mobile-nav').classList.toggle('act
 function initMap(){
     if(mapInst)return;
     const el=document.getElementById('shop-map');if(!el)return;
-    mapInst=L.map('shop-map',{center:C.shop,zoom:15,zoomControl:true});
+    mapInst=L.map('shop-map',{center:C.shop,zoom:16,zoomControl:true});
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap'}).addTo(mapInst);
-    L.marker(C.shop).addTo(mapInst).bindPopup('<b>ETS EL Arafat</b><br>Atakpamé, ENS-Togo<br>Face station MRS<br>📞 +228 91 98 46 98').openPopup();
+    L.marker(C.shop).addTo(mapInst).bindPopup('<b>ETS EL Arafat</b><br>Atakpamé, ENS-Togo<br>Face station MRS<br>📞 +228 92 87 16 05 / +228 93 38 75 95').openPopup();
     setTimeout(()=>mapInst.invalidateSize(),300);
 }
 function getRouteOSM(){
@@ -1849,7 +1944,7 @@ function getRouteOSM(){
 function clearRouteMap(){
     if(userMkr){mapInst.removeLayer(userMkr);userMkr=null}
     if(routeLn){mapInst.removeLayer(routeLn);routeLn=null}
-    document.getElementById('route-info').textContent='';mapInst.setView(C.shop,15);
+    document.getElementById('route-info').textContent='';mapInst.setView(C.shop,16);
 }
 function openGoogleMaps(){
     const info=document.getElementById('route-info');
