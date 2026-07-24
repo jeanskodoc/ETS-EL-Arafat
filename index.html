@@ -170,6 +170,20 @@
         }
         .btn-shop:hover::after{opacity:.5}
 
+        /* Badge "Accès libre" pour le bouton boutique */
+        .free-badge{
+            display:inline-block;
+            font-size:.5rem;
+            font-weight:600;
+            padding:2px 8px;
+            border-radius:10px;
+            background:rgba(16,185,129,.25);
+            color:#34d399;
+            margin-left:6px;
+            text-transform:uppercase;
+            letter-spacing:.05em;
+        }
+
         footer{
             margin-top:clamp(24px,4vw,32px);
             color:rgba(255,255,255,.45);
@@ -363,14 +377,17 @@
         <p class="sub">GESTION · VENTE EN LIGNE · FACTURES</p>
 
         <div class="btns">
-            <a href="#" class="btn btn-shop" data-target="B.html" data-protected="true">
+            <!-- Bouton Boutique EL Arafat - ACCÈS LIBRE (pas de protection) -->
+            <a href="B.html" class="btn btn-shop">
                 <div class="btn-icon"><i class="fas fa-store-alt"></i></div>
                 <div class="btn-text">
-                    <span class="title">Boutique EL Arafat</span>
-                    <span class="desc">Interface Vente physique</span>
+                    <span class="title">Boutique EL Arafat <span class="free-badge">Libre</span></span>
+                    <span class="desc">Interface Vente physique — Accès sans connexion</span>
                 </div>
                 <span class="btn-arrow"><i class="fas fa-chevron-right"></i></span>
             </a>
+
+            <!-- Bouton Comptabilité - PROTÉGÉ -->
             <a href="#" class="btn btn-buy" data-target="compta-auto.html" data-protected="true">
                 <div class="btn-icon"><i class="fas fa-file-invoice"></i></div>
                 <div class="btn-text">
@@ -379,6 +396,8 @@
                 </div>
                 <span class="btn-arrow"><i class="fas fa-chevron-right"></i></span>
             </a>
+
+            <!-- Bouton Articles-Boutique - PROTÉGÉ -->
             <a href="#" class="btn btn-buy" data-target="Articles.html" data-protected="true">
                 <div class="btn-icon"><i class="fas fa-boxes"></i></div>
                 <div class="btn-text">
