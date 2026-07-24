@@ -1,5 +1,587 @@
 <!DOCTYPE html>
+<ht<!DOCTYPE html>
 <html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ETS EL Arafat · Accueil</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,'Segoe UI',system-ui,-apple-system,sans-serif}
+
+        body{
+            min-height:100dvh;display:flex;justify-content:center;align-items:center;padding:16px;
+            position:relative;overflow-x:hidden;
+            background:url('E2.jpeg') center/cover no-repeat fixed;
+        }
+        body::before{
+            content:'';position:fixed;inset:0;z-index:0;
+            background:rgba(0,0,0,.6);
+        }
+
+        .card{
+            position:relative;z-index:2;
+            width:100%;max-width:400px;
+            padding:clamp(30px,5vw,42px) clamp(24px,4vw,34px);
+            background:rgba(255,255,255,.04);
+            backdrop-filter:blur(26px) saturate(1.7);
+            -webkit-backdrop-filter:blur(26px) saturate(1.7);
+            border-radius:26px;
+            border:1px solid rgba(255,255,255,.08);
+            box-shadow:0 24px 80px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.07);
+            text-align:center;
+        }
+
+        .card>*{
+            animation:reveal .65s cubic-bezier(.22,1,.36,1) both;
+        }
+        .card>*:nth-child(1){animation-delay:.05s}
+        .card>*:nth-child(2){animation-delay:.15s}
+        .card>*:nth-child(3){animation-delay:.25s}
+        .card>*:nth-child(4){animation-delay:.38s}
+        .card>*:nth-child(5){animation-delay:.52s}
+        .card>*:nth-child(6){animation-delay:.65s}
+        @keyframes reveal{
+            0%{opacity:0;transform:translateY(18px) scale(.97)}
+            100%{opacity:1;transform:translateY(0) scale(1)}
+        }
+
+        .logo{
+            width:clamp(80px,17vw,100px);height:clamp(80px,17vw,100px);
+            margin:0 auto clamp(18px,3vw,24px);
+            position:relative;display:flex;align-items:center;justify-content:center;
+            border-radius:50%;
+            background:linear-gradient(135deg,#10b981,#047857);
+            box-shadow:0 8px 32px rgba(16,185,129,.35);
+            transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s;
+        }
+        .logo:hover{transform:scale(1.06);box-shadow:0 12px 48px rgba(16,185,129,.5)}
+        .logo::after{
+            content:'';position:absolute;inset:-3px;border-radius:50%;
+            border:1.5px solid rgba(255,255,255,.1);
+        }
+        .logo img{
+            width:60%;height:60%;object-fit:cover;border-radius:50%;
+            filter:drop-shadow(0 2px 8px rgba(0,0,0,.35));
+        }
+
+        h1{
+            color:#fff;
+            font-size:clamp(1.4rem,5vw,1.8rem);
+            font-weight:800;letter-spacing:-.02em;
+            margin-bottom:4px;
+        }
+        h1 span{color:#34d399}
+
+        .badge{
+            display:inline-flex;align-items:center;gap:6px;
+            padding:5px 14px;margin-bottom:clamp(16px,3vw,22px);
+            background:rgba(255,255,255,.06);border-radius:20px;
+            border:1px solid rgba(255,255,255,.08);
+            color:rgba(255,255,255,.5);
+            font-size:clamp(.6rem,1.4vw,.68rem);
+            font-weight:500;letter-spacing:.04em;
+        }
+        .badge i{font-size:.5rem;color:#34d399}
+
+        p.sub{
+            color:rgba(255,255,255,.4);
+            font-size:clamp(.7rem,2vw,.8rem);
+            font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+            margin-bottom:clamp(28px,5vw,36px);
+        }
+
+        .btns{display:flex;flex-direction:column;gap:13px}
+
+        .btn{
+            display:flex;align-items:center;gap:16px;
+            padding:clamp(14px,3vw,18px) clamp(18px,4vw,22px);
+            border-radius:16px;text-decoration:none;
+            transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .35s,background .35s;
+            position:relative;overflow:hidden;
+            cursor:pointer;
+        }
+        .btn:active{transform:scale(.96)}
+
+        .btn-shop{
+            background:linear-gradient(135deg,#10b981,#047857);
+            color:#fff;
+            box-shadow:0 6px 24px rgba(16,185,129,.3);
+        }
+        .btn-shop:hover{
+            box-shadow:0 12px 44px rgba(16,185,129,.45);
+            transform:translateY(-3px) scale(1.01);
+        }
+        .btn-shop::before{
+            content:'';position:absolute;inset:0;border-radius:inherit;
+            background:linear-gradient(135deg,rgba(255,255,255,.1),transparent 60%);
+            pointer-events:none;opacity:0;
+            transition:opacity .35s;
+        }
+        .btn-shop:hover::before{opacity:1}
+
+        .btn-buy{
+            background:rgba(255,255,255,.05);
+            color:#fff;
+            border:1px solid rgba(255,255,255,.1);
+        }
+        .btn-buy:hover{
+            background:rgba(255,255,255,.1);
+            border-color:rgba(255,255,255,.2);
+            transform:translateY(-3px) scale(1.01);
+            box-shadow:0 12px 40px rgba(0,0,0,.3);
+        }
+
+        .btn-icon{
+            width:clamp(46px,10vw,54px);height:clamp(46px,10vw,54px);
+            border-radius:14px;display:flex;align-items:center;justify-content:center;
+            font-size:clamp(1.1rem,3vw,1.4rem);flex-shrink:0;
+            position:relative;
+        }
+        .btn-icon::after{
+            content:'';position:absolute;inset:0;border-radius:inherit;
+            background:linear-gradient(135deg,rgba(255,255,255,.1),transparent 50%);
+            pointer-events:none;
+        }
+        .btn-shop .btn-icon{background:rgba(255,255,255,.12)}
+        .btn-buy .btn-icon{background:rgba(255,255,255,.06)}
+        .btn-text{flex:1;text-align:left}
+        .btn-text .title{
+            font-size:clamp(.88rem,2.2vw,1rem);font-weight:700;display:block;
+        }
+        .btn-text .desc{
+            font-size:clamp(.63rem,1.6vw,.73rem);opacity:.5;display:block;margin-top:3px;
+            font-weight:400;
+        }
+
+        .btn-arrow{
+            font-size:clamp(.95rem,2.5vw,1.15rem);
+            opacity:.35;transition:all .35s cubic-bezier(.22,1,.36,1);
+        }
+        .btn:hover .btn-arrow{opacity:1;transform:translateX(6px)}
+
+        .btn-shop::after{
+            content:'';position:absolute;inset:-2px;border-radius:inherit;
+            background:linear-gradient(135deg,#10b981,#f72585);
+            z-index:-1;opacity:0;filter:blur(12px);
+            transition:opacity .45s;
+        }
+        .btn-shop:hover::after{opacity:.5}
+
+        footer{
+            margin-top:clamp(24px,4vw,32px);
+            color:rgba(255,255,255,.45);
+            font-size:clamp(.6rem,1.5vw,.7rem);
+            line-height:1.8;
+        }
+        footer .contacts{
+            display:flex;flex-direction:column;gap:4px;align-items:center;
+            margin-top:6px;
+        }
+        footer a{
+            color:rgba(250,204,21,.7);text-decoration:none;
+            transition:color .3s;
+            font-weight:500;
+            display:inline-flex;align-items:center;gap:6px;
+        }
+        footer a:hover{color:#facc15}
+        footer .copyright{
+            color:rgba(255,255,255,.18);
+            margin-bottom:8px;
+        }
+
+        /* === Modal de connexion vendeur === */
+        .modal-overlay{
+            position:fixed;inset:0;z-index:100;
+            background:rgba(0,0,0,.75);
+            backdrop-filter:blur(8px);
+            -webkit-backdrop-filter:blur(8px);
+            display:none;
+            align-items:center;justify-content:center;
+            padding:20px;
+            animation:fadeIn .3s ease;
+        }
+        .modal-overlay.active{display:flex}
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+        .modal{
+            width:100%;max-width:380px;
+            padding:clamp(28px,5vw,38px) clamp(22px,4vw,32px);
+            background:rgba(20,20,25,.85);
+            backdrop-filter:blur(30px) saturate(1.5);
+            -webkit-backdrop-filter:blur(30px) saturate(1.5);
+            border-radius:24px;
+            border:1px solid rgba(255,255,255,.1);
+            box-shadow:0 30px 80px rgba(0,0,0,.6);
+            text-align:center;
+            animation:modalIn .45s cubic-bezier(.22,1,.36,1);
+        }
+        @keyframes modalIn{
+            0%{opacity:0;transform:translateY(30px) scale(.95)}
+            100%{opacity:1;transform:translateY(0) scale(1)}
+        }
+
+        .modal-icon{
+            width:64px;height:64px;margin:0 auto 18px;
+            border-radius:50%;
+            background:linear-gradient(135deg,#10b981,#047857);
+            display:flex;align-items:center;justify-content:center;
+            font-size:1.6rem;color:#fff;
+            box-shadow:0 8px 28px rgba(16,185,129,.4);
+        }
+
+        .modal h2{
+            color:#fff;font-size:1.3rem;font-weight:700;
+            margin-bottom:6px;letter-spacing:-.01em;
+        }
+        .modal p.modal-sub{
+            color:rgba(255,255,255,.5);font-size:.78rem;
+            margin-bottom:24px;
+        }
+
+        .form-group{
+            margin-bottom:14px;text-align:left;
+            position:relative;
+        }
+        .form-group label{
+            display:block;color:rgba(255,255,255,.6);
+            font-size:.72rem;font-weight:500;
+            margin-bottom:6px;letter-spacing:.03em;
+        }
+        .input-wrap{
+            position:relative;
+        }
+        .input-wrap i{
+            position:absolute;left:16px;top:50%;
+            transform:translateY(-50%);
+            color:rgba(255,255,255,.35);font-size:.85rem;
+        }
+        .form-group input{
+            width:100%;
+            padding:13px 16px 13px 42px;
+            background:rgba(255,255,255,.05);
+            border:1px solid rgba(255,255,255,.1);
+            border-radius:12px;
+            color:#fff;font-size:.9rem;
+            transition:all .3s;
+            outline:none;
+        }
+        .form-group input::placeholder{color:rgba(255,255,255,.3)}
+        .form-group input:focus{
+            border-color:#10b981;
+            background:rgba(16,185,129,.06);
+            box-shadow:0 0 0 3px rgba(16,185,129,.12);
+        }
+        .toggle-pwd{
+            position:absolute;right:14px;top:50%;
+            transform:translateY(-50%);
+            color:rgba(255,255,255,.4);
+            cursor:pointer;font-size:.85rem;
+            transition:color .3s;
+        }
+        .toggle-pwd:hover{color:#fff}
+
+        .error-msg{
+            color:#f87171;font-size:.72rem;
+            margin-top:8px;display:none;
+            align-items:center;gap:6px;
+        }
+        .error-msg.show{display:flex}
+
+        .modal-btns{
+            display:flex;gap:10px;margin-top:22px;
+        }
+        .btn-submit,.btn-cancel{
+            flex:1;padding:13px;border-radius:12px;
+            font-size:.88rem;font-weight:600;
+            cursor:pointer;border:none;
+            transition:all .3s;
+        }
+        .btn-submit{
+            background:linear-gradient(135deg,#10b981,#047857);
+            color:#fff;
+            box-shadow:0 6px 20px rgba(16,185,129,.3);
+        }
+        .btn-submit:hover{
+            transform:translateY(-2px);
+            box-shadow:0 10px 30px rgba(16,185,129,.45);
+        }
+        .btn-cancel{
+            background:rgba(255,255,255,.06);
+            color:rgba(255,255,255,.7);
+            border:1px solid rgba(255,255,255,.1);
+        }
+        .btn-cancel:hover{
+            background:rgba(255,255,255,.1);
+            color:#fff;
+        }
+
+        .lock-badge{
+            display:inline-flex;align-items:center;gap:5px;
+            font-size:.6rem;color:rgba(255,255,255,.35);
+            margin-top:14px;
+            padding:4px 10px;border-radius:10px;
+            background:rgba(255,255,255,.04);
+        }
+        .lock-badge i{font-size:.55rem;color:#facc15}
+
+        @media(max-width:420px){
+            .card{padding:24px 18px;border-radius:20px}
+            .logo{width:68px;height:68px;margin-bottom:14px}
+            .btn{gap:12px;padding:12px 14px;border-radius:14px}
+            .btn-icon{width:40px;height:40px;border-radius:12px;font-size:.95rem}
+        }
+
+        @media(max-height:520px)and(orientation:landscape){
+            .card{max-width:94%;padding:14px 20px}
+            .logo{width:44px;height:44px;margin-bottom:6px}
+            .logo img{width:55%;height:55%}
+            .badge{display:none}
+            h1{font-size:.9rem}
+            p.sub{font-size:.55rem;margin-bottom:10px}
+            .btns{flex-direction:row;gap:10px}
+            .btn{padding:8px 12px;border-radius:12px}
+            .btn-icon{width:32px;height:32px;border-radius:10px;font-size:.75rem}
+            footer{margin-top:8px;font-size:.5rem}
+        }
+
+        @media(prefers-reduced-motion:reduce){
+            .card>*{animation:none;opacity:1;transform:none}
+            .btn,.btn::after,.btn-arrow{transition:none}
+            .modal{animation:none}
+            .modal-overlay{animation:none}
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="logo"><img src="E1.jpeg" alt="EL Arafat"></div>
+        <h1>ETS-<span>EL Arafat</span></h1>
+        <div class="badge"><i class="fas fa-circle"></i> Boutique en ligne</div>
+        <p class="sub">GESTION · VENTE EN LIGNE · FACTURES</p>
+
+        <div class="btns">
+            <a href="#" class="btn btn-shop" data-target="B.html" data-protected="true">
+                <div class="btn-icon"><i class="fas fa-store-alt"></i></div>
+                <div class="btn-text">
+                    <span class="title">Boutique EL Arafat</span>
+                    <span class="desc">Interface Vente physique</span>
+                </div>
+                <span class="btn-arrow"><i class="fas fa-chevron-right"></i></span>
+            </a>
+            <a href="#" class="btn btn-buy" data-target="compta-auto.html" data-protected="true">
+                <div class="btn-icon"><i class="fas fa-file-invoice"></i></div>
+                <div class="btn-text">
+                    <span class="title">Comptabilité</span>
+                    <span class="desc">Gestion des comptes</span>
+                </div>
+                <span class="btn-arrow"><i class="fas fa-chevron-right"></i></span>
+            </a>
+            <a href="#" class="btn btn-buy" data-target="Articles.html" data-protected="true">
+                <div class="btn-icon"><i class="fas fa-boxes"></i></div>
+                <div class="btn-text">
+                    <span class="title">Articles-Boutique</span>
+                    <span class="desc">Gestion des Articles-Boutique</span>
+                </div>
+                <span class="btn-arrow"><i class="fas fa-chevron-right"></i></span>
+            </a>
+        </div>
+
+        <footer>
+            <p class="copyright">&copy; 2026 ETS EL Arafat · Tous droits réservés</p>
+            <div class="contacts">
+                <a href="tel:+22892871605"><i class="fas fa-phone"></i> +228 92 87 16 05</a>
+                <a href="tel:+22893387595"><i class="fas fa-phone"></i> +228 93 38 75 95</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal de connexion vendeur -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <div class="modal-icon"><i class="fas fa-user-shield"></i></div>
+            <h2>Espace Vendeur</h2>
+            <p class="modal-sub">Veuillez vous connecter pour continuer</p>
+
+            <form id="loginForm" autocomplete="off">
+                <div class="form-group">
+                    <label for="username">Identifiant vendeur</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" name="username" placeholder="Entrez votre identifiant" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" name="password" placeholder="Entrez votre mot de passe" required>
+                        <span class="toggle-pwd" id="togglePwd"><i class="fas fa-eye"></i></span>
+                    </div>
+                </div>
+
+                <div class="error-msg" id="errorMsg">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>Identifiant ou mot de passe incorrect.</span>
+                </div>
+
+                <div class="modal-btns">
+                    <button type="button" class="btn-cancel" id="cancelBtn">Annuler</button>
+                    <button type="submit" class="btn-submit">Se connecter</button>
+                </div>
+            </form>
+
+            <div class="lock-badge"><i class="fas fa-lock"></i> Accès réservé au vendeur</div>
+        </div>
+    </div>
+
+    <script>
+        // === Configuration du compte vendeur ===
+        const SELLER_ACCOUNT = {
+            username: 'admin',
+            password: 'admin123'
+        };
+
+        // Durée de session (en minutes)
+        const SESSION_DURATION = 30;
+        const SESSION_KEY = 'ets_arafat_seller_session';
+
+        // Variable pour stocker la page cible après connexion
+        let pendingTarget = null;
+
+        // Vérifier si la session est encore valide
+        function isSessionValid() {
+            const session = sessionStorage.getItem(SESSION_KEY);
+            if (!session) return false;
+            try {
+                const data = JSON.parse(session);
+                const now = Date.now();
+                const elapsed = (now - data.timestamp) / (1000 * 60);
+                if (elapsed > SESSION_DURATION) {
+                    sessionStorage.removeItem(SESSION_KEY);
+                    return false;
+                }
+                return data.username === SELLER_ACCOUNT.username;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // Créer une session
+        function createSession() {
+            sessionStorage.setItem(SESSION_KEY, JSON.stringify({
+                username: SELLER_ACCOUNT.username,
+                timestamp: Date.now()
+            }));
+        }
+
+        // Ouvrir le modal
+        function openModal(target) {
+            pendingTarget = target;
+            document.getElementById('loginModal').classList.add('active');
+            document.getElementById('username').focus();
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Fermer le modal
+        function closeModal() {
+            document.getElementById('loginModal').classList.remove('active');
+            document.getElementById('loginForm').reset();
+            document.getElementById('errorMsg').classList.remove('show');
+            pendingTarget = null;
+            document.body.style.overflow = '';
+        }
+
+        // Gestion des clics sur les boutons protégés
+        document.querySelectorAll('[data-protected="true"]').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = this.dataset.target;
+                if (isSessionValid()) {
+                    window.location.href = target;
+                } else {
+                    openModal(target);
+                }
+            });
+        });
+
+        // Soumission du formulaire
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+
+            if (username === SELLER_ACCOUNT.username && password === SELLER_ACCOUNT.password) {
+                createSession();
+                closeModal();
+                if (pendingTarget) {
+                    window.location.href = pendingTarget;
+                }
+            } else {
+                document.getElementById('errorMsg').classList.add('show');
+                // Animation de secousse
+                const modal = document.querySelector('.modal');
+                modal.style.animation = 'none';
+                modal.offsetHeight; // force reflow
+                modal.style.animation = 'modalIn .4s cubic-bezier(.22,1,.36,1), shake .4s';
+            }
+        });
+
+        // Animation de secousse (ajoutée dynamiquement)
+        const shakeStyle = document.createElement('style');
+        shakeStyle.textContent = `
+            @keyframes shake {
+                0%,100%{transform:translateX(0)}
+                20%,60%{transform:translateX(-8px)}
+                40%,80%{transform:translateX(8px)}
+            }
+        `;
+        document.head.appendChild(shakeStyle);
+
+        // Bouton annuler
+        document.getElementById('cancelBtn').addEventListener('click', closeModal);
+
+        // Fermer en cliquant sur l'overlay
+        document.getElementById('loginModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Fermer avec Échap
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('loginModal').classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        // Afficher/masquer le mot de passe
+        document.getElementById('togglePwd').addEventListener('click', function() {
+            const pwd = document.getElementById('password');
+            const icon = this.querySelector('i');
+            if (pwd.type === 'password') {
+                pwd.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                pwd.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+
+        // Effacer l'erreur quand l'utilisateur tape
+        document.getElementById('username').addEventListener('input', function() {
+            document.getElementById('errorMsg').classList.remove('show');
+        });
+        document.getElementById('password').addEventListener('input', function() {
+            document.getElementById('errorMsg').classList.remove('show');
+        });
+    </script>
+</body>
+</html>
+ml lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
