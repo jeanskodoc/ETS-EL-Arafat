@@ -114,6 +114,60 @@
  .desktop-nav button i {
  margin-right: 2px;
  }
+ /* Buyer tabs — green accent (public access) */
+ .desktop-nav button.buyer-tab,
+ .mobile-nav button.buyer-tab {
+ border-bottom: 2px solid transparent;
+ }
+ .desktop-nav button.buyer-tab:hover,
+ .desktop-nav button.buyer-tab.active {
+ color: var(--primary);
+ background: #f0fdf4;
+ border-bottom-color: var(--primary);
+ }
+ /* Seller/Admin tabs — orange accent (restricted access) */
+ .desktop-nav button.seller-tab {
+ border-bottom: 2px solid transparent;
+ color: #92400e;
+ }
+ .desktop-nav button.seller-tab:hover,
+ .desktop-nav button.seller-tab.active {
+ color: #92400e;
+ background: #fef3c7;
+ border-bottom-color: #f59e0b;
+ }
+ .desktop-nav button.seller-tab::before {
+ content: '\f023';
+ font-family: 'Font Awesome 6 Free';
+ font-weight: 900;
+ font-size: .55rem;
+ margin-right: 3px;
+ color: #f59e0b;
+ }
+ .mobile-nav button.seller-tab {
+ color: #92400e;
+ }
+ .mobile-nav button.seller-tab::before {
+ content: '\f023';
+ font-family: 'Font Awesome 6 Free';
+ font-weight: 900;
+ font-size: .65rem;
+ margin-right: 6px;
+ color: #f59e0b;
+ }
+ /* Section divider in mobile nav */
+ .mobile-nav .nav-section-title {
+ font-size: .65rem;
+ text-transform: uppercase;
+ letter-spacing: 1px;
+ color: var(--text-light);
+ margin: .8rem 0 .3rem 0;
+ padding: .3rem .5rem;
+ border-bottom: 1px solid var(--border);
+ font-weight: 700;
+ }
+ .mobile-nav .nav-section-title.buyer-title { color: var(--primary); border-left: 3px solid var(--primary); padding-left: .5rem; }
+ .mobile-nav .nav-section-title.seller-title { color: #92400e; border-left: 3px solid #f59e0b; padding-left: .5rem; }
  .cart-badge {
  position: absolute;
  top: -6px;
@@ -1554,20 +1608,20 @@
  <a href="#" class="logo" data-view="store"><i class="fas fa-bolt"></i> ETS EL<span> Arafat</span></a>
  <nav class="desktop-nav">
  <ul>
- <li><button class="active" data-view="store"><i class="fas fa-home"></i> Boutique</button></li>
- <li><button data-view="promos"><i class="fas fa-tags"></i> Promos</button></li>
- <li><button data-view="map"><i class="fas fa-map-marker-alt"></i> Carte</button></li>
- <li><button data-view="dash"><i class="fas fa-chart-line"></i> Dashboard</button></li>
- <li><button data-view="prod"><i class="fas fa-box"></i> Produits</button></li>
- <li><button data-view="orders"><i class="fas fa-truck"></i> Ventes</button></li>
- <li><button data-view="track"><i class="fas fa-search-location"></i> Suivi</button></li>
- <li><button data-view="contact"><i class="fas fa-headset"></i> Contact</button></li>
- <li><button data-view="vendor"><i class="fas fa-store"></i> Vendeur</button></li>
- <li><button data-view="vendor-orders"><i class="fas fa-truck"></i> Commandes</button></li>
- <li><button data-view="vendor-accounts"><i class="fas fa-chart-line"></i> Mes Comptes</button></li>
- <li><button data-view="price-mgmt"><i class="fas fa-qrcode"></i> Gestion de prix</button></li>
- <li><button data-view="cart" style="position:relative"><i class="fas fa-shopping-cart"></i> Panier <span id="cart-count" class="cart-badge">0</span></button></li>
- <li><button data-view="wishlist" style="position:relative"><i class="fas fa-heart"></i> <span id="wish-badge" class="wish-badge">0</span></button></li>
+ <li><button class="active buyer-tab" data-view="store"><i class="fas fa-home"></i> Boutique</button></li>
+ <li><button class="buyer-tab" data-view="promos"><i class="fas fa-tags"></i> Promos</button></li>
+ <li><button class="buyer-tab" data-view="map"><i class="fas fa-map-marker-alt"></i> Carte</button></li>
+ <li><button class="buyer-tab" data-view="track"><i class="fas fa-search-location"></i> Suivi</button></li>
+ <li><button class="buyer-tab" data-view="contact"><i class="fas fa-headset"></i> Contact</button></li>
+ <li><button class="buyer-tab" data-view="cart" style="position:relative"><i class="fas fa-shopping-cart"></i> Panier <span id="cart-count" class="cart-badge">0</span></button></li>
+ <li><button class="buyer-tab" data-view="wishlist" style="position:relative"><i class="fas fa-heart"></i> <span id="wish-badge" class="wish-badge">0</span></button></li>
+ <li><button class="seller-tab" data-view="dash"><i class="fas fa-chart-line"></i> Dashboard</button></li>
+ <li><button class="seller-tab" data-view="prod"><i class="fas fa-box"></i> Produits</button></li>
+ <li><button class="seller-tab" data-view="orders"><i class="fas fa-truck"></i> Ventes</button></li>
+ <li><button class="seller-tab" data-view="vendor"><i class="fas fa-store"></i> Vendeur</button></li>
+ <li><button class="seller-tab" data-view="vendor-orders"><i class="fas fa-truck"></i> Commandes</button></li>
+ <li><button class="seller-tab" data-view="vendor-accounts"><i class="fas fa-chart-line"></i> Mes Comptes</button></li>
+ <li><button class="seller-tab" data-view="price-mgmt"><i class="fas fa-qrcode"></i> Gestion de prix</button></li>
  </ul>
  </nav>
  <button type="button" class="mobile-menu-btn" aria-label="Menu"><i class="fas fa-bars"></i></button>
@@ -1581,20 +1635,22 @@
  <button type="button" class="close-menu-btn" style="background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-light)">&times;</button>
  </div>
  <ul>
- <li><button data-view="store"><i class="fas fa-home"></i> Boutique</button></li>
- <li><button data-view="promos"><i class="fas fa-tags"></i> Promos</button></li>
- <li><button data-view="map"><i class="fas fa-map-marker-alt"></i> Carte</button></li>
- <li><button data-view="dash"><i class="fas fa-chart-line"></i> Dashboard</button></li>
- <li><button data-view="prod"><i class="fas fa-box"></i> Produits</button></li>
- <li><button data-view="orders"><i class="fas fa-truck"></i> Ventes</button></li>
- <li><button data-view="track"><i class="fas fa-search-location"></i> Suivi commande</button></li>
- <li><button data-view="contact"><i class="fas fa-headset"></i> Contact</button></li>
- <li><button data-view="vendor"><i class="fas fa-store"></i> Vendeur</button></li>
- <li><button data-view="vendor-orders"><i class="fas fa-truck"></i> Commandes</button></li>
- <li><button data-view="vendor-accounts"><i class="fas fa-chart-line"></i> Mes Comptes</button></li>
- <li><button data-view="price-mgmt"><i class="fas fa-qrcode"></i> Gestion de prix</button></li>
- <li><button data-view="cart"><i class="fas fa-shopping-cart"></i> Panier</button></li>
- <li><button data-view="wishlist"><i class="fas fa-heart"></i> Favoris</button></li>
+ <li class="nav-section-title buyer-title"><i class="fas fa-shopping-bag"></i> Espace Acheteur</li>
+ <li><button class="buyer-tab" data-view="store"><i class="fas fa-home"></i> Boutique</button></li>
+ <li><button class="buyer-tab" data-view="promos"><i class="fas fa-tags"></i> Promos</button></li>
+ <li><button class="buyer-tab" data-view="map"><i class="fas fa-map-marker-alt"></i> Carte</button></li>
+ <li><button class="buyer-tab" data-view="track"><i class="fas fa-search-location"></i> Suivi commande</button></li>
+ <li><button class="buyer-tab" data-view="contact"><i class="fas fa-headset"></i> Contact</button></li>
+ <li><button class="buyer-tab" data-view="cart"><i class="fas fa-shopping-cart"></i> Panier</button></li>
+ <li><button class="buyer-tab" data-view="wishlist"><i class="fas fa-heart"></i> Favoris</button></li>
+ <li class="nav-section-title seller-title"><i class="fas fa-lock"></i> Espace Vendeur / Admin</li>
+ <li><button class="seller-tab" data-view="dash"><i class="fas fa-chart-line"></i> Dashboard</button></li>
+ <li><button class="seller-tab" data-view="prod"><i class="fas fa-box"></i> Produits</button></li>
+ <li><button class="seller-tab" data-view="orders"><i class="fas fa-truck"></i> Ventes</button></li>
+ <li><button class="seller-tab" data-view="vendor"><i class="fas fa-store"></i> Vendeur</button></li>
+ <li><button class="seller-tab" data-view="vendor-orders"><i class="fas fa-truck"></i> Commandes</button></li>
+ <li><button class="seller-tab" data-view="vendor-accounts"><i class="fas fa-chart-line"></i> Mes Comptes</button></li>
+ <li><button class="seller-tab" data-view="price-mgmt"><i class="fas fa-qrcode"></i> Gestion de prix</button></li>
  </ul>
  </div>
 
@@ -1668,8 +1724,8 @@
  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:.8rem">
  <h2 style="font-size:1.1rem"><i class="fas fa-box"></i> Gestion des produits</h2>
  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
- <span id="admin-info" style="font-size:.78rem;color:var(--text-light);display:inline"> Connecté (KOLA)</span>
- <button id="logout-btn" class="btn btn-sm btn-outline" style="color:var(--red);border-color:var(--red);display:inline"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+ <span id="admin-info" style="font-size:.78rem;color:var(--text-light);display:none"> Connecté (KOLA)</span>
+ <button id="logout-btn" class="btn btn-sm btn-outline" style="color:var(--red);border-color:var(--red);display:none"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
  </div>
  </div>
  <div class="admin-layout">
@@ -1789,8 +1845,8 @@
  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:.8rem">
  <h2 style="font-size:1.1rem"><i class="fas fa-store"></i> Espace Vendeur</h2>
  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
- <span id="vendor-info" style="font-size:.78rem;color:var(--text-light);display:inline"> Connecté (KOLA)</span>
- <button id="vendor-logout-btn" class="btn btn-sm btn-outline" style="color:var(--red);border-color:var(--red);display:inline"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+ <span id="vendor-info" style="font-size:.78rem;color:var(--text-light);display:none"> Connecté (KOLA)</span>
+ <button id="vendor-logout-btn" class="btn btn-sm btn-outline" style="color:var(--red);border-color:var(--red);display:none"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
  </div>
  </div>
  <div class="admin-layout">
@@ -2207,8 +2263,9 @@
  });
  cart = ld(C.keys.cart, []);
  wishlist = ld(C.keys.wishlist, []);
- adminUser = ld(C.keys.session, { user: 'KOLA' });
- vendorUser = 'KOLA';
+ // DISABLED auto-login: admin and vendor must authenticate manually
+ adminUser = ld(C.keys.session, null);
+ vendorUser = ld('esodi-vendor-session', null) ? 'KOLA' : null;
 
  const vendors = ld(C.keys.vendors, []);
  const kolaExists = vendors.some(v => v.user === 'KOLA');
@@ -2228,15 +2285,12 @@
  filterProducts();
  updateCartUI();
  updateWishUI();
- showAdmin(true);
- showVendorUI(true);
+ // Default: NOT logged in as admin or vendor
+ showAdmin(!!adminUser);
+ showVendorUI(!!vendorUser);
  startAutoSave();
- renderDash();
- renderAdmin();
- renderSales();
- renderVendorProducts();
- renderVendorOrders();
- renderVendorAccounts();
+ if (adminUser) { renderDash(); renderAdmin(); renderSales() }
+ if (vendorUser) { renderVendorProducts(); renderVendorOrders(); renderVendorAccounts() }
  renderPriceMgmtQR();
 
  window.addEventListener('storage', function(e) {
@@ -2259,7 +2313,7 @@
  }
  });
 
- showToast('✅ Bienvenue KOLA ! Connecté en tant qu\'administrateur et vendeur', 'success');
+ showToast('Bienvenue sur ETS EL Arafat ! Espace acheteur activé.', 'success');
  }
 
  function initialProducts() {
@@ -2930,6 +2984,8 @@
  function vendorLogin(u, pw) {
  if (u === 'KOLA' && pw === 'KOLA1@') {
  vendorUser = 'KOLA';
+ // Persist vendor session so it survives page reloads
+ sd('esodi-vendor-session', { user: 'KOLA', expires: Date.now() + 2592000000 });
  closeModal('vendor-login-modal');
  showVendorUI(true);
  showToast('Connecté comme KOLA', 'success');
@@ -4154,11 +4210,18 @@ h1{color:#16a34a;font-size:20px;margin-bottom:10px}
  }
 
  function switchView(v) {
+ // Define which tabs require admin or vendor login
+ const adminTabs = ['dash', 'prod', 'orders'];
+ const vendorTabs = ['vendor', 'vendor-orders', 'vendor-accounts', 'price-mgmt'];
+ const buyerTabs = ['store', 'promos', 'map', 'track', 'contact', 'cart', 'wishlist'];
+
  document.querySelectorAll('.desktop-nav button, .mobile-nav button').forEach(b => b.classList.remove('active'));
  const btn = document.querySelector(`[data-view="${v}"]`);
  if (btn) btn.classList.add('active');
- if ((v === 'dash' || v === 'prod' || v === 'orders') && !adminUser) { showLogin(); return }
- if ((v === 'vendor' || v === 'vendor-orders' || v === 'vendor-accounts') && !vendorUser) { openModal(
+ // Restrict admin tabs
+ if (adminTabs.indexOf(v) >= 0 && !adminUser) { showLogin(); return }
+ // Restrict vendor tabs (price-mgmt included since it triggers sales)
+ if (vendorTabs.indexOf(v) >= 0 && !vendorUser) { openModal(
  'vendor-login-modal'); return }
  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
  const sec = document.getElementById('view-' + v);
@@ -4468,6 +4531,7 @@ h1{color:#16a34a;font-size:20px;margin-bottom:10px}
  renderSales() });
  document.getElementById('btn-export-csv').addEventListener('click', exportCSV);
  document.getElementById('logout-btn').addEventListener('click', adminLogout);
+ document.getElementById('vendor-logout-btn').addEventListener('click', vendorLogout);
  document.getElementById('btn-close-detail').addEventListener('click', closeDetail);
 
  document.getElementById('vendor-login-form').addEventListener('submit', function(e) {
