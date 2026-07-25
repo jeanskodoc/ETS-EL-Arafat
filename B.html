@@ -1573,9 +1573,9 @@
                     <li><button class="active" data-view="store"><i class="fas fa-home"></i> Boutique</button></li>
                     <li><button data-view="promos"><i class="fas fa-tags"></i> Promos</button></li>
                     <li><button data-view="map"><i class="fas fa-map-marker-alt"></i> Carte</button></li>
-                    <li id="nav-li-dash" hidden><button data-view="dash"><i class="fas fa-chart-line"></i> Dashboard</button></li>
-                    <li id="nav-li-prod" hidden><button data-view="prod"><i class="fas fa-box"></i> Produits</button></li>
-                    <li id="nav-li-orders" hidden><button data-view="orders"><i class="fas fa-truck"></i> Ventes</button></li>
+                    <li><button data-view="dash"><i class="fas fa-chart-line"></i> Dashboard</button></li>
+                    <li><button data-view="prod"><i class="fas fa-box"></i> Produits</button></li>
+                    <li><button data-view="orders"><i class="fas fa-truck"></i> Ventes</button></li>
                     <li><button data-view="track"><i class="fas fa-search-location"></i> Suivi</button></li>
                     <li><button data-view="contact"><i class="fas fa-headset"></i> Contact</button></li>
                     <li><button data-view="vendor"><i class="fas fa-store"></i> Vendeur</button></li>
@@ -1601,9 +1601,9 @@
             <li><button data-view="store"><i class="fas fa-home"></i> Boutique</button></li>
             <li><button data-view="promos"><i class="fas fa-tags"></i> Promos</button></li>
             <li><button data-view="map"><i class="fas fa-map-marker-alt"></i> Carte</button></li>
-            <li id="nav-m-li-dash" hidden><button data-view="dash"><i class="fas fa-chart-line"></i> Dashboard</button></li>
-            <li id="nav-m-li-prod" hidden><button data-view="prod"><i class="fas fa-box"></i> Produits</button></li>
-            <li id="nav-m-li-orders" hidden><button data-view="orders"><i class="fas fa-truck"></i> Ventes</button></li>
+            <li><button data-view="dash"><i class="fas fa-chart-line"></i> Dashboard</button></li>
+            <li><button data-view="prod"><i class="fas fa-box"></i> Produits</button></li>
+            <li><button data-view="orders"><i class="fas fa-truck"></i> Ventes</button></li>
             <li><button data-view="track"><i class="fas fa-search-location"></i> Suivi commande</button></li>
             <li><button data-view="contact"><i class="fas fa-headset"></i> Contact</button></li>
             <li><button data-view="vendor"><i class="fas fa-store"></i> Vendeur</button></li>
@@ -1993,18 +1993,6 @@
     </main>
 
     <!-- MODALS -->
-    <div id="login-modal" class="modal-overlay">
-        <div class="modal-content" style="max-width:340px">
-            <div style="text-align:center;margin-bottom:.8rem"><div style="font-size:2.2rem">🔐</div><h3>Connexion Admin</h3></div>
-            <form id="login-form" novalidate>
-                <div class="form-group"><label>Identifiant</label><input type="text" id="login-user" required autocomplete="username"></div>
-                <div class="form-group"><label>Mot de passe</label><input type="password" id="login-pass" required autocomplete="current-password"></div>
-                <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-sign-in-alt"></i> Se connecter</button>
-                <p id="login-error" style="color:#ef4444;font-size:.78rem;text-align:center;margin-top:6px;display:none"></p>
-            </form>
-        </div>
-    </div>
-
     <div id="payment-modal" class="modal-overlay">
         <div class="modal-content" style="max-width:400px;text-align:center">
             <div style="font-size:2.5rem;margin-bottom:.3rem">💳</div>
@@ -2058,32 +2046,8 @@
         </div>
     </div>
 
-    <div id="vendor-login-modal" class="modal-overlay">
-        <div class="modal-content" style="max-width:340px">
-            <div style="text-align:center;margin-bottom:.8rem"><div style="font-size:2.2rem">🏪</div><h3>Connexion Vendeur</h3></div>
-            <form id="vendor-login-form" novalidate>
-                <div class="form-group"><label>Identifiant</label><input type="text" id="vl-user" required></div>
-                <div class="form-group"><label>Mot de passe</label><input type="password" id="vl-pass" required></div>
-                <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-sign-in-alt"></i> Se connecter</button>
-                <p id="vl-error" style="color:#ef4444;font-size:.78rem;text-align:center;margin-top:6px;display:none"></p>
-            </form>
-            <p style="text-align:center;margin-top:.8rem;font-size:.78rem">Pas encore vendeur ? <a href="#" onclick="event.preventDefault();closeModal('vendor-login-modal');openModal('vendor-register-modal')" style="color:var(--primary);font-weight:600">Créer un compte</a></p>
-        </div>
-    </div>
-
-    <div id="vendor-register-modal" class="modal-overlay">
-        <div class="modal-content" style="max-width:380px">
-            <div style="text-align:center;margin-bottom:.8rem"><div style="font-size:2.2rem">📝</div><h3>Créer un compte vendeur</h3><p style="font-size:.75rem;color:var(--text-light)">Valable 30 jours. Identifiants générés.</p></div>
-            <form id="vendor-register-form" novalidate>
-                <div class="form-group"><label>Nom complet *</label><input type="text" id="vr-name" required></div>
-                <div class="form-group"><label>Nom de la boutique *</label><input type="text" id="vr-shop" required></div>
-                <div class="form-group"><label>Téléphone WhatsApp *</label><input type="tel" id="vr-phone" required></div>
-                <button type="submit" class="btn btn-primary btn-block"><i class="fab fa-whatsapp"></i> Créer mon compte</button>
-                <div id="vr-result" style="margin-top:8px;padding:10px;border-radius:8px;font-size:.8rem;text-align:center;display:none"></div>
-            </form>
-            <p style="text-align:center;margin-top:.8rem;font-size:.78rem">Déjà un compte ? <a href="#" onclick="event.preventDefault();closeModal('vendor-register-modal');openModal('vendor-login-modal')" style="color:var(--primary);font-weight:600">Se connecter</a></p>
-        </div>
-    </div>
+    <!-- SUPPRIMÉ : login-modal et vendor-login-modal -->
+    <!-- SUPPRIMÉ : vendor-register-modal -->
 
     <footer>
         <div class="container">
@@ -2111,7 +2075,6 @@
                 products: 'esodi-products',
                 cart: 'esodi-cart',
                 orders: 'esodi-orders',
-                session: 'esodi-session',
                 vendors: 'esodi-vendors',
                 wishlist: 'esodi-wishlist'
             },
@@ -2125,7 +2088,6 @@
             cart = [],
             wishlist = [],
             currentCat = 'all',
-            adminUser = null,
             vendorUser = null,
             mapInst = null,
             userMkr = null,
@@ -2157,17 +2119,18 @@
             products = ld(C.keys.products, initialProducts().map(p => ({ ...p, vendor: 'admin' })));
             cart = ld(C.keys.cart, []);
             wishlist = ld(C.keys.wishlist, []);
-            adminUser = ld(C.keys.session, null);
             initVendors();
             const vs = ld('esodi-vendor-session', null);
-            if (vs && Date.now() < vs.expires) { vendorUser = vs.user;
+            if (vs) { vendorUser = vs.user;
                 showVendorUI(true) } else { localStorage.removeItem('esodi-vendor-session') }
             initCats();
             initEvents();
             filterProducts();
             updateCartUI();
             updateWishUI();
-            if (adminUser && adminUser.user) showAdmin(true);
+            renderDash();
+            renderAdmin();
+            renderSales();
         }
 
         function initialProducts() {
@@ -2257,19 +2220,12 @@
 
         function initVendors() {
             if (!localStorage.getItem(C.keys.vendors)) {
-                const exp = Date.now() + 2592000000 * 12;
                 sd(C.keys.vendors, [
-                    { user: 'KOLA', pass: hash('KOLA123'), created: Date.now(), expires: exp },
-                    { user: 'VEN01', pass: hash('VEN123'), created: Date.now(), expires: Date.now() + 2592000000,
-                        profile: { name: 'Tech Distrib', shop: 'Tech Distrib', phone: '+22800000001' } },
-                    { user: 'VEN02', pass: hash('VEN456'), created: Date.now(), expires: Date.now() + 2592000000,
-                        profile: { name: 'Mama Textile', shop: 'Mama Textile', phone: '+22800000002' } }
+                    { user: 'VEN01', profile: { name: 'Tech Distrib', shop: 'Tech Distrib', phone: '+22800000001' } },
+                    { user: 'VEN02', profile: { name: 'Mama Textile', shop: 'Mama Textile', phone: '+22800000002' } }
                 ]);
             }
         }
-
-        function hash(p) { let h = 0; for (let i = 0; i < p.length; i++) { h = ((h << 5) - h) + p.charCodeAt(i);
-                h |= 0 } return 'h' + Math.abs(h).toString(36) }
 
         function fmt(n) { return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF',
                 minimumFractionDigits: 0 }).format(n) }
@@ -2633,46 +2589,10 @@
             window._ck = null;
             closeModal('payment-modal');
             showToast('Commande confirmée !', 'success');
-            if (adminUser) { renderDash();
-                renderSales() }
+            renderDash();
+            renderSales();
             return true;
         }
-
-        function adminLogin(u, pw) {
-            const v = ld(C.keys.vendors, []),
-                hashed = hash(pw),
-                acc = v.find(x => x.user === u && x.pass === hashed);
-            if (!acc) return 'Identifiant ou mot de passe incorrect';
-            adminUser = { user: u };
-            sd(C.keys.session, adminUser);
-            closeModal('login-modal');
-            showAdmin(true);
-            showToast('Connecté', 'success');
-            switchView('dash');
-            return '';
-        }
-
-        function adminLogout() { adminUser = null;
-            localStorage.removeItem(C.keys.session);
-            showAdmin(false);
-            showToast('Déconnecté', 'info');
-            switchView('store') }
-
-        function showAdmin(s) {
-            ['nav-li-dash', 'nav-li-prod', 'nav-li-orders', 'nav-m-li-dash', 'nav-m-li-prod', 'nav-m-li-orders',
-                'logout-btn'
-            ].forEach(id => { const e = document.getElementById(id); if (e) e.hidden = !s });
-            const ai = document.getElementById('admin-info');
-            if (ai) { ai.style.display = s ? '' : 'none'; if (s) ai.textContent = '👤 Connecté' }
-            if (s) { renderDash();
-                renderAdmin();
-                renderSales() }
-        }
-
-        function showLogin() { document.getElementById('login-user').value = '';
-            document.getElementById('login-pass').value = '';
-            document.getElementById('login-error').style.display = 'none';
-            openModal('login-modal') }
 
         function renderDash() {
             const o = orders(),
@@ -2792,18 +2712,13 @@
             showToast('Export CSV téléchargé', 'success');
         }
 
-        function vendorLogin(u, pw) {
+        // ===== VENDOR =====
+        function vendorLogin(u) {
             const v = ld(C.keys.vendors, []),
-                hashed = hash(pw),
-                acc = v.find(x => x.user === u && x.pass === hashed);
-            if (!acc) return 'Identifiant ou mot de passe incorrect';
-            if (Date.now() > acc.expires) return 'expired';
+                acc = v.find(x => x.user === u);
+            if (!acc) return 'Identifiant vendeur incorrect';
             vendorUser = u;
-            const exp = Date.now() + 2592000000;
-            acc.expires = exp;
-            sd(C.keys.vendors, v);
-            sd('esodi-vendor-session', { user: u, expires: exp });
-            closeModal('vendor-login-modal');
+            sd('esodi-vendor-session', { user: u });
             showVendorUI(true);
             showToast('Connecté comme ' + u, 'success');
             switchView('vendor');
@@ -2822,7 +2737,7 @@
             const e = document.getElementById('vendor-info');
             if (e) { e.style.display = s ? '' : 'none'; if (s) { const a = ld(C.keys.vendors, []).find(x => x.user ===
                         vendorUser); if (a) e.textContent = '👤 ' + (a.profile ? esc(a.profile.name) || a.profile
-                        .shop : vendorUser) + ' ⏳ ' + Math.ceil((a.expires - Date.now()) / 86400000) + 'j' } }
+                        .shop : vendorUser) } }
             document.getElementById('vendor-logout-btn').style.display = s ? '' : 'none';
             document.getElementById('desktop-vendor-logout').hidden = !s;
             document.getElementById('mobile-vendor-logout').hidden = !s;
@@ -3455,7 +3370,7 @@ h1{color:#f59e0b;font-size:18px}.grid{display:grid;grid-template-columns:repeat(
 
         function delProd(id) {
             const p = productById(id);
-            if (!p || !adminUser) return;
+            if (!p) return;
             if (!confirm(`Supprimer "${p.name}" ?`)) return;
             products = products.filter(x => x.id !== id);
             saveState();
@@ -3466,7 +3381,7 @@ h1{color:#f59e0b;font-size:18px}.grid{display:grid;grid-template-columns:repeat(
 
         function editProduct(id) {
             const p = productById(id);
-            if (!p || !adminUser) return;
+            if (!p) return;
             document.getElementById('edit-id').value = p.id;
             document.getElementById('edit-name').value = p.name;
             document.getElementById('edit-brand').value = p.brand || '';
@@ -3698,9 +3613,18 @@ h1{color:#f59e0b;font-size:18px}.grid{display:grid;grid-template-columns:repeat(
             document.querySelectorAll('.desktop-nav button, .mobile-nav button').forEach(b => b.classList.remove('active'));
             const btn = document.querySelector(`[data-view="${v}"]`);
             if (btn) btn.classList.add('active');
-            if ((v === 'dash' || v === 'prod' || v === 'orders') && !adminUser) { showLogin(); return }
-            if ((v === 'vendor' || v === 'vendor-orders' || v === 'vendor-accounts') && !vendorUser) { openModal(
-                    'vendor-login-modal'); return }
+            if ((v === 'vendor' || v === 'vendor-orders' || v === 'vendor-accounts') && !vendorUser) {
+                const identifiant = prompt('Entrez votre identifiant vendeur :');
+                if (identifiant) {
+                    const err = vendorLogin(identifiant);
+                    if (err) {
+                        showToast(err, 'error');
+                        return;
+                    }
+                } else {
+                    return;
+                }
+            }
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             const sec = document.getElementById('view-' + v);
             if (sec) sec.classList.add('active');
@@ -3795,9 +3719,6 @@ h1{color:#f59e0b;font-size:18px}.grid{display:grid;grid-template-columns:repeat(
 
         // ===== MODALS =====
         function openModal(id) {
-            if (id === 'vendor-register-modal') { document.getElementById('vendor-register-form').querySelector('button')
-                    .disabled = false;
-                document.getElementById('vr-result').style.display = 'none' }
             document.getElementById(id).classList.add('active');
             document.body.style.overflow = 'hidden'
         }
@@ -3855,19 +3776,8 @@ h1{color:#f59e0b;font-size:18px}.grid{display:grid;grid-template-columns:repeat(
                     '.filter-btn'); if (!b) return;
                 setCat(b.dataset.cat, b) });
 
-            document.getElementById('login-form').addEventListener('submit', e => {
-                e.preventDefault();
-                const u = document.getElementById('login-user').value.trim(),
-                    pw = document.getElementById('login-pass').value,
-                    err = adminLogin(u, pw),
-                    el = document.getElementById('login-error');
-                if (err) { el.style.display = 'block';
-                    el.textContent = err } else el.style.display = 'none';
-            });
-
             document.getElementById('add-form').addEventListener('submit', e => {
                 e.preventDefault();
-                if (!adminUser) { showToast('Connectez-vous', 'warning'); return }
                 const p = { id: Date.now(), vendor: 'admin', name: document.getElementById('f-name')
                         .value.trim(), brand: document.getElementById('f-brand').value.trim(),
                     cat: document.getElementById('f-cat').value, price: parseInt(document
@@ -3898,7 +3808,6 @@ h1{color:#f59e0b;font-size:18px}.grid{display:grid;grid-template-columns:repeat(
 
             document.getElementById('edit-form').addEventListener('submit', e => {
                 e.preventDefault();
-                if (!adminUser) { showToast('Connectez-vous', 'warning'); return }
                 const id = parseInt(document.getElementById('edit-id').value),
                     p = productById(id);
                 if (!p) return;
@@ -3924,7 +3833,6 @@ h1{color:#f59e0b;font-size:18px}.grid{display:grid;grid-template-columns:repeat(
 
             document.getElementById('manual-sale-form').addEventListener('submit', e => {
                 e.preventDefault();
-                if (!adminUser) { showToast('Connectez-vous', 'warning'); return }
                 const cl = document.getElementById('ms-client').value.trim(),
                     ph = document.getElementById('ms-phone').value.trim(),
                     pid = parseInt(document.getElementById('ms-product').value),
@@ -3998,85 +3906,8 @@ h1{color:#f59e0b;font-size:18px}.grid{display:grid;grid-template-columns:repeat(
                 salesPage = 1;
                 renderSales() });
             document.getElementById('btn-export-csv').addEventListener('click', exportCSV);
-            document.getElementById('logout-btn').addEventListener('click', adminLogout);
             document.getElementById('btn-close-detail').addEventListener('click', closeDetail);
 
-            document.getElementById('vendor-login-form').addEventListener('submit', e => {
-                e.preventDefault();
-                const u = document.getElementById('vl-user').value.trim(),
-                    pw = document.getElementById('vl-pass').value,
-                    err = vendorLogin(u, pw),
-                    el = document.getElementById('vl-error');
-                if (err === 'expired') { el.style.display = 'block';
-                    el.innerHTML = '⌛ Compte expiré. Contactez l\'administrateur.' } else if (err) { el
-                        .style.display = 'block';
-                    el.textContent = err } else el.style.display = 'none';
-            });
-            document.getElementById('vendor-register-form').addEventListener('submit', e => {
-                e.preventDefault();
-                const name = document.getElementById('vr-name').value.trim(),
-                    shop = document.getElementById('vr-shop').value.trim(),
-                    phone = document.getElementById('vr-phone').value.trim();
-                if (!name || !shop || !phone) { showToast('Remplissez tous les champs',
-                    'warning'); return }
-                const v = ld(C.keys.vendors, []);
-                let idx = 0;
-                v.forEach(x => { const m = x.user.match(/VEN(\d+)/); if (m) idx = Math.max(idx,
-                        parseInt(m[1])) });
-                const user = 'VEN' + (idx + 1).toString().padStart(2, '0'),
-                    pass = 'VEN' + (Math.random().toString(36).slice(2, 6).toUpperCase()) + Math
-                    .floor(Math.random() * 999).toString().padStart(3, '0'),
-                    expires = Date.now() + 2592000000;
-                v.push({ user, pass: hash(pass), created: Date.now(), expires, profile: { name, shop,
-                        phone } });
-                sd(C.keys.vendors, v);
-                const msg = encodeURIComponent(
-                    `🆕 *NOUVEAU VENDEUR ETS EL Arafat*\n━━━━━━━━━━━━━━━━\n👤 ${name}\n🏪 ${shop}\n📱 ${phone}\n━━━━━━━━━━━━━━━━\n🔑 Identifiant : ${user}\n🔐 Mot de passe : ${pass}\n📅 Expire : ${new Date(expires).toLocaleDateString()}\n━━━━━━━━━━━━━━━━`
-                    );
-                window.open(`https://wa.me/${C.wa}?text=${msg}`, '_blank');
-                const el = document.getElementById('vr-result');
-                el.style.display = 'block';
-                el.style.background = '#dcfce7';
-                el.style.color = '#166534';
-                el.innerHTML = `✅ Compte créé !<br><strong>Identifiant:</strong> ${user}<br><strong>Mot de passe:</strong> ${pass}`;
-                document.getElementById('vendor-register-form').querySelector('button').disabled = true;
-                setTimeout(() => { closeModal('vendor-register-modal');
-                    document.getElementById('vl-user').value = user;
-                    document.getElementById('vl-pass').value = pass;
-                    openModal('vendor-login-modal') }, 4000);
-            });
-            document.getElementById('vendor-add-form').addEventListener('submit', e => {
-                e.preventDefault();
-                if (!vendorUser) { showToast('Connectez-vous d\'abord', 'warning'); return }
-                const p = { id: Date.now(), vendor: vendorUser, name: document.getElementById(
-                        'vf-name').value.trim(), brand: document.getElementById('vf-brand')
-                        .value.trim(), cat: document.getElementById('vf-cat').value,
-                    price: parseInt(document.getElementById('vf-price').value) || 0,
-                    wprice: parseInt(document.getElementById('vf-wprice').value) || 0,
-                    wqty: parseInt(document.getElementById('vf-wqty').value) || 5,
-                    promo: parseInt(document.getElementById('vf-promo').value) || 0,
-                    warranty: document.getElementById('vf-warranty').value.trim() || '',
-                    minStock: parseInt(document.getElementById('vf-minstock').value) || 3,
-                    stock: parseInt(document.getElementById('vf-stock').value) || 0,
-                    img: document.getElementById('vf-img').value.trim() || C.placeholder,
-                    desc: document.getElementById('vf-desc').value.trim() || '',
-                    delivery: parseInt(document.getElementById('vf-delivery').value) || 0,
-                    seller: document.getElementById('vf-seller').value.trim() };
-                if (!p.name || !p.price || !p.seller) { showToast('Nom, prix et boutique requis',
-                        'warning'); return }
-                products.push(p);
-                saveState();
-                e.target.reset();
-                document.getElementById('vf-delivery').value = '0';
-                document.getElementById('vf-wqty').value = '5';
-                document.getElementById('vf-promo').value = '0';
-                document.getElementById('vf-stock').value = '10';
-                document.getElementById('vf-minstock').value = '3';
-                renderVendorProducts();
-                populateVendorDeliverySelect();
-                filterProducts();
-                showToast('Produit publié !', 'success');
-            });
             document.getElementById('vd-add-row').addEventListener('click', vdAddRow);
             document.querySelectorAll('.vd-remove-row').forEach(b => b.addEventListener('click', function() { this
                         .closest('.vd-item-row').remove();
@@ -4152,11 +3983,6 @@ h1{color:#f59e0b;font-size:18px}.grid{display:grid;grid-template-columns:repeat(
             document.querySelectorAll('.modal-overlay').forEach(m => { m.addEventListener('click', function(e) {
                     if (e.target === this) { this.classList.remove('active');
                         document.body.style.overflow = '';
-                        if (this.id === 'vendor-register-modal') { document.getElementById(
-                                'vendor-register-form').querySelector('button')
-                            .disabled = false;
-                            document.getElementById('vr-result').style.display =
-                            'none' };
                         if (this.id === 'payment-modal') { document.getElementById(
                                 'btn-pay-whatsapp').style.display = 'flex';
                             document.getElementById('payment-options').style
@@ -4166,11 +3992,6 @@ h1{color:#f59e0b;font-size:18px}.grid{display:grid;grid-template-columns:repeat(
                     document.querySelectorAll('.modal-overlay.active').forEach(function(m) {
                         m.classList.remove('active');
                         document.body.style.overflow = '';
-                        if (m.id === 'vendor-register-modal') { document.getElementById(
-                                'vendor-register-form').querySelector('button')
-                            .disabled = false;
-                            document.getElementById('vr-result').style.display =
-                            'none' };
                         if (m.id === 'payment-modal') { document.getElementById(
                                 'btn-pay-whatsapp').style.display = 'flex';
                             document.getElementById('payment-options').style
@@ -4195,8 +4016,8 @@ h1{color:#f59e0b;font-size:18px}.grid{display:grid;grid-template-columns:repeat(
                     filterProducts();
                     updateCartUI();
                     updateWishUI();
-                    if (adminUser && document.getElementById('view-dash').classList.contains(
-                        'active')) renderDash();
+                    if (document.getElementById('view-dash').classList.contains('active'))
+                        renderDash();
                     if (document.getElementById('view-orders').classList.contains('active'))
                         renderSales();
                 }
